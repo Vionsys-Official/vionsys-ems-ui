@@ -39,7 +39,7 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-r from-gray-200 to-gray-400 flex justify-center items-center">
       <div className="bg-white shadow-2xl w-full max-w-md p-10 rounded-lg">
         <div className="flex justify-center mb-8">
-          <img src="/public/assets/logo.png" className="w-2/3" alt="vionsys" />
+          <img src="/assets/logo.png" className="w-2/3" alt="vionsys" />
         </div>
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Welcome Back
