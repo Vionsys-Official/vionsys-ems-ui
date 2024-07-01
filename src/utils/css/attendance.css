@@ -1,0 +1,41 @@
+/* Custom styles for the calendar container */
+
+.rbc-header {
+    color: #fff;
+    background-color: #7498d0;
+    font-size: 14px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px !important;
+}
+
+.rbc-event {
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Styles for event labels */
+.rbc-event-label {
+    color: inherit;
+}
+
+/* Styles for navigation buttons */
+.rbc-btn-group {
+    margin-bottom: 10px;
+}
+
+/* Styles for event container */
+.rbc-event {
+    border-radius: 5px;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+/* Styles for selected event */
+.rbc-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
