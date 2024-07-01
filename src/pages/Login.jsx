@@ -25,7 +25,6 @@ const Login = () => {
           const decodedToken = jwtDecode(data.token);
           localStorage.setItem("user", JSON.stringify(decodedToken));
           toast.success(`Log in successfully.`, {
-
             icon: <HiCheck color="green" />,
           });
           queryClient.invalidateQueries({
@@ -37,32 +36,42 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-slate-300 flex justify-center items-center">
-      <div className="bg-white w-96 p-6 rounded-md">
-        <div className="bg-white flex justify-center mb-3">
-          <img
-            src="https://www.vionsys.com/public/assets/img/logo_3.png"
-            className="p-2 w-4/6"
-            alt="vionsys"
-          />
+    <div className="min-h-screen bg-gradient-to-r from-gray-200 to-gray-400 flex justify-center items-center">
+      <div className="bg-white shadow-2xl w-full max-w-md p-10 rounded-lg">
+        <div className="flex justify-center mb-8">
+          <img src="/public/assets/logo.png" className="w-2/3" alt="vionsys" />
         </div>
-        <h2 className="text-2xl">Login to your account</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Welcome Back
+        </h2>
         <form onSubmit={handleLogin}>
-          <div className="flex flex-col my-2">
-            <label htmlFor="">Email</label>
+          <div className="flex flex-col mb-5">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-600 mb-2"
+            >
+              Email Address
+            </label>
             <input
-              className="p-2 rounded-md border-[1px] border-slate-400"
-              type="text"
+              id="email"
+              className="p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+              type="email"
               value={email}
               autoComplete="current-email"
-              placeholder="Enter your email"
+              placeholder="you@example.com"
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="flex flex-col my-2">
-            <label htmlFor="">Password</label>
+          <div className="flex flex-col mb-6">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-gray-600 mb-2"
+            >
+              Password
+            </label>
             <input
-              className="p-2 rounded-md border-[1px] border-slate-400"
+              id="password"
+              className="p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
               type="password"
               value={password}
               autoComplete="current-password"
@@ -73,13 +82,18 @@ const Login = () => {
           <button
             disabled={isPending}
             type="submit"
-            className="w-full rounded-md bg-blue-600 text-slate-100 p-2 mt-2"
+            className="w-full rounded-md bg-blue-600 hover:bg-blue-700 text-white p-3 mb-6 transition duration-300"
           >
-            {isPending ? "Loading...." : "Login"}
+            {isPending ? "Loading..." : "Login"}
           </button>
         </form>
-        <div>
-          <Link to={'/ForgotPassword'}>Forgot Password ?</Link>
+        <div className="text-center">
+          <Link
+            to="/ForgotPassword"
+            className="text-sm text-blue-600 hover:underline transition duration-150"
+          >
+            Forgot Password?
+          </Link>
         </div>
       </div>
     </div>
