@@ -5,16 +5,16 @@ import { useMutation } from "@tanstack/react-query";
 const useResetPassword = () => {
   const {
     data,
-    mutate: resetpasword,
+    mutate: resetPassword,
     isPending,
   } = useMutation({
-    mutationFn: ({ password, passwordConfirm ,token}) =>
-      ResetPasswordApi(password, passwordConfirm,token ),
+    mutationFn: ({ password, passwordConfirm, token }) =>
+      ResetPasswordApi(password, passwordConfirm, token),
     onSuccess: (res) => toast.success(res.data.message),
     onError: (err) => toast.error(err.response.data.error),
   });
   return {
-    resetpasword,
+    resetPassword,
     data,
     isPending,
   };
