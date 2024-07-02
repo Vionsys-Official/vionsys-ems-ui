@@ -145,7 +145,7 @@ const UserProfile = () => {
                                     <div className="flex  flex-wrap justify-between items-center">
                                         <div className="flex justify-center items-center gap-2">
                                             <CiLocationOn />
-                                            <span>{userData?.data?.user?.address}</span>
+                                            <span>{userData?.data?.user?.TempAddress}</span>
                                         </div>
                                         <div className="flex justify-center items-center gap-2">
                                             <CiMail />
