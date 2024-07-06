@@ -7,7 +7,7 @@ const useGetNotificationToken = () => {
   const { mutate: sendNotificationToken, error } = useMutation({
     mutationFn: (notificationToken) => getNotificationToken(notificationToken),
     mutationKey: ["getToken"],
-    onSuccess: () => toast.success("Notification permission granted"),
+    onSuccess: (res) => console.log("token added to database - " + res),
     onError: () =>
       toast("Please re-enable notification permissions.", {
         icon: "⚠️",
