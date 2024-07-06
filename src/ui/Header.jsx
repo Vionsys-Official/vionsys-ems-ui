@@ -1,50 +1,60 @@
-
 import { HiMenu } from "react-icons/hi";
 import ThemeButton from "./ThemeButton";
-import { Button, Drawer } from "antd";
+import { Button, Drawer, Avatar, Input } from "antd";
 import VionsysLogoImage from "/assets/vionsys_logo.png";
 import getUserIdRole from "../utils/getUserIdRole";
-import Sidebar from './Sidebar'
+import Sidebar from './Sidebar';
 import { useState } from "react";
 import useGetCurrentUser from "../features/users/useGetCurrentUser";
-import { CiSearch } from "react-icons/ci";
-
-import { Avatar } from 'antd';
-import { Input } from 'antd';
+import { IoIosSearch } from "react-icons/io";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-
-
-
-  const onClose = () => {
-    setOpen(false);
-  }
-
+  const onClose = () => setOpen(false);
   const { id } = getUserIdRole();
-  const { user, isPending } = useGetCurrentUser(id);
-  return (
-    <div className="dark:bg-slate-800 fixed dark:text-slate-100 px-2 py-1 flex justify-between w-full bg-[#7498d0] text-white">
-      <div className="flex gap-4 items-center">
-        <div className="p-2 bg-white rounded-full"><img src={VionsysLogoImage} className="w-[25px] h-[25px]" alt="" /></div>
-        <h1 className="text-lg font-bold uppercase">
-          <span>Vionsys IT </span>
-          Solutions India pvt. ltd.</h1>
-      </div>
+  const { user } = useGetCurrentUser(id);
 
-      <div className="flex gap-6 items-center">
-        <div className="relative flex gap-4 justify-center items-center mx-3 w-[340px]">
-          <Input className="px-2" placeholder="Search" />
-          <CiSearch size={20} className="absolute right-2 cursor-pointer" />
+  return (
+    <div className="fixed top-0 left-0 w-full bg-[#7498d0] dark:bg-slate-800 text-white dark:text-slate-100 px-5 py-2 shadow-lg flex justify-between items-center z-50 transition-all duration-300 ease-in-out">
+      <div className="flex gap-4 items-center">
+        <div className="p-2 bg-white rounded-lg flex items-center justify-center shadow-md transition-transform transform hover:scale-105">
+          <img src={VionsysLogoImage} className="md:w-[20px] md:h-[20px] w-[45px] h-[35px]" alt="Vionsys Logo" />
+        </div>
+        <h1 className="md:text-lg uppercase font-semibold text-[16px] hidden md:block">
+          Vionsys IT Solutions India Pvt. Ltd.
+        </h1>
+      </div>
+      <div className="hidden sm:flex gap-6 items-center">
+        <div className="relative flex items-center w-64">
+          <Input 
+            className="px-4 py-1 w-full rounded-full bg-gray-200 text-gray-800 border border-gray-500 shadow-inner shadow-gray-400"
+            placeholder="Search"
+          />
+          <IoIosSearch size={24} className="absolute right-3 cursor-pointer text-gray-400 transition-colors duration-200 hover:text-blue-500" />
         </div>
         <ThemeButton />
-        <Avatar src={user?.data?.user?.profile} alt="" size={"large"} />
+        <Avatar 
+          src={user?.data?.user?.profile} 
+          alt="User Profile" 
+          size={"medium"} 
+          className="shadow-md transition-transform transform hover:scale-105 border-gray-700 dark:border-white"
+        />
       </div>
-      <Button className="cursor-pointer sm:hidden" onClick={() => setOpen(true)}>
-        <HiMenu />
-      </Button>
-      <Drawer title="Basic Drawer" onClose={onClose} open={open}>
-        <Sidebar isMobile={true} />
+      <div className="flex sm:hidden gap-4 items-center">
+        <ThemeButton />
+        <Button className="bg-transparent border-0 text-white focus:outline-none hover:scale-105" onClick={() => setOpen(true)}>
+          <HiMenu size={22} />
+        </Button>
+      </div>
+      <Drawer
+        title="Menu"
+        placement="right"
+        onClose={onClose}
+        open={open}
+        width={240}  // Reduced width of the drawer
+        className="sm:hidden"
+      >
+        <Sidebar isMobile={true} onClose={onClose} />
       </Drawer>
     </div>
   );
