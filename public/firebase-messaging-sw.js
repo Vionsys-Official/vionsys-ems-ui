@@ -30,18 +30,14 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
 
-  // Ensure payload.notification exists and has title and body properties
-  if (
-    payload.notification &&
-    payload.notification.title &&
-    payload.notification.body
-  ) {
-    const link = payload?.fcmOptions?.link || payload?.data?.link;
+  // Only call showNotification if the payload does not contain a notification property
+  if (!payload.notification) {
+    const link = payload?.data?.link;
 
-    const notificationTitle = payload.notification.title;
+    const notificationTitle = payload.data.title;
     const notificationOptions = {
-      body: payload.notification.body,
-      icon: payload.notification.image || "/assets/default-icon.png", // Use a default icon if not provided
+      body: payload.data.body,
+      icon: payload.data.image || "/assets/default-icon.png", // Use a default icon if not provided
       data: { url: link },
     };
 
