@@ -20,6 +20,9 @@ firebase.initializeApp(firebaseConfig);
 // Retrieve an instance of Firebase Messaging to handle background messages
 const messaging = firebase.messaging();
 
+// Track displayed notifications to prevent duplicates
+const displayedNotifications = new Set();
+
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
   console.log(
@@ -27,13 +30,59 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
 
-  // Customize notification here
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: "/public/assets/vionsys_logo.png",
-  };
+  // Ensure payload.notification exists and has title and body properties
+  if (
+    payload.notification &&
+    payload.notification.title &&
+    payload.notification.body
+  ) {
+    const link = payload?.fcmOptions?.link || payload?.data?.link;
 
-  // Show notification to the user
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: payload.notification.image || "/assets/default-icon.png", // Use a default icon if not provided
+      data: { url: link },
+    };
+
+    // Check if this notification has already been displayed
+    if (!displayedNotifications.has(notificationTitle)) {
+      // Show notification to the user
+      self.registration.showNotification(
+        notificationTitle,
+        notificationOptions
+      );
+
+      // Add to the set of displayed notifications
+      displayedNotifications.add(notificationTitle);
+    }
+  }
+});
+
+self.addEventListener("notificationclick", function (event) {
+  console.log("[firebase-messaging-sw.js] Notification click received.");
+
+  event.notification.close();
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then(function (clientList) {
+        const url = event.notification.data.url;
+
+        if (!url) return;
+
+        for (const client of clientList) {
+          if (client.url === url && "focus" in client) {
+            return client.focus();
+          }
+        }
+
+        // If no matching client, open a new window with the URL
+        if (clients.openWindow) {
+          console.log("Opening window for URL: ", url);
+          return clients.openWindow(url);
+        }
+      })
+  );
 });
