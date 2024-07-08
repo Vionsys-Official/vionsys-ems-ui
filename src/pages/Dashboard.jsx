@@ -13,8 +13,11 @@ const Dashboard = () => {
   const { role } = getUserIdRole();
 
   useEffect(() => {
-    const fetchNotificationToken = async () =>
-      await askUserForNotificationPermission(sendNotificationToken);
+    const fetchNotificationToken = async () => {
+      const { NotificationToken } = await askUserForNotificationPermission(
+        sendNotificationToken
+      );
+    };
     fetchNotificationToken();
   }, []);
 
