@@ -2,14 +2,15 @@ import { LoaderIcon } from "react-hot-toast";
 import { Button, Popover, Table } from "antd";
 import useGetAllAttendance from "../features/attendance/useGetAllAttendance";
 import withAuth from "../store/withAuth";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, differenceInHours } from "date-fns";
 import getDateDifferenceWithFormat from "../utils/getDateDifferenceWithFormat";
 import { RiFileExcel2Line } from "react-icons/ri";
 import ExcelForm from "./ExcelForm";
 import { useState } from "react";
+import "../utils/css/attendance.css";
 
 const dateFormatNormal = (date) => {
-  return format(parseISO(date), "dd:MM:yyyy");
+  return format(parseISO(date), "dd/MM/yyyy");
 };
 
 const dateToTime = (dateStr) => {
@@ -17,89 +18,118 @@ const dateToTime = (dateStr) => {
 };
 
 const AttendanceList = () => {
-  const [modal, setmodal] = useState(false);
+  const [modal, setModal] = useState(false);
   const { data, isPending } = useGetAllAttendance();
 
   const columns = [
     {
+      key: "employeeId",
+      dataIndex: "employeeId",
+      title: "EMP ID",
+      width: 80,
+      sorter: (a, b) => a.employeeId.localeCompare(b.employeeId),
+    },
+    {
       key: "name",
       dataIndex: "name",
-      title: "Name",
+      title: "EMP Name",
       fixed: "left",
-      width: "100px",
+      width: 120,
+      render: (text) => <span className="font-semibold">{text}</span>
     },
     {
       key: "date",
       dataIndex: "date",
       title: "Date",
-      // width: '100px',
-      // responsive: ["md"]
-    },
-    {
-      key: "employeeId",
-      dataIndex: "employeeId",
-      title: "Employee ID",
-      // width: '100px',
+      width: 100,
     },
     {
       key: "loginTime",
       dataIndex: "loginTime",
       title: "Login Time",
-      // width: '100px',
+      width: 120,
     },
     {
       key: "logoutTime",
       dataIndex: "logoutTime",
       title: "Logout Time",
-      // width: '100px',
+      width: 120,
     },
     {
       key: "workTime",
       dataIndex: "workTime",
       title: "Work Time",
-      // width: '100px',
+      width: 120,
+      render: (text, record) => {
+        // Calculate work time in hours
+        const loginTime =
+          record.loginTime !== "-" ? parseISO(record.loginTime) : null;
+        const logoutTime =
+          record.logoutTime !== "-" ? parseISO(record.logoutTime) : null;
+
+        if (loginTime && logoutTime) {
+          const workHours = differenceInHours(logoutTime, loginTime);
+          const color = workHours >= 8 ? "green" : "";
+          return <span style={{ color }}>{text}</span>;
+        }
+
+        return text;
+      },
     },
   ];
+
   const dataSource = data?.data?.attendance?.map((item) => {
+    const loginTime = item?.attendances[0]?.loginTime
+      ? dateToTime(item?.attendances[0]?.loginTime)
+      : "-";
+    const logoutTime = item?.attendances[0]?.logoutTime
+      ? dateToTime(item?.attendances[0]?.logoutTime)
+      : "-";
+    const workTime =
+      loginTime !== "-" && logoutTime !== "-"
+        ? getDateDifferenceWithFormat(
+            item?.attendances[0]?.logoutTime,
+            item?.attendances[0]?.loginTime
+          )
+        : "-";
     return {
       name: `${item?.user?.firstName} ${item?.user?.lastName}`,
       date: dateFormatNormal(item?.attendances[0]?.date),
       employeeId: item?.user?.employeeId,
-      loginTime:
-        item?.attendances[0]?.loginTime &&
-        dateToTime(item?.attendances[0]?.loginTime),
-      logoutTime:
-        item?.attendances[0]?.logoutTime &&
-        dateToTime(item?.attendances[0]?.logoutTime),
-      workTime:
-        item?.attendances[0]?.logoutTime &&
-        item?.attendances[0]?.loginTime &&
-        getDateDifferenceWithFormat(
-          item?.attendances[0]?.logoutTime,
-          item?.attendances[0]?.loginTime
-        ),
+      loginTime,
+      logoutTime,
+      workTime,
     };
   });
 
   return (
-    <div className="p-6 bg-white">
-      <ExcelForm isModalOpen={modal} setIsModalOpen={setmodal} />
-      <div className="flex justify-between p-4">
-        <h2 className="text-xl py-4 ">Attendance List : </h2>
-        <Popover placement="topLeft" title="Get Excel" style={{ width: '100px' }}>
-          <Button className="text-[#217346] bg-white shadow-md" onClick={() => setmodal(true)}>
-            <RiFileExcel2Line />
-          </Button>
-        </Popover>
+    <div className="attendance-list-container dark:bg-gray-800 ">
+      <div className="flex-row gap-4 mb-5 rounded-lg dark:border-gray-800">
+        <ExcelForm isModalOpen={modal} setIsModalOpen={setModal} />
+        <div className="attendance-list-header">
+          <h2 className="attendance-list-title">Attendance List :</h2>
+          <Popover
+            placement="topLeft"
+            title="Get Excel"
+            style={{ width: "100px" }}
+          >
+            <Button
+              className="attendance-list-excel-button bg-green-500 text-white"
+              onClick={() => setModal(true)}
+            >
+              <RiFileExcel2Line />
+            </Button>
+          </Popover>
+        </div>
+        {isPending && <LoaderIcon />}
+        <Table
+          className="attendance-list-table"
+          scroll={{ x: 800 }}
+          columns={columns}
+          dataSource={dataSource}
+          rowClassName="attendance-list-row"
+        />
       </div>
-      {isPending && <LoaderIcon />}
-      <Table
-        scroll={{
-          x: 200,
-        }}
-        columns={columns}
-        dataSource={dataSource}
-      />
     </div>
   );
 };
