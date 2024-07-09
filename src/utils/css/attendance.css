@@ -1,41 +1,102 @@
-/* Custom styles for the calendar container */
-
-.rbc-header {
-    color: #fff;
-    background-color: #7498d0;
-    font-size: 14px !important;
+/* Base styles for light mode */
+.attendance-list-container {
+    padding: 24px;
+    background: #f0f2f5;
+    transition: background 0.3s, color 0.3s;
+  }
+      
+  .attendance-list-header {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 36px !important;
-}
-
-.rbc-event {
-    width: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-/* Styles for event labels */
-.rbc-event-label {
-    color: inherit;
-}
-
-/* Styles for navigation buttons */
-.rbc-btn-group {
-    margin-bottom: 10px;
-}
-
-/* Styles for event container */
-.rbc-event {
-    border-radius: 5px;
-    padding: 2px 5px;
-    cursor: pointer;
-}
-
-/* Styles for selected event */
-.rbc-selected {
-    background-color: rgba(0, 0, 0, 0.1);
-}
+    justify-content: space-between;
+    padding: 12px;
+    background: #ffffff;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  
+  .attendance-list-title {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  .attendance-list-excel-button {
+    color: #217346;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .attendance-list-excel-button:hover {
+    background: #e6f7ff;
+  }
+  
+  .attendance-list-table .ant-table-thead > tr > th {
+    background: #fafafa;
+    text-align: center;
+    border-bottom: 2px solid #e8e8e8;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  
+  .attendance-list-table .ant-table-tbody > tr > td {
+    text-align: center;
+    border-bottom: 1px solid #e8e8e8;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  
+  .attendance-list-table .ant-table-tbody > tr:hover {
+    background: #e6f7ff;
+    transition: background 0.3s;
+  }
+  
+  .attendance-list-row:hover {
+    background-color: #e6f7ff;
+    transition: background 0.3s;
+  }
+  
+  
+  /* Styles for dark mode */
+  /* html.dark-mode .attendance-list-container {
+    background: #1e1e1e;
+    color: #6b4f4f;
+  }
+  
+  html.dark-mode .attendance-list-header {
+    background: #2b2b2b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  }
+  
+  html.dark-mode .attendance-list-title {
+    color: #ffffff;
+  }
+  
+  html.dark-mode .attendance-list-excel-button {
+    color: #ffffff;
+    background: #444444;
+  }
+  
+  html.dark-mode .attendance-list-excel-button:hover {
+    background: #333333;
+  }
+  
+  html.dark-mode .attendance-list-table .ant-table-thead > tr > th {
+    background: #3a3a3a;
+    border-color: #5a5a5a;
+    color: #ffffff;
+  }
+  
+  html.dark-mode .attendance-list-table .ant-table-tbody > tr > td {
+    border-color: #5a5a5a;
+  }
+  
+  html.dark-mode .attendance-list-table .ant-table-tbody > tr:hover {
+    background: #555555;
+  }
+  
+  html.dark-mode .attendance-list-row:hover {
+    background-color: #555555;
+  } */
+  
