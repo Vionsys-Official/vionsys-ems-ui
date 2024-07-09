@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import getUserIdRole from "../../utils/getUserIdRole";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import AdminLeaveModal from "../../ui/leavesUI/AdminLeaveModal";
+import "../../utils/css/AdminLeavePage.css";
+import { SearchOutlined } from "@ant-design/icons";
 
 const AdminLeavePage = () => {
   const [modalOpen, setmodalOpen] = useState(false);
@@ -18,7 +20,7 @@ const AdminLeavePage = () => {
   // the cloumns in admin leaves page
   const columns = [
     {
-      title: "User ",
+      title: "Emp Name",
       dataIndex: "name",
       key: "name",
     },
@@ -39,7 +41,7 @@ const AdminLeavePage = () => {
       key: "leaveDays",
     },
     {
-      title: "Request date",
+      title: "Request Date",
       dataIndex: "date",
       key: "date",
       render: (date) => format(new Date(date), "d-MM-yyyy"),
@@ -57,23 +59,40 @@ const AdminLeavePage = () => {
       render: (date) => format(new Date(date), "d-MM-yyyy"),
     },
     {
+      title: "Note By Admin",
+      dataIndex: "noteByAdmin",
+      key: "noteByAdmin",
+    },
+    {
       title: "Leave Status",
       dataIndex: "leaveStatus",
       key: "leaveStatus",
+      filters: [
+        {text: 'Rejected', value: 'Rejected', },
+        {text: 'Expired', value: 'Expired', },
+        {text: 'Cancelled', value: 'Cancelled', },
+        {text: 'Approved', value: 'Approved', },
+        {text: 'Pending', value: 'Pending', },
+      ],
+      onFilter: (value, record) => record.leaveStatus === value,
+    filterSearch: true,
       render: (leaveStatus) => {
         let color = "";
         switch (leaveStatus) {
           case "Pending":
-            color = "yellow";
+            color = "#FAAD14";
             break;
           case "Approved":
-            color = "green";
+            color = "darkgreen";
             break;
           case "Rejected":
-            color = "red";
+            color = "darkred";
+            break;
+          case "Cancelled":
+            color = "black";
             break;
           default:
-            color = "";
+            color = "gray";
         }
         return (
           <Tag color={color} key={leaveStatus}>
@@ -81,11 +100,6 @@ const AdminLeavePage = () => {
           </Tag>
         );
       },
-    },
-    {
-      title: "Note By Admin",
-      dataIndex: "noteByAdmin",
-      key: "noteByAdmin",
     },
     {
       title: "Action",
@@ -105,7 +119,9 @@ const AdminLeavePage = () => {
   AllLeaves?.forEach((leave) => {
     leave?.leaves?.forEach((leaveData) => {
       const fullName = `${leave?.firstName} ${leave?.lastName}`;
-      if (fullName.toLocaleLowerCase().includes(searchName.toLocaleLowerCase())) {
+      if (
+        fullName.toLocaleLowerCase().includes(searchName.toLocaleLowerCase())
+      ) {
         dataSource.push({
           key: leaveData?._id,
           email: leave?.email,
@@ -123,22 +139,38 @@ const AdminLeavePage = () => {
     setmodalOpen(true);
   };
 
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
+
   return (
-    <div className="px-5">
-      <AdminLeaveModal
-        modalOpen={modalOpen}
-        setmodalOpen={setmodalOpen}
-        leavedata={leavedata}
-      />
-      <Input
-        placeholder="Search by name"
-        value={searchName}
-        onChange={(e) => setSearchName(e.target.value)}
-        style={{ marginBottom: "16px", width: "300px" }}
-      />
-      {isPending && <LoaderIcon />}
-      {AllLeaves && <Table columns={columns} dataSource={sorteduserLeaves} />}
-    </div>
+      <div className="gap-4 mb-5 admin-leave-page-container">
+        <AdminLeaveModal
+          modalOpen={modalOpen}
+          setmodalOpen={setmodalOpen}
+          leavedata={leavedata}
+        />
+        <Input
+          className="p-2 border-2 rounded-lg border-blue-200"
+          placeholder="Search by name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          prefix={<SearchOutlined />}
+          style={{
+            marginBottom: "16px",
+            width: "300px",
+          }}
+        />
+        {isPending && <LoaderIcon />}
+        {AllLeaves && (
+          <Table
+            className="admin-leave-table"
+            columns={columns}
+            dataSource={sorteduserLeaves}
+            onChange={onChange}
+          />
+        )}
+      </div>
   );
 };
 
