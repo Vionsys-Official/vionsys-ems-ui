@@ -11,6 +11,15 @@ const AdminLeaveModal = (props) => {
   const { modalOpen, setmodalOpen, leavedata } = props;
   const { _id: leaveId, user: userId } = leavedata;
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   // create form in admin
 
   const handleSubmit = (values) => {
@@ -38,11 +47,12 @@ const AdminLeaveModal = (props) => {
   return (
     <main>
       <Modal
-        title="Employee Leave Request"
         open={modalOpen}
         footer={false}
         closeIcon={<HiXCircle size={25} onClick={() => setmodalOpen(false)} />}
+        className="font-medium"
       >
+        <h1 className="text-xl font-bold text-center mb-6 text-[#7498D0]">Employee Leave Request</h1>
         <Form
           name="Admin_Leave_Form"
           onFinish={handleSubmit}
@@ -62,7 +72,7 @@ const AdminLeaveModal = (props) => {
                 color="black"
               />
             </Form.Item>
-            <Form.Item label="Applied for days" name="days" className="w-full">
+            <Form.Item label="Applied For Days" name="days" className="w-full">
               <Input
                 type="text"
                 defaultValue={leavedata?.leaveDays}
@@ -71,17 +81,28 @@ const AdminLeaveModal = (props) => {
               />
             </Form.Item>
           </div>
-          <Form.Item label="leave Duration" name="duration" className="w-full">
-            <Input
-              type="text"
-              defaultValue={`${leavedata?.leaveStart?.slice(
-                0,
-                10
-              )} - ${leavedata?.leaveEnd?.slice(0, 10)}`}
-              disabled={true}
-              color="black"
-            />
-          </Form.Item>
+          <div className="firstrow flex gap-5">
+            <Form.Item
+              label="Leave Start Date"
+              name="duration"
+              className="w-full"
+            >
+              <Input
+                type="text"
+                defaultValue={formatDate(leavedata?.leaveStart)}
+                disabled={true}
+                color="black"
+              />
+            </Form.Item>
+            <Form.Item label="Leave End Date" name="duration" className="w-full">
+              <Input
+                type="text"
+                defaultValue={formatDate(leavedata?.leaveEnd)}
+                disabled={true}
+                color="black"
+              />
+            </Form.Item>
+          </div>
           <Form.Item label="Leave Reasons" name="reason" className="w-full">
             <Input
               type="text"
@@ -92,27 +113,27 @@ const AdminLeaveModal = (props) => {
           </Form.Item>
           <Form.Item
             className="w-full"
-            label="Select leave status"
+            label="Select Leave Status"
             name="leaveAdminstatus"
             rules={[{ required: true, message: "Please select the status" }]}
           >
-            <Select>
-              <Select.Option value="Approved">Approve</Select.Option>
-              <Select.Option value="Rejected">Reject</Select.Option>
+            <Select placeholder="Select Status">
+              <Select.Option value="Approved">Approved</Select.Option>
+              <Select.Option value="Rejected">Rejected</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
-            label="enter leave note "
+            label="Enter Leave Note"
             name="note"
-            rules={[{ required: true, message: "Please enter note" }]}
+            rules={[{ required: true,}]}
           >
-            <TextArea rows={2} placeholder="reason for leave request" />
+            <TextArea rows={2} placeholder="Provide Leave Note Here" />
           </Form.Item>
 
           <Button
             disabled={isPending || reajectPending}
             type="primary"
-            className="bg-slate-600 hover:bg-slate-500"
+            className="bg-[#7096d3]"
             htmlType="submit"
           >
             Update

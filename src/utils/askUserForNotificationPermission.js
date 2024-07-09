@@ -12,6 +12,7 @@ const askUserForNotificationPermission = async (sendNotificationToken) => {
       const NotificationToken = await getToken(messaging, {
         vapidKey: import.meta.env.VITE_VAPID_KEY,
       });
+      await sendNotificationToken(NotificationToken);
       return { NotificationToken };
     }
 
