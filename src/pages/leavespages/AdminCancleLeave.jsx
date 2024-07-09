@@ -5,6 +5,8 @@ import { format } from "date-fns";
 import { Input, Tag } from "antd";
 import { LoaderIcon } from "react-hot-toast";
 import UserLeaveHistory from "../../ui/leavesUI/UserLeaveHistory";
+import "../../utils/css/AdminLeavePage.css";
+import { SearchOutlined } from "@ant-design/icons";
 
 const AdminCancleLeave = () => {
   const { id } = getUserIdRole();
@@ -72,13 +74,13 @@ const AdminCancleLeave = () => {
     },
 
     {
-      title: "Request date",
+      title: "Request Date",
       dataIndex: "date",
       key: "date",
       render: (date) => (date ? format(new Date(date), "d-MM-yyyy") : "NA"),
     },
     {
-      title: "Cancelled date",
+      title: "Cancelled Date",
       dataIndex: "cancleDate",
       key: "cancleDate",
       render: (date) => (date ? format(new Date(date), "d-MM-yyyy") : "NA"),
@@ -100,7 +102,7 @@ const AdminCancleLeave = () => {
       dataIndex: "leaveStatus",
       key: "leaveStatus",
       render: (leaveStatus) => {
-        let color = "red";
+        let color = "black";
         return (
           <Tag color={color} key={leaveStatus}>
             {leaveStatus}
@@ -111,17 +113,24 @@ const AdminCancleLeave = () => {
   ];
 
   return (
-    <div className="px-5">
+    <div className="gap-4 mb-5 admin-leave-page-container">
       <Input
+        className="p-2 border-2 rounded-lg border-blue-200"
         placeholder="Search by name"
         value={searchName}
         onChange={(e) => setSearchName(e.target.value)}
-        style={{ marginBottom: "16px", width: "300px" }}
+        prefix={<SearchOutlined />}
+          style={{
+            marginBottom: "16px",
+            width: "300px",
+          }}
       />
+      <div className="admin-leave-table border-2 rounded-lg border-blue-200">
       {isPending && <LoaderIcon />}
       {data && (
         <UserLeaveHistory userleave={sorteduserLeaves} columns={columns} />
       )}
+      </div>
     </div>
   );
 };
