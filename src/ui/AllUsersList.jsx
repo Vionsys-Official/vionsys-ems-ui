@@ -53,8 +53,8 @@ const AllUsersList = () => {
     <>
       <div className="h-full p-8 w-full">
         <div className="">
-          <div>
-            <h1>All employees list</h1>
+          <div >
+            <h1 className="font-bold text-xl">All Employees List</h1>
           </div>
           <div className="flex gap-4 my-4">
             <Input
@@ -81,15 +81,15 @@ const AllUsersList = () => {
           <List
             itemLayout="horizontal"
             dataSource={userData}
-            renderItem={(item, index) => (
-              <List.Item className="bg-white rounded-md mb-1">
-                <div className="flex items-center gap-4 px-2">
+            renderItem={(item, index,) => (
+              <List.Item key={index} className="bg-white rounded-md mb-1">
+                <div className="flex items-center gap-4 px-6">
                   <Avatar
                     size={50}
                     src={`${item.profile || "../assets/illustration-businessman_53876-5856.jpg"}`}
                   />
                   <div>
-                    <div className="text-base">{item.title}</div>
+                    <div className="text-base font-semibold">{item.title}</div>
                     <div>{item?.designation}</div>
                   </div>
                 </div>
