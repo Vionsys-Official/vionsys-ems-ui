@@ -30,39 +30,37 @@ const Notifications = () => {
   };
 
   return (
-    <Card className="col-span-3">
-      <div className="flex justify-between items-center border-b pb-2">
-        <h1 className="text-xl">Notifications</h1>
+    <Card className="col-span-3 dark:border-none dark:bg-gray-700">
+      <div className="flex justify-between px-6 items-center border-b-2 rounded-3xl border-orange-500 pb-2">
+        <h1 className="text-xl dark:text-white">Notifications</h1>
         {role === "admin" && (
-          <Button type="default" onClick={() => setOpen(!open)}>
+          <Button className="bg-green-500 dark:border-none text-white hover:bg-green-600" type="default" onClick={() => setOpen(!open)}>
             Create
           </Button>
         )}
       </div>
       <List
-        className="overflow-scroll max-h-80 px-1"
+        className="overflow-scroll max-h-80 px-1 "
         itemLayout="horizontal"
         dataSource={dataArray}
         renderItem={(item, index) => (
-          <List.Item className="gap-8 pb-4">
+          <List.Item className=" border-b dark:border-zinc-500 dark:border-b">
             <Skeleton avatar title={false} active loading={isPending}>
               <List.Item.Meta
-                avatar={<Avatar src={`${item.avtar}`} />}
-                title={<p className="capitalize font-semibold">{item.title}</p>}
-                description={item.description}
+                avatar={<Avatar className="mt-2" src={`${item.avtar}`} />}
+                title={<p className="capitalize dark:text-white font-semibold">{item.title}</p>}
+                description={<p className="dark:text-zinc-300">{item.description}</p>}
               />
-
-
-
-              <div className="text-[#999] flex flex-col relative  pb-2">
+              <div className="text-[#999] dark:text-zinc-300 justify-center items-center flex flex-col relative space-y-1  pb-2">
                 {/* Format date here */}
-                <span>{format(new Date(item.date), "yyyy-MM-dd hh:mm:ss a")}</span>
-                <span>~ {item.username}</span>
+                <span className="text-sm">{format(new Date(item.date), "MM/dd/yyyy")}</span>
+                <span className="text-sm">{format(new Date(item.date), "hh:mm:ss a")}</span>
+                <span className="text-sm">~ {item.username}</span>
               </div>
-              <div className="flex absolute cursor-pointer right-0 pt-4 text-sm gap-2">
+              <div className="flex absolute cursor-pointer right-24 text-sm gap-2">
                 {role === "admin" && (
                   <Link onClick={() => handleDelete(item._id)} className="cursor-pointer">
-                    <AiOutlineDelete className="text-sm cursor-pointer text-red-600" />
+                    <AiOutlineDelete size={26} className="relative text-sm cursor-pointer hover:bg-red-700 bg-red-600 rounded-full p-1 text-white" />
                   </Link>
                 )}
               </div>

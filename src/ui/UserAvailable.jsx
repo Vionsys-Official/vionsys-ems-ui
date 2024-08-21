@@ -27,26 +27,27 @@ const UserAvailable = () => {
     { name: "Available", value: available },
     { name: "Unavailable", value: unAvailable},
   ];
-  const COLORS = ["#87d068","#ff3333", "#FFBB28", "#FF8042"];
+  const COLORS = ["#00C49F","#ff3333", "#00C49F", "#00C49F"];
 
   return (
-    <Card className="relative">
-      <h1 className="text-xl pb-2">Available</h1>
+    <Card className="relative dark:bg-gray-700 shadow-2xl dark:shadow-zinc-500  border-none">
+      <h1 className="text-xl font-semibold border-b-2 dark:text-white rounded-full py-2 border-orange-500 text-center">Available</h1>
       {isPending ? (
         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
           <LoaderIcon />
         </div>
       ) : (
-        <div className="">
-          <div className="py-2">
+        <div className=" pt-6">
+          <div className="py-2 pb-2 text-center">
             <Avatar.Group>
               {availableEmployees.map((item) => {
                 return (
-                  <AntToolTip key={item.name} title={item.name} placement="top">
+                  <AntToolTip key={item.name} title={item.name} placement="top" >
                     <Avatar
+                    className="hover:scale-125  transition-transform duration-200 ease-in-out"
                       style={{
                         backgroundColor: `${
-                          item.date ? "#87d068" : "#ff3333"
+                          item.date ? "#00C49F" : "#ff3333"
                         }  `,
                       }}
                       alt={item.name}
@@ -63,7 +64,7 @@ const UserAvailable = () => {
               <PieChart>
                 <Pie
                   data={chartData}
-                  cx={100}
+                  cx={150}
                   cy={100}
                   innerRadius={60}
                   outerRadius={80}
@@ -78,11 +79,12 @@ const UserAvailable = () => {
                     />
                   ))}
                 </Pie>
+                
                 <Tooltip />
                 <Legend
-                  align="right"
-                  verticalAlign="middle"
-                  layout="vertical"
+                  align="center"
+                  verticalAlign="bottom"
+                  layout="horizontal"
                 />
               </PieChart>
             </ResponsiveContainer>

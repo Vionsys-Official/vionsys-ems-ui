@@ -11,6 +11,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { logout } from "../services/authApi";
+import { GoCrossReference } from "react-icons/go";
 
 const Sidebar = ({ isMobile, onClose }) => {
   const { role } = getUserIdRole();
@@ -123,6 +124,20 @@ const Sidebar = ({ isMobile, onClose }) => {
               >
                 <MdPeople size={25} />
                 <p className="md:hidden ml-3">Employees</p>
+              </Link>
+            </Tooltip>
+            <Tooltip title={isMobile?"":"Leave History"} placement="right">
+              <Link
+                to="/AdminLeavePage"
+                className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
+                  isActive("/AdminLeavePage")
+                    ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                    : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+                }`}
+                onClick={() => handleLinkClick("/AdminLeavePage")}
+              >
+                <GoCrossReference size={25} />
+                <p className="md:hidden ml-3">Leave History</p>
               </Link>
             </Tooltip>
           </>

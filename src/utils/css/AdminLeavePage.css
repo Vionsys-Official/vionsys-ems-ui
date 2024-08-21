@@ -1,0 +1,50 @@
+/* AdminLeavePage.css */
+
+.admin-leave-page-container {
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  .admin-leave-table {
+    width: 100%;
+    border: 1px solid #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    border-width: 2px;
+    border-radius: 0.5rem;
+    border-color: #BFDBFE;
+  }
+  
+  .admin-leave-table th, .admin-leave-table td {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .admin-leave-table th {
+    background-color: #fafafa;
+    font-weight: bold;
+  }
+  
+  .admin-leave-table td {
+    background-color: #fff;
+  }
+  
+  .admin-leave-table tr:nth-child(even) td {
+    background-color: #f1f1f1;
+  }
+  
+  .admin-leave-table .ant-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .admin-leave-table .ant-tag {
+    border-radius: 5px;
+    border: 1px solid;
+  }
+
+  .ant-table-filter-dropdown-btns .ant-btn-primary {
+    background-color: #1890ff !important; /* Blue color */
+    border-color: #1890ff !important; /* Blue color */
+  }
