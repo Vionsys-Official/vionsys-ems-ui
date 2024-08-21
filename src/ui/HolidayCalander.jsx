@@ -183,6 +183,7 @@ const HolidayCalander = () => {
             onChange={(e) => setYear(e)}
             defaultValue={new Date().getFullYear()}
             placeholder="Calender Year"
+            className="mt-3"
           >
             <Select.Option value={2024}>2024</Select.Option>
             <Select.Option value={2025}>2025</Select.Option>
@@ -190,42 +191,44 @@ const HolidayCalander = () => {
             <Select.Option value={2027}>2027</Select.Option>
             <Select.Option value={2028}>2028</Select.Option>
           </Select>
-        </div>
-        <p className="px-5">You can see a list of holidays in the calendar year.</p>
-      </div>
-      <div className="flex justify-center items-center gap-3 m-3">
-        {
-          mode === "fixed" ? "" : (
-            <div className="px-4 py-1 text-red-500 bg-white rounded-md">
-              <h3>You can take only one floater leave.</h3>
-            </div>
-          )
-        }
-        <div className="w-fit border-b border-black p-2">
-          <button
-            className={`px-3 py-1  rounded-lg ${mode === "fixed" ? "bg-blue-400 text-white" : ""
-              }`}
-            onClick={() => setMode("fixed")}
-          >
-            Fixed Holidays
-          </button>
-          {/* Button to switch to Floater Holidays mode */}
-          <button
-            className={`px-3 py-1 rounded-lg ${mode === "floater" ? "bg-blue-400 text-white" : ""
-              }`}
-            onClick={() => setMode("floater")}
-          >
-            Floater Holidays
-          </button>
-        </div>
-        <div className="holiday_create">
+          <div className="holiday_create mt-3">
           {role == "admin" && (
             <Button type="default" className="bg-white" onClick={() => setcreationmodal(true)}>
               Create a new Holiday
             </Button>
           )}
         </div>
+        </div>
+
+        <p className="px-2">
+          You can see a list of holidays in the calendar year.
+        </p>
       </div>
+      <div className="flex justify-center items-center gap-3 m-3">
+        <div className="w-fit border-b p-2">
+          <button
+            className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${mode==="fixed" ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm focus:outline-none sm:text-base bg-[#7498d0] text-white " : ""}`}
+            onClick={() => setMode("fixed")}
+          >
+            Fixed Holidays
+          </button>
+          
+          <button
+             className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${mode==="floater" ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm text-white focus:outline-none sm:text-base bg-[#7498d0]" : ""}`}
+            onClick={() => setMode("floater")}
+          >
+            Floater Holidays
+          </button>
+          
+        </div>
+      </div>
+      {mode === "fixed" ? (
+          ""
+        ) : (
+          <div className="px-5 py-1">
+            <h3 className="p-1  rounded-md text-center font-semibold text-red-500 bg-white">You can take only one floater leave</h3>
+          </div>
+        )}
       {/* Render table based on mode */}
       {isPending ? (
         "Loading..."
@@ -236,7 +239,6 @@ const HolidayCalander = () => {
           className="px-5"
         />
       )}
-
     </div>
   );
 };
