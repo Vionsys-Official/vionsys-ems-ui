@@ -51,8 +51,8 @@ const AllUsersList = () => {
   };
 
   return (
-    <>
-      <div className="h-full p-8 w-full">
+    <section className="py-5">
+      <div className="h-full p-5 w-full">
         <div className="">
           <div>
             <h1 className="font-bold text-xl">All Employees List</h1>
@@ -108,7 +108,7 @@ const AllUsersList = () => {
           />
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
