@@ -141,7 +141,8 @@ const TaskPage = () => {
 
 
   return (
-    <div className="gap-4 mb-5 admin-leave-page-container">
+    <section className='p-5'>
+      <div className="gap-4 mb-5 admin-leave-page-container">
       {isPending ? <h1>Loading....</h1> :
         <div className='border-2 rounded-lg border-blue-200'>
           <Table columns={columns} dataSource={dataSource} />
@@ -151,6 +152,7 @@ const TaskPage = () => {
         </div>
       }
     </div>
+    </section>
   );
 }
 

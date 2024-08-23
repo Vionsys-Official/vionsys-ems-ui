@@ -18,7 +18,9 @@ const AdminCancleLeave = () => {
   AllLeaves?.forEach((leave) => {
     leave?.leaves?.forEach((leaveData) => {
       const fullName = `${leave?.firstName} ${leave?.lastName}`;
-      if (fullName.toLocaleLowerCase().includes(searchName.toLocaleLowerCase())) {
+      if (
+        fullName.toLocaleLowerCase().includes(searchName.toLocaleLowerCase())
+      ) {
         dataSource.push({
           key: leaveData?._id,
           email: leave?.email,
@@ -113,25 +115,27 @@ const AdminCancleLeave = () => {
   ];
 
   return (
-    <div className="gap-4 mb-5 admin-leave-page-container">
-      <Input
-        className="p-2 border-2 rounded-lg border-blue-200"
-        placeholder="Search by name"
-        value={searchName}
-        onChange={(e) => setSearchName(e.target.value)}
-        prefix={<SearchOutlined />}
+    <section className="py-5">
+      <div className="gap-4 mb-5 admin-leave-page-container">
+        <Input
+          className="p-2 border-2 rounded-lg border-blue-200"
+          placeholder="Search by name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          prefix={<SearchOutlined />}
           style={{
             marginBottom: "16px",
             width: "300px",
           }}
-      />
-      <div className="admin-leave-table border-2 rounded-lg border-blue-200">
-      {isPending && <LoaderIcon />}
-      {data && (
-        <UserLeaveHistory userleave={sorteduserLeaves} columns={columns} />
-      )}
+        />
+        <div className="admin-leave-table border-2 rounded-lg border-blue-200">
+          {isPending && <LoaderIcon />}
+          {data && (
+            <UserLeaveHistory userleave={sorteduserLeaves} columns={columns} />
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

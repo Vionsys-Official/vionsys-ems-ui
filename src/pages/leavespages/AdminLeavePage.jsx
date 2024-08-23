@@ -70,14 +70,14 @@ const AdminLeavePage = () => {
       dataIndex: "leaveStatus",
       key: "leaveStatus",
       filters: [
-        {text: 'Rejected', value: 'Rejected', },
-        {text: 'Expired', value: 'Expired', },
-        {text: 'Cancelled', value: 'Cancelled', },
-        {text: 'Approved', value: 'Approved', },
-        {text: 'Pending', value: 'Pending', },
+        { text: "Rejected", value: "Rejected" },
+        { text: "Expired", value: "Expired" },
+        { text: "Cancelled", value: "Cancelled" },
+        { text: "Approved", value: "Approved" },
+        { text: "Pending", value: "Pending" },
       ],
       onFilter: (value, record) => record.leaveStatus === value,
-    filterSearch: true,
+      filterSearch: true,
       render: (leaveStatus) => {
         let color = "";
         switch (leaveStatus) {
@@ -136,21 +136,24 @@ const AdminLeavePage = () => {
   const sorteduserLeaves = dataSource?.sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
-  
+
   const handleCancelLeave = (record) => {
     if (record.leaveStatus === "Pending") {
       setleavedata(record);
       setmodalOpen(true);
     } else {
-      toast.error(`Cannot modify leave request with status: ${record.leaveStatus}.`); //Only pending leave requests can be approved or rejected.
+      toast.error(
+        `Cannot modify leave request with status: ${record.leaveStatus}.`
+      ); //Only pending leave requests can be approved or rejected.
     }
   };
 
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
+    console.log("params", pagination, filters, sorter, extra);
   };
 
   return (
+    <section className="py-5">
       <div className="gap-4 mb-5 admin-leave-page-container">
         <AdminLeaveModal
           modalOpen={modalOpen}
@@ -178,6 +181,7 @@ const AdminLeavePage = () => {
           />
         )}
       </div>
+    </section>
   );
 };
 
