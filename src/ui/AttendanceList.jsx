@@ -106,8 +106,8 @@ const AttendanceList = () => {
     <div className="attendance-list-container dark:bg-gray-800 ">
       <div className="flex-row gap-4 mb-5 rounded-lg dark:border-gray-800">
         <ExcelForm isModalOpen={modal} setIsModalOpen={setModal} />
-        <div className="attendance-list-header">
-          <h2 className="attendance-list-title">Attendance List :</h2>
+        <div className="attendance-list-header flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-gray-600">
+          <h2 className="attendance-list-title">Attendance List</h2>
           <Popover
             placement="topLeft"
             title="Get Excel"
@@ -121,14 +121,16 @@ const AttendanceList = () => {
             </Button>
           </Popover>
         </div>
+        <div className="border-2 rounded-lg border-blue-200 dark:border-gray-600">
         {isPending && <LoaderIcon />}
         <Table
-          className="attendance-list-table"
+          className="attendance-list-table "
           scroll={{ x: 800 }}
           columns={columns}
           dataSource={dataSource}
           rowClassName="attendance-list-row"
         />
+        </div>
       </div>
     </div>
   );

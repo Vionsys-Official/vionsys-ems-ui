@@ -1,5 +1,5 @@
 import { LoaderIcon } from "react-hot-toast";
-// import UserCard from "./UserCard";
+// import UserCard from "./UserCard"; asch
 import useGetAllUsers from "../features/users/useGetAllUsers";
 import CreateNewUser from "../pages/CreateNewUser";
 import withAuth from "../store/withAuth";
@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Avatar, Button, List, Input } from "antd";
 import getUserIdRole from "../utils/getUserIdRole";
 import { Link } from "react-router-dom";
+import { SearchOutlined } from "@ant-design/icons";
 
 const AllUsersList = () => {
   const { id } = getUserIdRole();
@@ -41,7 +42,7 @@ const AllUsersList = () => {
         <Link to={`${item?._id}`}>{`${item.firstName} ${item?.lastName}`}</Link>
       ),
       designation: item?.designation,
-      profile:item?.profile,
+      profile: item?.profile,
     };
   });
 
@@ -53,18 +54,19 @@ const AllUsersList = () => {
     <>
       <div className="h-full p-8 w-full">
         <div className="">
-          <div >
+          <div>
             <h1 className="font-bold text-xl">All Employees List</h1>
           </div>
-          <div className="flex gap-4 my-4">
+          <div className="flex gap-4">
             <Input
-              className="p-2"
+              className="p-2 my-4 flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-gray-600"
               placeholder="Search users"
               onChange={handleSearch}
               value={searchQuery}
+              prefix={<SearchOutlined />}
             />
             <Button
-              className="bg-slate-100 dark:bg-slate-500 dark:text-slate-100"
+              className="bg-slate-100 dark:bg-slate-500 dark:text-slate-100 my-4 flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-gray-600"
               size="large"
               onClick={showModal}
             >
@@ -81,12 +83,15 @@ const AllUsersList = () => {
           <List
             itemLayout="horizontal"
             dataSource={userData}
-            renderItem={(item, index,) => (
+            renderItem={(item, index) => (
               <List.Item key={index} className="bg-white rounded-md mb-1">
                 <div className="flex items-center gap-4 px-6">
                   <Avatar
                     size={50}
-                    src={`${item.profile || "../assets/illustration-businessman_53876-5856.jpg"}`}
+                    src={`${
+                      item.profile ||
+                      "../assets/illustration-businessman_53876-5856.jpg"
+                    }`}
                   />
                   <div>
                     <div className="text-base font-semibold">{item.title}</div>
