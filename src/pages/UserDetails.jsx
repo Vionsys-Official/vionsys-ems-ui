@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetCurrentUser from "../features/users/useGetCurrentUser";
 import { HiTrash, HiPencil } from "react-icons/hi";
 import { LoaderIcon } from "react-hot-toast";
@@ -36,12 +36,12 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="p-4 fixed w-[84vw] flex justify-center items-center  dark:text-slate-600 overflow-hidden ">
-      <div className="relative grid grid-cols-1 md:grid-cols-5 px-4 gap-6 md:pt-14 pt-20 bg-white dark:bg-slate-400 py-8 w-full justify-around items-start ">
-        <div className="flex flex-col col-span-2 gap-2 shadow-xl bg-white  p-6 rounded-lg border  ">
-        <div className="flex flex-col justify-center items-center 
-        ">
-          <img
+    <div className="p-2 w-full rounded-xl flex justify-center items-center  dark:text-slate-600 overflow-hidden ">
+      <div className="relative rounded-xl grid grid-cols-1 md:grid-cols-5 px-4 gap-6 md:pt-14 pt-20 bg-white dark:bg-slate-400 py-8 w-full justify-around items-start ">
+        <div className="flex flex-col col-span-2 gap-2 shadow-xl bg-slate-100 p-6 rounded-lg border  ">
+        <div className="flex flex-col justify-center items-center">
+         <div className="rounded-full border-2 border-blue-200">
+         <img
             className="w-40 h-40 rounded-full object-cover shadow-md mx-auto"
             src={
               userData?.profile ||
@@ -49,6 +49,7 @@ const UserDetails = () => {
             }
             alt="profile"
           />
+         </div>
           <p className="text-xl mt-4 font-bold dark:text-black text-center">
             {`${userData?.firstName} ${userData?.lastName}`}
           </p>
@@ -59,7 +60,7 @@ const UserDetails = () => {
           {`${userData?.designation}`}
           </p>
           </div>
-          <div className="flex flex-col gap-2 justify-start items-start  py-2 rounded-lg pl-4  border">
+          <div className="flex bg-white flex-col gap-2 justify-start items-start  py-2 rounded-lg pl-4  border">
           <p className="text-xl  font-bold text-center  dark:text-black">
            Basic Information
           </p>
@@ -73,7 +74,7 @@ const UserDetails = () => {
           <span>
           <MdOutlinePhoneInTalk className="w-5 h-5 dark:text-black"/>
           </span>
-            <span className="text-slate-700 dark:text-black">{userData?.emergencyPhone ? userData.emergencyPhone : "N/A"}</span>
+            <span className="text-slate-700 dark:text-black">{userData?.phone ? userData.phone : "N/A"}</span>
           </p>
           <p className="text-lg flex items-center gap-2">
           <span>
@@ -157,44 +158,62 @@ const UserDetails = () => {
             </Tooltip>
           </div>
         </div>
-        <div className="flex flex-col  gap-4  col-span-3 h-[74vh] ">
+
+        <div className="relative flex flex-col  gap-4  col-span-3 h-full ">
         <div className="flex flex-col gap-3 border shadow-lg p-4 dark:bg-white rounded-lg h-full">
-        
-          <p className="text-xl font-bold flex justify-start items-start dark:text-black py-2 px-4">
+         <p className="text-xl font-bold flex justify-start items-start dark:text-black py-2 px-4">
           Personal Information
           </p>
-        <div className="w-[90%] flex pb-6 px-4 ">
-        <div className="flex flex-col gap-3 w-1/2">
-        <p className="text-lg ">
-            <span className="block text-black font-semibold dark:text-black">
+          <div className="w-full flex px-4 ">
+        <div className="flex flex-col gap-3 pb-4 w-full">
+        <p className="text-lg flex ">
+            <span className="block w-1/2 text-black font-semibold dark:text-black">
               Personal Email:
             </span>
+            <p className="text-lg w-1/2 text-gray-700 dark:text-black">
+            {userData?.personalEmail ? userData.personalEmail : "N/A"}
           </p>
-          <p className="text-lg font-semibold">
-            <span className="block text-black dark:text-black">
+          </p>
+          <p className="text-lg flex">
+            <span className="block w-1/2 font-semibold text-black dark:text-black">
               Contact No:
             </span>
+            <p className="text-lg w-1/2 text-gray-700 dark:text-black">
+            {userData?.emergencyPhone ? userData.emergencyPhone : "N/A"}
           </p>
-          <p className="text-lg font-semibold">
-            <span className="block text-black dark:text-black">
+          </p>
+          <p className="text-lg flex">
+            <span className="block w-1/2 font-semibold text-black dark:text-black">
               Date of Birth:
             </span>
+            <p className="text-lg w-1/2 text-gray-700 dark:text-black">
+          {userData?.dob ? new Date(userData.dob).toLocaleDateString() : "N/A"}
           </p>
-          <p className="text-lg font-semibold">
-            <span className="text-black dark:text-black font-semibold">Gender :</span>
           </p>
-          <p className="text-lg font-semibold">
-            <span className="block text-black dark:text-black">
+          <p className="text-lg flex">
+            <span className="text-black w-1/2 dark:text-black font-semibold">Gender :</span>
+            <p className="text-lg w-1/2 text-gray-700 dark:text-black">
+          {userData?.gender ? userData.gender : "N/A"}
+          </p>
+          </p>
+          <p className="text-lg flex">
+            <span className="block w-1/2 font-semibold text-black dark:text-black">
               Permanent Address:
             </span>
+            <p className="text-lg w-1/2 text-gray-700 dark:text-black">
+          {userData?.PerAddress ? userData.PerAddress : "N/A"}
+          </p>
           </p>    
-          <p className="text-lg font-semibold">
-            <span className="block text-black dark:text-black">
+          <p className="text-lg flex">
+            <span className="block w-1/2 font-semibold text-black dark:text-black">
               Current Address:
-            </span>            
+            </span>  
+            <p className="text-lg w-1/2 text-gray-700 dark:text-black">
+          {userData?.TempAddress ? userData.TempAddress : "N/A"} 
+          </p>          
           </p>
           </div>
-          <div className="w-1/2 flex flex-col gap-3">
+          {/* <div className="w-1/2 flex flex-col gap-3">
           <p className="text-lg  text-gray-700 dark:text-black">
             {userData?.personalEmail ? userData.personalEmail : "N/A"}
           </p>
@@ -213,9 +232,11 @@ const UserDetails = () => {
           <p className="text-lg text-gray-700 dark:text-black">
           {userData?.TempAddress ? userData.TempAddress : "N/A"} 
           </p>
-          </div>
+          </div> */}
           </div>
         </div>
+
+
           <div className="flex flex-row  py-5 justify-between items-center px-8  shadow-lg border rounded-lg dark:bg-white
            gap-8 h-full">
           <p className="text-lg text-gray-700 dark:text-black">
