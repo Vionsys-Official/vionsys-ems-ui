@@ -22,51 +22,61 @@ const LeaveForm = () => {
   const { TextArea } = Input;
   const [leaveDays, setLeaveDays] = useState(0);
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: null,
+    endDate: null,
     key: "selection",
   });
   const [selectedLeaveType, setSelectedLeaveType] = useState(""); // State to track selected leave type
 
   const onFinish = (values) => {
     const { startDate, endDate } = dateRange;
-    const leaveStart = startDate.toISOString();
-    const leaveEnd = endDate.toISOString();
+    const leaveStart = startDate ? startDate.toISOString() : null;
+    const leaveEnd = endDate ? endDate.toISOString() : null;
     values.leaveDays = leaveDays;
     const data = { userId, leaveStart, leaveEnd, ...values };
     console.log(data);
     createRequest(data);
+    form.resetFields();
   };
 
   useEffect(() => {
-    const actualLeaveDays = Math.ceil(
-      (new Date(dateRange?.endDate).getTime() -
-        new Date(dateRange?.startDate).getTime()) /
-      (1000 * 60 * 60 * 24) +
-      1
-    );
-
-    setLeaveDays(actualLeaveDays);
+    if (dateRange.startDate && dateRange.endDate) {
+      const actualLeaveDays = Math.ceil(
+        (new Date(dateRange.endDate).getTime() -
+          new Date(dateRange.startDate).getTime()) /
+          (1000 * 60 * 60 * 24) +
+          1
+      );
+      setLeaveDays(actualLeaveDays);
+    }
   }, [dateRange]);
+
   const handleLeaveTypeChange = (value) => {
     setSelectedLeaveType(value); // Update selected leave type
   };
 
+  const [form] = Form.useForm();
+
   return (
-    <div className=" bg-white p-5 rounded-md">
-      <h1 className="text-xl font-bold">Vionsys Leave Request Form</h1>
+    <div className=" bg-white p-5 rounded-md font-medium">
+      <h1 className="text-center text-xl font-bold mb-3 text-[#7498D0]">Vionsys Leave Request Form</h1>
       <p className="p-2">In case of a one-day leave, just select the start date.</p>
       <div title="leave Form" visible={true} footer={false}>
-        <div className="flex w-full">
+        <div className="flex w-full mb-4">
           <Space direction="vertical" size={20}>
-            <RangePicker
+          <RangePicker
               onChange={(e) =>
-                setDateRange({ startDate: e[0].$d, endDate: e[1].$d })
+                setDateRange({
+                  startDate: e[0]?.toDate(),
+                  endDate: e[1]?.toDate(),
+                  key: "selection",
+                })
               }
             />
           </Space>
         </div>
         <Form
+        form={form}
           name="myForm"
           onFinish={onFinish}
           layout="vertical"
@@ -83,7 +93,7 @@ const LeaveForm = () => {
                 <Input
                   placeholder="Leave Days"
                   type="number"
-                  defaultValue={leaveDays ? leaveDays : 0}
+                  defaultValue={leaveDays}
                   disabled={true}
                 />
               </Form.Item>
@@ -151,7 +161,7 @@ const LeaveForm = () => {
             <Button
               disabled={isPending}
               type="primary"
-              className="bg-slate-600 hover:bg-slate-500"
+              className="bg-[#7498D0] hover:bg-slate-500"
               htmlType="submit"
             >
               Apply for leave

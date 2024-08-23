@@ -21,11 +21,18 @@ const LeavesHistory = () => {
   const [leaveId, setleaveId] = useState("");
   const [modal, setmodal] = useState(false);
   const [cancleReason, setcancleReason] = useState("");
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
 
   const handleCancelLeave = (user, record) => {
-    setmodal(true);
-    setleaveUser(user);
-    setleaveId(record?._id);
+    if (record.leaveStatus === "Pending" || record.leaveStatus === "Approved") {
+      setmodal(true);
+      setleaveUser(user);
+      setleaveId(record?._id);
+      setIsFormDisabled(false);
+    } else {
+      toast.error("Only pending & approved leaves can be cancelled.");
+      setIsFormDisabled(true);
+    }
   };
 
   const handleCancelLeaveSumbit = () => {
@@ -34,6 +41,8 @@ const LeavesHistory = () => {
       return;
     }
     cancleRequest({ user: leaveUser, leaveId, cancleReason });
+    setmodal(false);
+    setcancleReason("");
   };
 
   const columns = [
@@ -88,20 +97,32 @@ const LeavesHistory = () => {
       title: "Leave Status",
       dataIndex: "leaveStatus",
       key: "leaveStatus",
+      filters: [
+        { text: "Rejected", value: "Rejected" },
+        { text: "Expired", value: "Expired" },
+        { text: "Cancelled", value: "Cancelled" },
+        { text: "Approved", value: "Approved" },
+        { text: "Pending", value: "Pending" },
+      ],
+      onFilter: (value, record) => record.leaveStatus === value,
+      filterSearch: true,
       render: (leaveStatus) => {
         let color = "";
         switch (leaveStatus) {
           case "Pending":
-            color = "yellow";
+            color = "#FAAD14";
             break;
           case "Approved":
-            color = "green";
+            color = "darkgreen";
             break;
           case "Rejected":
-            color = "red";
+            color = "darkred";
+            break;
+          case "Cancelled":
+            color = "black";
             break;
           default:
-            color = "";
+            color = "gray";
         }
         return (
           <Tag color={color} key={leaveStatus}>
@@ -129,39 +150,45 @@ const LeavesHistory = () => {
   ];
 
   return (
-    <main className="p-5">
-      {isPending && <LoaderIcon />}
+    <section className="py-5">
+      <main className="p-5 gap-4 mb-5 admin-leave-page-container">
+      <div className="border-2 rounded-lg border-blue-200">
+        {isPending && <LoaderIcon />}
 
-      <Modal
-        title="Cancel Leave Request"
-        open={modal}
-        footer={false}
-        closeIcon={<HiXCircle size={25} onClick={() => setmodal(false)} />}
-      >
-        <div className="flex flex-col gap-3">
-          <h1 className="text-red-700">
-            Do you really want to cancel this leave request ?
-          </h1>
-          <Input
-            onChange={(e) => setcancleReason(e.target.value)}
-            value={cancleReason}
-            placeholder="Reason"
-          />
-          <Button
-            type="primary"
-            danger
-            className="text-red-600 hover:bg-red-600 hover:text-white"
-            onClick={handleCancelLeaveSumbit}
-          >
-            Cancel Leave
-          </Button>
+        <Modal
+          title="Cancel Leave Request"
+          open={modal}
+          footer={false}
+          closeIcon={<HiXCircle size={25} onClick={() => setmodal(false)} />}
+        >
+          <div className="flex flex-col gap-3">
+            <h1 className="text-red-700">
+              Do you really want to cancel this leave request ?
+            </h1>
+            <Input
+              onChange={(e) => setcancleReason(e.target.value)}
+              value={cancleReason}
+              placeholder="Reason"
+              disabled={isFormDisabled}
+            />
+            <Button
+              type="primary"
+              danger
+              className="text-red-600 hover:bg-red-600 hover:text-white"
+              onClick={handleCancelLeaveSumbit}
+              disabled={isFormDisabled}
+            >
+              Cancel Leave
+            </Button>
+          </div>
+        </Modal>
+
+        <div style={{ overflowX: "auto" }}>
+          <UserLeaveHistory userleave={sorteduserLeaves} columns={columns} />
         </div>
-      </Modal>
-
-      <div style={{ overflowX: "auto" }}>
-        <UserLeaveHistory userleave={sorteduserLeaves} columns={columns} />
       </div>
     </main>
+    </section>
   );
 };
 
