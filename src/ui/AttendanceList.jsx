@@ -35,7 +35,7 @@ const AttendanceList = () => {
       title: "EMP Name",
       fixed: "left",
       width: 120,
-      render: (text) => <span className="font-semibold">{text}</span>
+      render: (text) => <span className="font-semibold">{text}</span>,
     },
     {
       key: "date",
@@ -103,34 +103,38 @@ const AttendanceList = () => {
   });
 
   return (
-    <div className="attendance-list-container dark:bg-gray-800 ">
-      <div className="flex-row gap-4 mb-5 rounded-lg dark:border-gray-800">
-        <ExcelForm isModalOpen={modal} setIsModalOpen={setModal} />
-        <div className="attendance-list-header">
-          <h2 className="attendance-list-title">Attendance List :</h2>
-          <Popover
-            placement="topLeft"
-            title="Get Excel"
-            style={{ width: "100px" }}
-          >
-            <Button
-              className="attendance-list-excel-button bg-green-500 text-white"
-              onClick={() => setModal(true)}
+    <section className="py-5">
+      <div className="attendance-list-container dark:bg-gray-800 ">
+        <div className="flex-row gap-4 mb-5 rounded-lg dark:border-gray-800">
+          <ExcelForm isModalOpen={modal} setIsModalOpen={setModal} />
+          <div className="attendance-list-header flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-gray-600">
+            <h2 className="attendance-list-title">Attendance List</h2>
+            <Popover
+              placement="topLeft"
+              title="Get Excel"
+              style={{ width: "100px" }}
             >
-              <RiFileExcel2Line />
-            </Button>
-          </Popover>
+              <Button
+                className="attendance-list-excel-button bg-green-500 text-white"
+                onClick={() => setModal(true)}
+              >
+                <RiFileExcel2Line />
+              </Button>
+            </Popover>
+          </div>
+          <div className="border-2 rounded-lg border-blue-200 dark:border-gray-600">
+            {isPending && <LoaderIcon />}
+            <Table
+              className="attendance-list-table "
+              scroll={{ x: 800 }}
+              columns={columns}
+              dataSource={dataSource}
+              rowClassName="attendance-list-row"
+            />
+          </div>
         </div>
-        {isPending && <LoaderIcon />}
-        <Table
-          className="attendance-list-table"
-          scroll={{ x: 800 }}
-          columns={columns}
-          dataSource={dataSource}
-          rowClassName="attendance-list-row"
-        />
       </div>
-    </div>
+    </section>
   );
 };
 

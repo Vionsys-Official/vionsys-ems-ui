@@ -72,13 +72,13 @@ const TaskPage = () => {
       render: (_, { status }) => (
         <>
           {status === 'PENDING' && (
-            <Tag color="yellow">Pending</Tag>
+            <Tag color="#FAAD14">Pending</Tag>
           )}
           {status === 'INPROGRESS' && (
-            <Tag color="blue">In Progress</Tag>
+            <Tag color="darkblue">In Progress</Tag>
           )}
           {status === 'COMPLETED' && (
-            <Tag color="green">Completed</Tag>
+            <Tag color="darkgreen">Completed</Tag>
           )}
         </>
       ),
@@ -99,11 +99,11 @@ const TaskPage = () => {
       render: (_, { status, id }) => (
         <div className='flex gap-4 flex-1'>
           {/* Start button */}
-          <span className={`flex justify-center items-center gap-1 border px-2 rounded-md bg-blue-400 text-white cursor-pointer hover:bg-white hover:text-blue-400 hover:border-blue-400 py-1 ${status === 'INPROGRESS' || status === 'COMPLETED' ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`} onClick={() => handleStartTask(id)}>
+          <span title="Start Task" className={`flex justify-center items-center gap-1 border px-2 rounded-md bg-blue-400 text-white cursor-pointer hover:bg-white hover:text-blue-400 hover:border-blue-400 py-1 ${status === 'INPROGRESS' || status === 'COMPLETED' ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`} onClick={() => handleStartTask(id)}>
             {!isSubmitting ? <LuListTodo size={20} /> : <Spin />}
           </span>
           {/* Complete button */}
-          <span className={`flex justify-center items-center gap-1 border px-2 rounded-md bg-green-400 text-white cursor-pointer hover:bg-white hover:text-green-400 hover:border-green-400 py-1 ${status === 'PENDING' || status === 'COMPLETED' ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`} onClick={() => handleCompleteTask(id)}>
+          <span title="Complete Task" className={`flex justify-center items-center gap-1 border px-2 rounded-md bg-green-400 text-white cursor-pointer hover:bg-white hover:text-green-400 hover:border-green-400 py-1 ${status === 'PENDING' || status === 'COMPLETED' ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`} onClick={() => handleCompleteTask(id)}>
             {!isCompleted ? <IoCheckmarkDone size={20} /> : <Spin />}
           </span>
         </div>
@@ -141,16 +141,18 @@ const TaskPage = () => {
 
 
   return (
-    <>
+    <section className='p-5'>
+      <div className="gap-4 mb-5 admin-leave-page-container">
       {isPending ? <h1>Loading....</h1> :
-        <>
+        <div className='border-2 rounded-lg border-blue-200'>
           <Table columns={columns} dataSource={dataSource} />
           <Modal open={modalData.visible} onCancel={handleModalClose} footer={null}>
             <p>{modalData.description}</p>
           </Modal>
-        </>
+        </div>
       }
-    </>
+    </div>
+    </section>
   );
 }
 
