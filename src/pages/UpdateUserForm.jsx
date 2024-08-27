@@ -252,9 +252,15 @@ const UpdateUserForm = () => {
             >
               <Select defaultValue="Select">
                 <Select.Option value="Shubham Kale">Shubham Kale</Select.Option>
-                <Select.Option value="Pankaj Kandhare">Pankaj Kandhare</Select.Option>
-                <Select.Option value="Govind Rathod">Govind Rathod</Select.Option>
+                <Select.Option value="Pankaj Kandhare">
+                  Pankaj Kandhare
+                </Select.Option>
+                <Select.Option value="Govind Rathod">
+                  Govind Rathod
+                </Select.Option>
                 <Select.Option value="Nilam Rathod">Nilam Rathod</Select.Option>
+                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
               </Select>
             </Form.Item>
 
@@ -262,9 +268,16 @@ const UpdateUserForm = () => {
             <Form.Item label="Team Lead" name="teamLead" className="flex-1">
               <Select defaultValue="Select">
                 <Select.Option value="Shubham Kale">Shubham Kale</Select.Option>
-                <Select.Option value="Pankaj Kandhare">Pankaj Kandhare</Select.Option>
-                <Select.Option value="Govind Rathod">Govind Rathod</Select.Option>
+                <Select.Option value="Pankaj Kandhare">
+                  Pankaj Kandhare
+                </Select.Option>
+                <Select.Option value="Govind Rathod">
+                  Govind Rathod
+                </Select.Option>
                 <Select.Option value="Nilam Rathod">Nilam Rathod</Select.Option>
+                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
+                <Option value="Prem Khadekar">Prem Khadekar</Option>
               </Select>
             </Form.Item>
           </div>
