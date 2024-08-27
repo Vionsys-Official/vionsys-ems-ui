@@ -2,15 +2,18 @@ import { Button, Form, Input, Modal, Select, Upload } from "antd";
 import { HiXCircle } from "react-icons/hi";
 import useSignup from "../features/authentication/useSignup";
 import { useState } from "react";
-import { useFormData } from "../features/users/useFormData";
 
 const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
   const [file, setFile] = useState();
+  const [form] = Form.useForm();
   const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
   const genders = ["Male", "Female", "Other"];
   const { Option } = Select;
+
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields(); // Reset form fields on cancel
+    setFile(null); // Reset file state on cancel
   };
   const { signup, isPending } = useSignup();
 
@@ -38,6 +41,7 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
         footer={false}
       >
         <Form
+          form={form}
           name="myForm"
           onFinish={onFinish}
           layout="vertical"
@@ -328,6 +332,8 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
                 <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
                 <Option value="Govind Rathod">Govind Rathod</Option>
                 <Option value="Nilam Rathod">Nilam Rathod</Option>
+                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
               </Select>
             </Form.Item>
 
@@ -338,6 +344,9 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
                 <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
                 <Option value="Govind Rathod">Govind Rathod</Option>
                 <Option value="Nilam Rathod">Nilam Rathod</Option>
+                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
+                <Option value="Prem Khadekar">Prem Khadekar</Option>
               </Select>
             </Form.Item>
           </div>
