@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast, { LoaderIcon } from "react-hot-toast";
 import { PiPhoneCallLight } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
@@ -113,18 +113,18 @@ const UserProfile = () => {
                     <LoaderIcon />
                 ) : (
                     <>
-                        <div className="w-[100%] grid md:grid-cols-4 grid-cols-1 bg-white rounded-md shadow-lg">
+                        <div className="w-full flex bg-white rounded-md shadow-lg">
                             {/* Your JSX for user profile */}
                             {/* left side image */}
-                            <div className="flex items-center col-span-1">
-                                <img src={userData?.data?.user?.profile} className="rounded-l-md w-[250px] h-[200px]" alt="" />
+                            <div className="relative rounded-md border-2 border-blue-200 flex items-center justify-center">
+                                <img src={userData?.data?.user?.profile} className="rounded-md object-cover" width={230} height={230} alt="" />
                             </div>
                             {/* right side image */}
-                            <div className="col-span-3">
+                            <div className="w-full">
                                 {/* first */}
-                                <div className="p-4 flex flex-col gap-2">
+                                <div className="p-4 flex flex-col h-full justify-center gap-2">
                                     <div className="flex gap-2 items-center">
-                                        <h1 className="text-2xl text-center">{`${userData?.data?.user?.firstName} ${userData?.data?.user?.lastName}`}</h1>
+                                        <h1 className="text-2xl font-bold text-center">{`${userData?.data?.user?.firstName} ${userData?.data?.user?.lastName}`}</h1>
                                         <h2>
                                             <span className="">
                                                 {userData?.data?.user?.isVerified ? (
@@ -142,7 +142,7 @@ const UserProfile = () => {
                                             </span>
                                         </h2>
                                     </div>
-                                    <div className="flex  flex-wrap justify-between items-center">
+                                    <div className="flex flex-wrap justify-between items-center">
                                         <div className="flex justify-center items-center gap-2">
                                             <CiLocationOn />
                                             <span>{userData?.data?.user?.TempAddress}</span>
@@ -186,17 +186,17 @@ const UserProfile = () => {
                             {/* Highlight section */}
                             <HighlightsBDWA />
                             <Card className="col-span-1 shadow-md">
-                                <div className='flex flex-col gap-2 pt-0'>
+                                <div className='flex p-3 rounded-md border-2 border-blue-200 flex-col'>
                                     <h2 className="text-lg text-center mb-2">Your Attendance</h2>
                                     <h4 className="text-center text-4xl mb-2">{!tableLoading ? startTime : "00:00:00"}</h4>
-                                    <div className="border rounded-md mb-4 flex-1 text-[#888] p-2 flex flex-col gap-2">
+                                    <div className="border bg-slate-100 rounded-md mb-4 flex-1 text-[#888] p-2 flex flex-col gap-2">
                                         <div className="flex justify-between">
                                             <span>Break Time:</span>
-                                            <span>1PM-2PM or 4PM to 5PM(1 hour)</span>
+                                            <span>1 hour during 10AM - 7PM</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span>Target Hours:&nbsp;</span>
-                                            <span>08:H 15M (per day)</span>
+                                            <span>08H 15M (per day)</span>
                                         </div>
                                     </div>
                                     <div className="flex gap-6 justify-center items-center">

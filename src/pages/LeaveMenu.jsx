@@ -39,7 +39,7 @@ const LeaveMenu = () => {
           Leaves Activity
         </Link>
         <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === " Leaves History" ? "font-bold text-blue-300" : ""
+          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Leaves History" ? "font-bold text-blue-300" : ""
             }`}
           onClick={() => handleSidebarLinkClick("Leaves History")}
         >

@@ -1,14 +1,15 @@
 import { Button, Form, Input, Select } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useGetCurrentUser from "../features/users/useGetCurrentUser";
-
 import useUpdate from "../features/authentication/useUpdate";
 import { useUpdateFormData } from "../features/users/useUpdateFormData";
 
 const UpdateUserForm = () => {
   const [file, setFile] = useState();
   const { userId } = useParams();
+  const navigate = useNavigate();
   const { update, isPending } = useUpdate();
   const { user } = useGetCurrentUser(userId);
   let userObject = user?.data.user;
@@ -71,9 +72,18 @@ const UpdateUserForm = () => {
       update(values);
     }
   };
+
+  const handleCancel = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   return (
     <div className="flex justify-center items-center py-4">
-      <div className="px-4 py-4 bg-white w-[75%] border rounded-xl">
+      <div className="px-4 py-4 bg-white w-[75%] border rounded-xl relative">
+        <CloseOutlined
+          className="absolute top-4 right-4 text-base cursor-pointer bg-slate-500 hover:bg-slate-400 rounded-full p-1 text-white"
+          onClick={handleCancel}
+        />
         <h4 className="text-center pb-4 font-bold text-yellow-300 text-2xl">
           Update Employee Data
         </h4>
@@ -166,9 +176,9 @@ const UpdateUserForm = () => {
             <Form.Item label="Blood Group" name="bloodGroup" className="flex-1">
               <Select placeholder="Select Blood Group">
                 {bloodGroups.map((group) => (
-                  <Option key={group} value={group}>
+                  <Select.Option key={group} value={group}>
                     {group}
-                  </Option>
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -177,9 +187,9 @@ const UpdateUserForm = () => {
             <Form.Item label="Gender" name="gender" className="flex-1">
               <Select placeholder="Select Gender">
                 {genders.map((gender) => (
-                  <Option key={gender} value={gender}>
+                  <Select.Option key={gender} value={gender}>
                     {gender}
-                  </Option>
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -241,20 +251,33 @@ const UpdateUserForm = () => {
               className="flex-1"
             >
               <Select defaultValue="Select">
-                <Option value="Shubham Kale">Shubham Kale</Option>
-                <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
-                <Option value="Govind Rathod">Govind Rathod</Option>
-                <Option value="Nilam Rathod">Nilam Rathod</Option>
+                <Select.Option value="Shubham Kale">Shubham Kale</Select.Option>
+                <Select.Option value="Pankaj Kandhare">
+                  Pankaj Kandhare
+                </Select.Option>
+                <Select.Option value="Govind Rathod">
+                  Govind Rathod
+                </Select.Option>
+                <Select.Option value="Nilam Rathod">Nilam Rathod</Select.Option>
+                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
               </Select>
             </Form.Item>
 
             {/* Team Lead */}
             <Form.Item label="Team Lead" name="teamLead" className="flex-1">
               <Select defaultValue="Select">
-                <Option value="Shubham Kale">Shubham Kale</Option>
-                <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
-                <Option value="Govind Rathod">Govind Rathod</Option>
-                <Option value="Nilam Rathod">Nilam Rathod</Option>
+                <Select.Option value="Shubham Kale">Shubham Kale</Select.Option>
+                <Select.Option value="Pankaj Kandhare">
+                  Pankaj Kandhare
+                </Select.Option>
+                <Select.Option value="Govind Rathod">
+                  Govind Rathod
+                </Select.Option>
+                <Select.Option value="Nilam Rathod">Nilam Rathod</Select.Option>
+                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
+                <Option value="Prem Khadekar">Prem Khadekar</Option>
               </Select>
             </Form.Item>
           </div>
@@ -267,7 +290,7 @@ const UpdateUserForm = () => {
               htmlType="submit"
               loading={isPending}
             >
-              update
+              Update
             </Button>
           </Form.Item>
         </Form>

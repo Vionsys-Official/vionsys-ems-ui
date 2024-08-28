@@ -73,28 +73,28 @@ const AdminDashboard = () => {
       id: 1,
       title: "Total Employees",
       value: `${availableEmployees?.length}`,
-      icon: <GoPeople size={30} className="text-cyan-400" />
+      icon: <GoPeople size={30} className="text-cyan-700" />
     }
     , {
       id: 2,
       title: "Available Employees",
       value: `${available}`,
-      icon: <FiUserCheck size={30} className="text-green-400" />
+      icon: <FiUserCheck size={30} className="text-green-600" />
     }, {
       id: 3,
       title: "Unavailable Employees",
       value: `${unAvailable}`,
-      icon: <BsPersonX size={30} className="text-red-300" />
+      icon: <BsPersonX size={30} className="text-red-500" />
     }
   ]
   return (
-    <>
-      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-8 px-8 pt-8">
+    <div className="bg-white dark:bg-[#475569]">
+      <div className="grid md:grid-cols-3 sm:grid-cols-2 shadow-2xl  grid-cols-1 gap-x-8 px-8 py-4">
         {
           emps_data.map((item) => (
-            <div key={item.id} className="flex flex-wrap gap-2 p-4 bg-white justify-evenly items-center rounded-md">
+            <div key={item.id} className="flex shadow-md flex-wrap  p-4 rounded-3xl  bg-white justify-between items-center " style={{ backgroundImage: `url('/assets/cardBg.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
               <div className="bg-slate-100 rounded-full p-4">{item.icon}</div>
-              <div className="flex flex-col">
+              <div className="flex flex-col space-y-4 text-center">
                 <h3 className="text-md">{item.title}</h3>
                 <p>{item.value}</p>
               </div>
@@ -105,21 +105,20 @@ const AdminDashboard = () => {
 
       <div className="p-8 grid md:grid-cols-3 gap-2 relative overflow-x-hidden">
         <UserAvailable />
-        <Card>
-          <h1 className="text-xl">Employees By Gender</h1>
+        <Card className="dark:bg-gray-700 shadow-2xl dark:shadow-zinc-500 mx-3 border-none">
+          <h1 className="text-xl font-semibold border-b-2 dark:text-white rounded-full py-2 border-orange-500 text-center">Employees By Gender</h1>
           <div className="top-0 relative flex justify-center items-center">
             <ResponsiveContainer minHeight={320} >
               <PieChart>
                 <Pie
                   data={chartData}
-                  cx={130}
-                  cy={130}
+                  cx={140}
+                  cy={150}
                   labelLine={false}
                   label={renderCustomizedLabel}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                  fill="#8884d8"
+                  outerRadius={120}
+                  paddingAngle={1}
+                  dataKey="value"  
                 >
                   {chartData.map((entry, index) => (
                     <Cell
@@ -142,7 +141,7 @@ const AdminDashboard = () => {
         <Notifications />
 
       </div>
-    </>
+    </div>
   );
 };
 

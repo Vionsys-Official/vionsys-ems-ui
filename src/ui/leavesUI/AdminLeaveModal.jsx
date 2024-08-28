@@ -29,7 +29,10 @@ const AdminLeaveModal = (props) => {
       approveLeave(
         { leaveId, userId, note },
         {
-          onSettled: () => setmodalOpen(false),
+          onSettled: () => {
+            setmodalOpen(false);
+            form.resetFields(); // Reset form fields after operation completes
+          },
         }
       );
       return;
@@ -37,15 +40,20 @@ const AdminLeaveModal = (props) => {
       rejectLeave(
         { leaveId, userId, note },
         {
-          onSettled: () => setmodalOpen(false),
+          onSettled: () => {
+            setmodalOpen(false);
+            form.resetFields(); // Reset form fields after operation completes
+          },
         }
       );
       return;
     }
   };
 
+  const [form] = Form.useForm();
+
   return (
-    <main>
+    <main className="">
       <Modal
         open={modalOpen}
         footer={false}
@@ -54,6 +62,7 @@ const AdminLeaveModal = (props) => {
       >
         <h1 className="text-xl font-bold text-center mb-6 text-[#7498D0]">Employee Leave Request</h1>
         <Form
+        form={form}
           name="Admin_Leave_Form"
           onFinish={handleSubmit}
           layout="vertical"

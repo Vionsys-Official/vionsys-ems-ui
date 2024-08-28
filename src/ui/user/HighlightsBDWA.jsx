@@ -30,8 +30,8 @@ const HighlightsBDWA = () => {
 
 
     return (
-        <Card className="col-span-1 shadow-md relative">
-            <h3 className='pb-2 font-semibold'>Highlights</h3>
+        <Card className="col-span-1 dark:bg-gray-700 shadow-2xl dark:shadow-zinc-500 border-none relative">
+            <h3 className='text-xl font-semibold border-b-2 dark:text-white rounded-full py-2 border-orange-500 text-center'>Highlights</h3>
             {showConfetti && (
                 <ReactConfetti
                     width={400}
@@ -45,14 +45,14 @@ const HighlightsBDWA = () => {
             )}
             {TodaysBirthday && TodaysBirthday?.length > 0 && (
                 <List
-                    className="overflow-scroll max-h-40 border-b"
+                    className="overflow-scroll max-h-40 "
                     itemLayout="horizontal"
                     dataSource={TodaysBirthday}
                     renderItem={(item, index) => (
                         <List.Item className="bg-cyan-100 rounded-lg mb-1">
                             <Skeleton avatar title={false} active loading={isLoading}>
                                 <List.Item.Meta
-                                    avatar={<Avatar src={`${item.profile}`} />}
+                                    avatar={<Avatar  src={`${item.profile}`} />}
                                     title={<p className="capitalize font-semibold">{item.firstName}&nbsp;{item.lastName}</p>}
                                     description="Birthday"
                                 />
@@ -66,18 +66,19 @@ const HighlightsBDWA = () => {
             )}
             {UpcomingBirthday && UpcomingBirthday?.length > 0 && (
                 <List
-                    className="overflow-scroll max-h-40 px-1 border-b"
+                    className="overflow-scroll pt-4 max-h-40 px-1 border-b dark:border-zinc-500 " 
                     itemLayout="horizontal"
                     dataSource={UpcomingBirthday}
                     renderItem={(item, index) => (
-                        <List.Item className="pb-4 bg-yellow-100 mb-1 rounded-md">
+                        <List.Item className=" rounded-md">
                             <Skeleton avatar title={false} active loading={isLoading}>
                                 <List.Item.Meta
-                                    avatar={<Avatar src={`${item.profile}`} />}
-                                    title={<p className="capitalize font-semibold">{item.firstName}&nbsp;{item.lastName}</p>}
-                                    description="Upcoming Birthday"
+                                className='px-3 dark:text-white'
+                                    avatar={<Avatar className='mt-2' src={`${item.profile}`} />}
+                                    title={<p className="capitalize dark:text-white  font-semibold">{item.firstName}&nbsp;{item.lastName}</p>}
+                                    description={<p className='text-green-500 font-semibold '>Upcoming Birthday</p> }
                                 />
-                                <div className="text-[#999] flex flex-col relative  pb-2">
+                                <div className="text-[#999] px-4 flex dark:text-white flex-col relative  pb-2">
                                     <span>{format(new Date(item.dob), "dd/MM/yyyy")}</span>
                                 </div>
                             </Skeleton>

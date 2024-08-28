@@ -1,13 +1,11 @@
 import { Button, Checkbox, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import { DateRangePicker } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import { DatePicker, Space } from "antd";
 import getUserIdRole from "../../utils/getUserIdRole";
 import useCreateLeaveRequest from "../../features/leaves/useCreateLeaveRequest";
-import FormItem from "antd/es/form/FormItem";
-import { DatePicker, Space } from "antd";
 import React from "react";
+import moment from "moment"; 
+
 const { RangePicker } = DatePicker;
 
 const LeaveForm = () => {
@@ -22,51 +20,79 @@ const LeaveForm = () => {
   const { TextArea } = Input;
   const [leaveDays, setLeaveDays] = useState(0);
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: null,
+    endDate: null,
     key: "selection",
   });
-  const [selectedLeaveType, setSelectedLeaveType] = useState(""); // State to track selected leave type
+  const [selectedLeaveType, setSelectedLeaveType] = useState(""); 
+  const [form] = Form.useForm();
 
   const onFinish = (values) => {
     const { startDate, endDate } = dateRange;
-    const leaveStart = startDate.toISOString();
-    const leaveEnd = endDate.toISOString();
-    values.leaveDays = leaveDays;
+    const leaveStart = startDate ? startDate.toISOString() : null;
+    const leaveEnd = endDate ? endDate.toISOString() : null;
+    values.leaveDays = leaveDays; 
     const data = { userId, leaveStart, leaveEnd, ...values };
     console.log(data);
     createRequest(data);
+    form.resetFields();
+    setDateRange({ startDate: null, endDate: null, key: "selection" });
+    setLeaveDays(0);
   };
 
   useEffect(() => {
-    const actualLeaveDays = Math.ceil(
-      (new Date(dateRange?.endDate).getTime() -
-        new Date(dateRange?.startDate).getTime()) /
-      (1000 * 60 * 60 * 24) +
-      1
-    );
-
-    setLeaveDays(actualLeaveDays);
+    if (dateRange.startDate && dateRange.endDate) {
+      const actualLeaveDays =
+        Math.ceil(
+          (new Date(dateRange.endDate).getTime() -
+            new Date(dateRange.startDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1;
+      setLeaveDays(actualLeaveDays);
+    } else {
+      setLeaveDays(0);
+    }
   }, [dateRange]);
+
+  const handleRangeChange = (dates) => {
+    if (dates) {
+      setDateRange({
+        startDate: dates[0]?.toDate(),
+        endDate: dates[1]?.toDate(),
+        key: "selection",
+      });
+    } else {
+      setDateRange({ startDate: null, endDate: null, key: "selection" });
+    }
+  };
+
   const handleLeaveTypeChange = (value) => {
-    setSelectedLeaveType(value); // Update selected leave type
+    setSelectedLeaveType(value);
   };
 
   return (
-    <div className=" bg-white p-5 rounded-md">
-      <h1 className="text-xl font-bold">Vionsys Leave Request Form</h1>
-      <p className="p-2">In case of a one-day leave, just select the start date.</p>
+    <div className="bg-white p-5 rounded-md font-medium">
+      <h1 className="text-center text-xl font-bold mb-3 text-[#7498D0]">
+        Vionsys Leave Request Form
+      </h1>
+      <p className="p-2">
+        In case of a one-day leave, just select the start date.
+      </p>
       <div title="leave Form" visible={true} footer={false}>
-        <div className="flex w-full">
+        <div className="flex w-full mb-4">
           <Space direction="vertical" size={20}>
             <RangePicker
-              onChange={(e) =>
-                setDateRange({ startDate: e[0].$d, endDate: e[1].$d })
+              value={
+                dateRange.startDate && dateRange.endDate
+                  ? [moment(dateRange.startDate), moment(dateRange.endDate)]
+                  : []
               }
+              onChange={handleRangeChange}
             />
           </Space>
         </div>
         <Form
+          form={form}
           name="myForm"
           onFinish={onFinish}
           layout="vertical"
@@ -75,18 +101,18 @@ const LeaveForm = () => {
         >
           <div className="flex justify-between gap-8">
             {selectedLeaveType !== "Floater Leave" && (
-              <Form.Item
-                label="Enter Leave Days"
-                name="leaveDays"
-                className="w-full"
-              >
+              <div className="w-full">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Enter Leave Days
+                </label>
                 <Input
                   placeholder="Leave Days"
                   type="number"
-                  defaultValue={leaveDays ? leaveDays : 0}
+                  value={leaveDays}
                   disabled={true}
+                  className="w-full"
                 />
-              </Form.Item>
+              </div>
             )}
             <Form.Item
               label="Leave Mode"
@@ -131,10 +157,11 @@ const LeaveForm = () => {
                 ]}
               >
                 <Select>
-                  {" "}
-                  {floaterDays.map((days) => {
-                    return <Select.Option value={days}>{days}</Select.Option>;
-                  })}
+                  {floaterDays.map((days) => (
+                    <Select.Option value={days} key={days}>
+                      {days}
+                    </Select.Option>
+                  ))}
                 </Select>
               </Form.Item>
             )}
@@ -151,7 +178,7 @@ const LeaveForm = () => {
             <Button
               disabled={isPending}
               type="primary"
-              className="bg-slate-600 hover:bg-slate-500"
+              className="bg-[#7498D0] hover:bg-slate-500"
               htmlType="submit"
             >
               Apply for leave

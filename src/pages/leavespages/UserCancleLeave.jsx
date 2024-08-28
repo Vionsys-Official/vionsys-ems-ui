@@ -75,7 +75,7 @@ const UserCancleLeave = () => {
       dataIndex: "leaveStatus",
       key: "leaveStatus",
       render: (leaveStatus) => {
-        let color = "red";
+        let color = "darkred";
         return (
           <Tag color={color} key={leaveStatus}>
             {leaveStatus}
@@ -86,10 +86,14 @@ const UserCancleLeave = () => {
   ];
 
   return (
-    <div className="p-5">
-      {isPending && <LoaderIcon />}
-      <UserLeaveHistory userleave={CancledLeaves} columns={columns} />
-    </div>
+    <section className="py-5">
+      <div className="p-5 gap-4 mb-5 admin-leave-page-container">
+        <div className="border-2 rounded-lg border-blue-200">
+          {isPending && <LoaderIcon />}
+          <UserLeaveHistory userleave={CancledLeaves} columns={columns} />
+        </div>
+      </div>
+    </section>
   );
 };
 

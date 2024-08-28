@@ -44,7 +44,7 @@ const JoiningKitOfEmpForAdmin = () => {
             title: "Assigned Date",
             dataIndex: "assignDate",
             key: "assignDate",
-            render: (date) => (date ? format(new Date(date), "dd MMM yyyy") : ""),
+            render: (date) => (date ? format(new Date(date), "MM/dd/yyyy") : ""),
         },
         {
             title: "Assigned By",
@@ -55,7 +55,7 @@ const JoiningKitOfEmpForAdmin = () => {
             title: "Returned Date",
             dataIndex: "returnedDate",
             key: "returnedDate",
-            render: (date) => (date ? format(new Date(date), "dd MMM yyyy") : "-"),
+            render: (date) => (date ? format(new Date(date), "MM/dd/yyyy") : "-"),
         },
         {
             title: 'Actions',
@@ -75,7 +75,7 @@ const JoiningKitOfEmpForAdmin = () => {
         }
     ];
     return (
-        <main className="flex flex-col gap-4">
+        <main className="flex flex-col gap-4 ">
             {/* Add welcome kit for the user */}
             <AddWelcomeKit isModalOpen={isWelcomeKitModalOpen} setIsModalOpen={setIsWelcomeKitModalOpen} userId={userId} />
             <div className="flex gap-2 flex-col justify-center items-center">

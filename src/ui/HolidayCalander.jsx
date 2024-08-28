@@ -103,7 +103,7 @@ const HolidayCalander = () => {
   };
 
   return (
-    <div>
+    <div className="py-5">
       {/* holiday delete modal form */}
       <Modal
         className="delete_holiday"
@@ -192,12 +192,16 @@ const HolidayCalander = () => {
             <Select.Option value={2028}>2028</Select.Option>
           </Select>
           <div className="holiday_create mt-3">
-          {role == "admin" && (
-            <Button type="default" className="bg-white" onClick={() => setcreationmodal(true)}>
-              Create a new Holiday
-            </Button>
-          )}
-        </div>
+            {role == "admin" && (
+              <Button
+                type="default"
+                className="bg-white"
+                onClick={() => setcreationmodal(true)}
+              >
+                Create a new Holiday
+              </Button>
+            )}
+          </div>
         </div>
 
         <p className="px-2">
@@ -207,38 +211,51 @@ const HolidayCalander = () => {
       <div className="flex justify-center items-center gap-3 m-3">
         <div className="w-fit border-b p-2">
           <button
-            className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${mode==="fixed" ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm focus:outline-none sm:text-base bg-[#7498d0] text-white " : ""}`}
+            className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${
+              mode === "fixed"
+                ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm focus:outline-none sm:text-base bg-[#7498d0] text-white "
+                : ""
+            }`}
             onClick={() => setMode("fixed")}
           >
             Fixed Holidays
           </button>
-          
+
           <button
-             className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${mode==="floater" ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm text-white focus:outline-none sm:text-base bg-[#7498d0]" : ""}`}
+            className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${
+              mode === "floater"
+                ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm text-white focus:outline-none sm:text-base bg-[#7498d0]"
+                : ""
+            }`}
             onClick={() => setMode("floater")}
           >
             Floater Holidays
           </button>
-          
         </div>
       </div>
       {mode === "fixed" ? (
-          ""
-        ) : (
-          <div className="px-5 py-1">
-            <h3 className="p-1  rounded-md text-center font-semibold text-red-500 bg-white">You can take only one floater leave</h3>
-          </div>
-        )}
-      {/* Render table based on mode */}
-      {isPending ? (
-        "Loading..."
+        ""
       ) : (
-        <Table
-          dataSource={mode === "fixed" ? fixedHolidays : floaterHolidays}
-          columns={columns}
-          className="px-5"
-        />
+        <div className="px-5 py-1">
+          <h3 className="p-1 text-center font-semibold text-red-500 bg-white border-2 rounded-lg border-blue-200 dark:border-gray-600">
+            You can take only one floater leave
+          </h3>
+        </div>
       )}
+      {/* Render table based on mode */}
+      <div className="p-5 gap-3 mb-4 admin-leave-page-container">
+        <div className="border-2 rounded-lg border-blue-200 dark:border-gray-600">
+          {isPending ? (
+            "Loading..."
+          ) : (
+            <Table
+              dataSource={mode === "fixed" ? fixedHolidays : floaterHolidays}
+              columns={columns}
+              className=""
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
