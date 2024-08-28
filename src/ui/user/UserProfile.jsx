@@ -195,8 +195,12 @@ const UserProfile = () => {
                                             <span>1 hour during 10AM - 7PM</span>
                                         </div>
                                         <div className="flex justify-between">
+                                            <span>Working Hours:&nbsp;</span>
+                                            <span>08H 00M (per day)</span>
+                                        </div>
+                                        <div className="flex justify-between">
                                             <span>Target Hours:&nbsp;</span>
-                                            <span>08H 15M (per day)</span>
+                                            <span>09H 15M (per day)</span>
                                         </div>
                                     </div>
                                     <div className="flex gap-6 justify-center items-center">

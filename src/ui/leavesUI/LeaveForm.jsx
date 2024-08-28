@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { DatePicker, Space } from "antd";
 import getUserIdRole from "../../utils/getUserIdRole";
 import useCreateLeaveRequest from "../../features/leaves/useCreateLeaveRequest";
-import React from "react";
 import moment from "moment"; 
+import { message } from "antd";
 
 const { RangePicker } = DatePicker;
 
@@ -15,7 +15,7 @@ const LeaveForm = () => {
     "11-Apr-24/Ramzan",
     "29-Oct-24/Dhanteras",
   ];
-  const { data, createRequest, isPending } = useCreateLeaveRequest();
+  const { createRequest, isPending } = useCreateLeaveRequest();
   const { id: userId } = getUserIdRole();
   const { TextArea } = Input;
   const [leaveDays, setLeaveDays] = useState(0);
@@ -26,6 +26,7 @@ const LeaveForm = () => {
   });
   const [selectedLeaveType, setSelectedLeaveType] = useState(""); 
   const [form] = Form.useForm();
+  const [show, setShow] = useState(false)
 
   const onFinish = (values) => {
     const { startDate, endDate } = dateRange;
@@ -38,6 +39,7 @@ const LeaveForm = () => {
     form.resetFields();
     setDateRange({ startDate: null, endDate: null, key: "selection" });
     setLeaveDays(0);
+    setShow(false)
   };
 
   useEffect(() => {
@@ -49,6 +51,7 @@ const LeaveForm = () => {
             (1000 * 60 * 60 * 24)
         ) + 1;
       setLeaveDays(actualLeaveDays);
+      setShow(true)
     } else {
       setLeaveDays(0);
     }
@@ -69,6 +72,13 @@ const LeaveForm = () => {
   const handleLeaveTypeChange = (value) => {
     setSelectedLeaveType(value);
   };
+
+  function handleClear() {
+    setDateRange({ startDate: null, endDate: null, key: "selection" });
+    form.resetFields();
+    message.info("Form clear successfully.");
+    setShow(false)
+  }
 
   return (
     <div className="bg-white p-5 rounded-md font-medium">
@@ -174,7 +184,9 @@ const LeaveForm = () => {
             <TextArea rows={4} placeholder="Reason for leave request" />
           </Form.Item>
 
-          <Form.Item>
+          
+            <div className="flex justify-between">
+            <Form.Item>
             <Button
               disabled={isPending}
               type="primary"
@@ -183,7 +195,19 @@ const LeaveForm = () => {
             >
               Apply for leave
             </Button>
-          </Form.Item>
+            </Form.Item>
+            {show?(<Button
+              disabled={isPending}
+              onClick={handleClear}
+              type="text"
+              className="bg-[#f75341] text-white hover:bg-red-700"
+              htmlType="reset"
+            >
+              Clear
+            </Button>):""}
+            </div>
+          
+         
         </Form>
       </div>
     </div>
