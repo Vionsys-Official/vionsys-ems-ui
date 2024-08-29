@@ -332,7 +332,7 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
                 <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
                 <Option value="Govind Rathod">Govind Rathod</Option>
                 <Option value="Nilam Rathod">Nilam Rathod</Option>
-                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Anjlee Chadar">Anjlee Chadar</Option>
                 <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
               </Select>
             </Form.Item>
@@ -344,9 +344,11 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
                 <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
                 <Option value="Govind Rathod">Govind Rathod</Option>
                 <Option value="Nilam Rathod">Nilam Rathod</Option>
-                <Option value="Anjalee Chadar">Anjalee Chadar</Option>
+                <Option value="Anjlee Chadar">Anjlee Chadar</Option>
                 <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
                 <Option value="Prem Khadekar">Prem Khadekar</Option>
+                <Option value="Sagar Yenkure">Sagar Yenkure</Option>
+                <Option value="Ravikant Waghmare">Ravikant Waghmare</Option>
               </Select>
             </Form.Item>
           </div>

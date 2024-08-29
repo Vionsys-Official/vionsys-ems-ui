@@ -29,11 +29,11 @@ const ProfileSubMenu = () => {
                     Joining Kit
                 </Link>
                 <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Previous Work" ? "font-bold text-blue-300" : ""
+                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Previous Experience" ? "font-bold text-blue-300" : ""
                         }`}
-                    onClick={() => handleSidebarLinkClick("Previous Work")}
+                    onClick={() => handleSidebarLinkClick("Previous Experience")}
                 >
-                    Previous Work
+                    Previous Experience
                 </Link>
             </div>
 
@@ -41,7 +41,7 @@ const ProfileSubMenu = () => {
             <div className="p-4 ml-40 flex-1 w-full">
                 {activeLink === "Profile" && <UserDetails />}
                 {activeLink === "Joining Kit" && <JoiningKitOfEmpForAdmin />}
-                {activeLink === "Previous Work" && <PreviousWork />}
+                {activeLink === "Previous Experience" && <PreviousWork />}
             </div>
         </div>
     )

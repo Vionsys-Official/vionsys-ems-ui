@@ -34,11 +34,11 @@ const Dashboard = () => {
           Employment Type
         </Link> */}
         <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Previous Work" ? "font-bold text-blue-300" : ""
+          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Previous Experience" ? "font-bold text-blue-300" : ""
             }`}
-          onClick={() => handleSidebarLinkClick("Previous Work")}
+          onClick={() => handleSidebarLinkClick("Previous Experience")}
         >
-          Previous work
+          Previous Experience
         </Link>
         <Link
           className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Joining Kit" ? "font-bold text-blue-300" : ""
@@ -66,7 +66,7 @@ const Dashboard = () => {
             }`}
           onClick={() => handleSidebarLinkClick("HolidayCalander")}
         >
-          Holiday Calender
+          Holiday Calendar
         </Link>
       </div>
 
@@ -74,14 +74,14 @@ const Dashboard = () => {
       <div className="p-4 ml-52 flex-1 w-full">
         {activeLink === "Profile" && <UserProfile />}
         {/* {activeLink === "Employment Type" && <EmploymentType />} */}
-        {activeLink === "Previous Work" && <PreviousWork />}
+        {activeLink === "Previous Experience" && <PreviousWork />}
         {activeLink === "Joining Kit" && <JoiningKit />}
         {/* {activeLink === "Documents" && <UserDocuments />} */}
         {activeLink === "HolidayCalander" && <HolidayCalander />}
         {activeLink === "Attendance" && <UserAttendance />}
         {activeLink !== "Profile" &&
           // activeLink !== "Employment Type" &&
-          activeLink !== "Previous Work" &&
+          activeLink !== "Previous Experience" &&
           activeLink !== "Joining Kit" &&
           activeLink !== "Attendance" &&
           activeLink !== "HolidayCalander" && (
