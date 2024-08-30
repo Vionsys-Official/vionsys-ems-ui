@@ -23,6 +23,7 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
       form.append(key, values[key]);
     }
     form.append("file", file);
+    // console.log(form.get("role"));
 
     signup(form, {
       onSettled: () => {
@@ -349,6 +350,16 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
                 <Option value="Prem Khadekar">Prem Khadekar</Option>
                 <Option value="Sagar Yenkure">Sagar Yenkure</Option>
                 <Option value="Ravikant Waghmare">Ravikant Waghmare</Option>
+              </Select>
+            </Form.Item>
+
+            {/* Role */}
+            <Form.Item label="Role" name="role" className="flex-1" rules={[
+                { required: true, message: "Please enter your role" },
+              ]}>
+              <Select defaultValue="Select">
+                <Option value="admin">Admin</Option>
+                <Option value="user">User</Option>
               </Select>
             </Form.Item>
           </div>
