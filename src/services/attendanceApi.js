@@ -1,7 +1,4 @@
-import getUserIdRole from "../utils/getUserIdRole";
 import { api } from "./authApi";
-
-const { id } = getUserIdRole();
 
 export const createAttendance = async ({ user, time, timeTag, note }) => {
   let payload =
@@ -14,13 +11,15 @@ export const createAttendance = async ({ user, time, timeTag, note }) => {
   return response.data;
 };
 
-export const getAttendance = async () => {
+export const getAttendance = async (id) => {
+  // console.log(id)
   const token = localStorage.getItem("token");
   const response = await api.get(`/attendance/find/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  // console.log(response.data)
   return response.data;
 };
 

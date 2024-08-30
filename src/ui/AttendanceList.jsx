@@ -23,9 +23,11 @@ const AttendanceList = () => {
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); 
   const { data, isPending } = useGetAllAttendance();
+  // console.log(data?.data?.attendance)
   const [isCalendarShow, setIsCalendarShow] = useState(false);
 
   const handleCalendarClick = (user) => {
+    // console.log(user)
     setSelectedUser(user);
     setIsCalendarShow(true);
   };
@@ -102,6 +104,8 @@ const AttendanceList = () => {
   ];
 
   const dataSource = data?.data?.attendance?.map((item) => {
+    const uid=item?._id;
+    const ID = item?.attendances[0]?._id
     const loginTime = item?.attendances[0]?.loginTime
       ? dateToTime(item?.attendances[0]?.loginTime)
       : "-";
@@ -115,17 +119,20 @@ const AttendanceList = () => {
             item?.attendances[0]?.loginTime
           )
         : "-";
+        // console.log(data?.data?.attendance);
     return {
+      uid:item._id,
       name: `${item?.user?.firstName} ${item?.user?.lastName}`,
       date: dateFormatNormal(item?.attendances[0]?.date),
       employeeId: item?.user?.employeeId,
       loginTime,
       logoutTime,
+      ID,
       workTime,
       monthlyCalendar: "Calendar"
     };
   });
-
+  // console.log(dataSource)
   return (
     <section className="py-5">
       <div className="attendance-list-container dark:bg-gray-800 ">
@@ -162,10 +169,10 @@ const AttendanceList = () => {
       {/* Modal to show User Attendance */}
       <Modal
         title="User Attendance"
-        visible={isCalendarShow}
+        open={isCalendarShow}
         onCancel={handleCancel}
         footer={null}
-        width={900}
+        width={1200}
       >
         {selectedUser && <UserAttendance user={selectedUser} />}
       </Modal>
