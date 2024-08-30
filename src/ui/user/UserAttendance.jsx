@@ -29,37 +29,44 @@ const isAlternateSundayOff = (date) => {
   return dayOfWeek === 0 && moment(date).date() % 14 !== 0; // Alternate Sundays
 };
 
-const UserAttendance = ({user}) => {
-  const { data: employeesData, isPending: attendanceLoading } = 
-  useGetAttendance({ uid: user?.uid || null });
+const UserAttendance = ({ user }) => {
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  
+  const { data: employeesData, isPending: attendanceLoading } =
+    useGetAttendance({ uid: user?.uid || null, year: selectedYear, month: selectedMonth });
 
-    //  console.log(employeesData)
   const userAttendance = employeesData?.data?.attendance;
-//   console.log(userAttendance)
-  const { data: holidayList, isPending } = getholidayList(
-    new Date().getFullYear()
-  );
-//   console.log(holidayList?.fixedHolidays);
+  //   console.log(userAttendance)
+  const {
+    data: holidayList,
+    isPending: holidayLoading,
+  } = getholidayList(selectedYear);
+
+  //   console.log(holidayList?.fixedHolidays);
   const fixedHolidayList = holidayList?.fixedHolidays || [];
   const [events, setEvents] = useState([]);
+
 
   useEffect(() => {
     if (userAttendance && fixedHolidayList) {
       const processedEvents = generateEvents(userAttendance, fixedHolidayList);
+      if (JSON.stringify(events) !== JSON.stringify(processedEvents)) {
       setEvents(processedEvents);
     }
-  }, [userAttendance, fixedHolidayList]);
+    }
+  }, [userAttendance, fixedHolidayList, selectedYear, selectedMonth]);
 
   const generateEvents = (attendanceData, fixedHolidayList) => {
     const processedEvents = [];
     const today = new Date();
 
-    const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
-    const lastDayOfYear = new Date(today.getFullYear(), 11, 31);
+    const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1);
+    const lastDayOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
 
     for (
-      let date = new Date(firstDayOfYear);
-      date <= lastDayOfYear;
+      let date = new Date(firstDayOfMonth);
+      date <= lastDayOfMonth;
       date.setDate(date.getDate() + 1)
     ) {
       const dateString = moment(date).format("YYYY-MM-DD");
@@ -100,61 +107,68 @@ const UserAttendance = ({user}) => {
           // If attendance data exists, determine if the employee is present or absent
           if (attendanceEntry) {
             const loginTime = new Date(attendanceEntry?.loginTime);
-            const logoutTime = attendanceEntry?.logoutTime ? new Date(attendanceEntry.logoutTime) : null;
+            const logoutTime = attendanceEntry?.logoutTime
+              ? new Date(attendanceEntry.logoutTime)
+              : null;
 
-            if (loginTime <= today) {
+              if (loginTime <= today) {
                 if (logoutTime) {
-                    // Calculate work time duration
-                    const duration = moment.duration(logoutTime - loginTime);
-                    const hours = duration.hours();
-                    const minutes = duration.minutes();
+                // Calculate work time duration
+                const duration = moment.duration(logoutTime - loginTime);
+                const hours = duration.hours();
+                const minutes = duration.minutes();
 
-                    // Handle NaN cases
-                    const workTime = isNaN(hours) || isNaN(minutes) ? 'NA' : `${hours} hrs : ${minutes} mins`;
+                // Handle NaN cases
+                const workTime =
+                  isNaN(hours) || isNaN(minutes)
+                    ? "NA"
+                    : `${hours} hrs : ${minutes} mins`;
 
                     // Employee is present
-                    processedEvents.push({
-                        title: 'P',
-                        work: workTime,
-                        desc: `${moment(loginTime).format("hh:mm")} - ${moment(logoutTime).format("hh:mm")}`,
-                        start: new Date(dateString),
-                        end: new Date(dateString),
-                        type: 'present',
-                        classNames: 'present',
-                    });
-                } else {
-                    // Employee is present but logoutTime is missing
-                    processedEvents.push({
-                        title: 'P',
-                        work: 'NA',
-                        desc: `${moment(loginTime).format("hh:mm")} - NA`,
-                        start: new Date(dateString),
-                        end: new Date(dateString),
-                        type: 'present',
-                        classNames: 'present',
-                    });
-                }
+                processedEvents.push({
+                  title: "P",
+                  work: workTime,
+                  desc: `${moment(loginTime).format("hh:mm")} - ${moment(
+                    logoutTime
+                  ).format("hh:mm")}`,
+                  start: new Date(dateString),
+                  end: new Date(dateString),
+                  type: "present",
+                  classNames: "present",
+                });
+              } else {
+                // Employee is present but logoutTime is missing
+                processedEvents.push({
+                  title: "P",
+                  work: "NA",
+                  desc: `${moment(loginTime).format("hh:mm")} - NA`,
+                  start: new Date(dateString),
+                  end: new Date(dateString),
+                  type: "present",
+                  classNames: "present",
+                });
+              }
             }
-        } else if (date <= today) {
+          } else if (date <= today) {
             // Employee is absent
             processedEvents.push({
-                title: 'A',
-                start: new Date(dateString),
-                end: new Date(dateString),
-                type: 'absent',
-                classNames: 'absent',
+              title: "A",
+              start: new Date(dateString),
+              end: new Date(dateString),
+              type: "absent",
+              classNames: "absent",
             });
+          }
         }
+      }
     }
-}
-}
 
     return processedEvents;
   };
 
-  const eventStyleGetter = (event, start, end, isSelected) => {
-    let style = {};
+  const eventStyleGetter = (event) => {
     // Customize style for a particular event
+    let style = {};
     if (event.title === "WO") {
       style.backgroundColor = "#e53935";
       style.color = "#fff";
@@ -169,9 +183,7 @@ const UserAttendance = ({user}) => {
       style.color = "#fff";
     }
 
-    return {
-      style,
-    };
+    return { style };
   };
 
   // Custom Event component to include login and logout times
@@ -189,23 +201,57 @@ const UserAttendance = ({user}) => {
     </div>
   );
 
-  const today = new Date();
+  const handleNavigate = (date) => {
+    setSelectedYear(date.getFullYear());
+    setSelectedMonth(date.getMonth());
+  };
 
   return (
     <div className="flex flex-col gap-2">
+      <div className="flex justify-center gap-4">
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(Number(e.target.value))}
+          className="mb-4 p-2 border-2 rounded border-blue-400"
+        >
+          {moment.months().map((month, index) => (
+            <option key={month} value={index}>
+              {month}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className="mb-4 p-2 border-2 border-blue-400 rounded"
+        >
+          {Array.from({ length: 10 }, (_, i) => {
+            const year = new Date().getFullYear() - i;
+            return (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+
       <div className="h-[130vh] bg-white p-4 rounded-md shadow-sm mx-4">
-        {!attendanceLoading && (
+        {!attendanceLoading && !holidayLoading && (
           <Calendar
             localizer={localizer}
             events={events}
             views={["month"]}
             step={1}
-            defaultDate={today}
+            date={new Date(selectedYear, selectedMonth)}
             eventPropGetter={eventStyleGetter}
             components={{ event: CustomEvent }} // Use CustomEvent component for rendering events
+            onNavigate={handleNavigate} // Handle navigation
           />
         )}
       </div>
+
       <div className="bg-white p-4 rounded-md shadow-sm mx-4 mb-4">
         <div className="flex gap-6 justify-center items-center">
           <div className="flex items-center gap-2">
