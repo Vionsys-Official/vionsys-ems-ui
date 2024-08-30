@@ -1,5 +1,6 @@
 import { LoaderIcon } from "react-hot-toast";
-import { Button, Popover, Table } from "antd";
+import { Button, Modal, Popover, Table } from "antd";
+import UserAttendance from "../ui/user/UserAttendance"
 import useGetAllAttendance from "../features/attendance/useGetAllAttendance";
 import withAuth from "../store/withAuth";
 import { format, parseISO, differenceInHours } from "date-fns";
@@ -8,6 +9,7 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import ExcelForm from "./ExcelForm";
 import { useState } from "react";
 import "../utils/css/attendance.css";
+import { IoCalendarOutline } from "react-icons/io5";
 
 const dateFormatNormal = (date) => {
   return format(parseISO(date), "dd/MM/yyyy");
@@ -19,7 +21,19 @@ const dateToTime = (dateStr) => {
 
 const AttendanceList = () => {
   const [modal, setModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); 
   const { data, isPending } = useGetAllAttendance();
+  const [isCalendarShow, setIsCalendarShow] = useState(false);
+
+  const handleCalendarClick = (user) => {
+    setSelectedUser(user);
+    setIsCalendarShow(true);
+  };
+
+  const handleCancel = () => {
+    setIsCalendarShow(false);
+    setSelectedUser(null);
+  };
 
   const columns = [
     {
@@ -76,6 +90,15 @@ const AttendanceList = () => {
         return text;
       },
     },
+    {
+      key: "Monthly Calendar",
+      dataIndex: "monthlyCalendar",
+      title: "Monthly Calendar",
+      width: 120,
+      render: (_, record) => (
+        <Button icon={<IoCalendarOutline className="w-6 h-6" />} onClick={() => handleCalendarClick(record)}/>
+      ),
+    },
   ];
 
   const dataSource = data?.data?.attendance?.map((item) => {
@@ -99,6 +122,7 @@ const AttendanceList = () => {
       loginTime,
       logoutTime,
       workTime,
+      monthlyCalendar: "Calendar"
     };
   });
 
@@ -134,6 +158,17 @@ const AttendanceList = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal to show User Attendance */}
+      <Modal
+        title="User Attendance"
+        visible={isCalendarShow}
+        onCancel={handleCancel}
+        footer={null}
+        width={900}
+      >
+        {selectedUser && <UserAttendance user={selectedUser} />}
+      </Modal>
     </section>
   );
 };

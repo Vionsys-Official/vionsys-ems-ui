@@ -107,14 +107,14 @@ const HolidayCalander = () => {
       {/* holiday delete modal form */}
       <Modal
         className="delete_holiday"
-        title="Delete Holiday from calender"
+        title="Delete Holiday from calendar"
         open={modal}
         onCancel={() => setmodal(false)}
         footer={null}
         closeIcon={<HiXCircle size={25} onClick={() => setmodal(false)} />}
       >
         <p className="text-red-500 py-3">
-          Do you really want to delete this holiday from calender, this action
+          Do you really want to delete this holiday from calendar, this action
           cannot be undone !
         </p>
         <Button disabled={deletePending} onClick={handleHolidayDelete}>
@@ -124,7 +124,7 @@ const HolidayCalander = () => {
 
       {/* create holiday modal form */}
       <Modal
-        title="Create new holiday in the calender"
+        title="Create new holiday in the calendar"
         open={creationmodal}
         onCancel={() => setcreationmodal(false)}
         footer={null}
@@ -173,7 +173,7 @@ const HolidayCalander = () => {
           </div>
         </div>
         <Button disabled={CreatePending} onClick={handleAddHoliday}>
-          Add to Calender
+          Add to Calendar
         </Button>
       </Modal>
       <div>
@@ -182,7 +182,7 @@ const HolidayCalander = () => {
           <Select
             onChange={(e) => setYear(e)}
             defaultValue={new Date().getFullYear()}
-            placeholder="Calender Year"
+            placeholder="Calendar Year"
             className="mt-3"
           >
             <Select.Option value={2024}>2024</Select.Option>
