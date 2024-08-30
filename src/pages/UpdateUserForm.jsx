@@ -45,6 +45,7 @@ const UpdateUserForm = () => {
         emergencyPhone,
         PerAddress,
         TempAddress,
+        role,
       } = values;
       const form = useUpdateFormData(
         _id,
@@ -65,7 +66,8 @@ const UpdateUserForm = () => {
         doj,
         emergencyPhone,
         PerAddress,
-        TempAddress
+        TempAddress,
+        role,
       );
       update(form);
     } else {
@@ -272,6 +274,14 @@ const UpdateUserForm = () => {
                 <Option value="Prem Khadekar">Prem Khadekar</Option>
                 <Option value="Sagar Yenkure">Sagar Yenkure</Option>
                 <Option value="Ravikant Waghmare">Ravikant Waghmare</Option>
+              </Select>
+            </Form.Item>
+
+            {/* Role */}
+            <Form.Item label="Role" name="role" className="flex-1">
+              <Select defaultValue="Select">
+                <Option value="admin">Admin</Option>
+                <Option value="user">User</Option>
               </Select>
             </Form.Item>
           </div>
