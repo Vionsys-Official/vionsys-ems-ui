@@ -5,7 +5,7 @@ import EmpClosedTickets from "../../../ui/tickets/employee/EmpClosedTickets";
 import RaiseTicket from "../../../ui/tickets/employee/RaiseTicket";
 
 const TicketSubMenu = () => {
-  const [activeLink, setActiveLink] = useState("");
+  const [activeLink, setActiveLink] = useState("Raise Ticket");
 
   const handleSidebarLinkClick = (link) => {
     setActiveLink(link);
@@ -15,26 +15,23 @@ const TicketSubMenu = () => {
       {/* Sidebar */}
       <div className="flex flex-1 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
         <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${
-            activeLink === "RaiseTicket" ? "font-bold text-blue-300" : ""
-          }`}
-          onClick={() => handleSidebarLinkClick("RaiseTicket")}
+          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Raise Ticket" ? "font-bold text-blue-300" : ""
+            }`}
+          onClick={() => handleSidebarLinkClick("Raise Ticket")}
         >
           Raise Ticket
         </Link>
         <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${
-            activeLink === "EmpOpenTickets" ? "font-bold text-blue-300" : ""
-          }`}
-          onClick={() => handleSidebarLinkClick("EmpOpenTickets")}
+          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Open Tickets" ? "font-bold text-blue-300" : ""
+            }`}
+          onClick={() => handleSidebarLinkClick("Open Tickets")}
         >
           Open Tickets
         </Link>
         <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${
-            activeLink === "EmpClosedTickets" ? "font-bold text-blue-300" : ""
-          }`}
-          onClick={() => handleSidebarLinkClick("EmpClosedTickets")}
+          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Closed Tickets" ? "font-bold text-blue-300" : ""
+            }`}
+          onClick={() => handleSidebarLinkClick("Closed Tickets")}
         >
           Closed Tickets
         </Link>
