@@ -1,8 +1,6 @@
-import {
-  MdNotifications,
-  MdPeople,
-  MdDashboard,
-} from "react-icons/md";
+import { MdNotifications, MdPeople, MdDashboard } from "react-icons/md";
+import { FaTicket } from "react-icons/fa6";
+import { FaHistory } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FcLeave } from "react-icons/fc";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -11,7 +9,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { logout } from "../services/authApi";
-import { GoCrossReference } from "react-icons/go";
 
 const Sidebar = ({ isMobile, onClose }) => {
   const { role } = getUserIdRole();
@@ -25,7 +22,7 @@ const Sidebar = ({ isMobile, onClose }) => {
     if (activeLink && sliderRef.current) {
       sliderRef.current.style.top = `${activeLink.offsetTop}px`;
     }
-  }, [activePath,location.pathname]);
+  }, [activePath, location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -52,11 +49,13 @@ const Sidebar = ({ isMobile, onClose }) => {
           className="hidden md:block absolute left-0 w-full h-11 bg-blue-100 border border-blue-400 z-0 rounded-l-full transition-all duration-300"
           style={{ top: -200 }}
         />
-        <Tooltip title={isMobile?"":"Dashboard"} placement="right">
+        <Tooltip title={isMobile ? "" : "Dashboard"} placement="right">
           <Link
             to="/"
             className={`sidebar-link flex items-center justify-center z-10 w-full p-2 rounded-lg transition-colors duration-200 ${
-              isActive("/") ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800" : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+              isActive("/")
+                ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
             }`}
             onClick={() => handleLinkClick("/")}
           >
@@ -64,14 +63,16 @@ const Sidebar = ({ isMobile, onClose }) => {
             <p className="md:hidden ml-3">Dashboard</p>
           </Link>
         </Tooltip>
-
+        {/* user dash */}
         {role === "user" && (
           <>
-            <Tooltip title={isMobile?"":"Todo Tasks"} placement="right">
+            <Tooltip title={isMobile ? "" : "Todo Tasks"} placement="right">
               <Link
                 to="/taskpage"
                 className={`sidebar-link flex items-center justify-center z-10 w-full p-2 rounded-lg transition-colors duration-200 ${
-                  isActive("/taskpage") ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800" : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+                  isActive("/taskpage")
+                    ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                    : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
                 }`}
                 onClick={() => handleLinkClick("/taskpage")}
               >
@@ -79,7 +80,7 @@ const Sidebar = ({ isMobile, onClose }) => {
                 <p className="md:hidden ml-3">Todo Tasks</p>
               </Link>
             </Tooltip>
-            <Tooltip title={isMobile?"":"Notifications"} placement="right">
+            <Tooltip title={isMobile ? "" : "Notifications"} placement="right">
               <Link
                 to="/notifications"
                 className={`sidebar-link flex items-center z-10 justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
@@ -93,7 +94,7 @@ const Sidebar = ({ isMobile, onClose }) => {
                 <p className="md:hidden ml-3">Notifications</p>
               </Link>
             </Tooltip>
-            <Tooltip title={isMobile?"":"Leave Request"} placement="right">
+            <Tooltip title={isMobile ? "" : "Leave Request"} placement="right">
               <Link
                 to="/LeaveMenu"
                 className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
@@ -107,12 +108,27 @@ const Sidebar = ({ isMobile, onClose }) => {
                 <p className="md:hidden ml-3">Leave Request</p>
               </Link>
             </Tooltip>
+            <Tooltip title={isMobile ? "" : "Raise Ticket"} placement="right">
+              <Link
+                to="/TicketSubmenu" //insert url
+                className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
+                  isActive("/Ticketpage") //insert url
+                    ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                    : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+                }`}
+                onClick={() => handleLinkClick("/TicketPage")} //insert url
+              >
+                <FaTicket size={25} />
+                <p className="md:hidden ml-3">Raise Ticket</p>
+              </Link>
+            </Tooltip>
           </>
         )}
-
+        {/* admin dash */}
         {role !== "user" && (
           <>
-            <Tooltip title={isMobile?"":"Employees"} placement="right">
+            {/* Employees */}
+            <Tooltip title={isMobile ? "" : "Employees"} placement="right">
               <Link
                 to="/employees"
                 className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
@@ -126,7 +142,8 @@ const Sidebar = ({ isMobile, onClose }) => {
                 <p className="md:hidden ml-3">Employees</p>
               </Link>
             </Tooltip>
-            <Tooltip title={isMobile?"":"Leave History"} placement="right">
+            {/* Leave history */}
+            <Tooltip title={isMobile ? "" : "Leave History"} placement="right">
               <Link
                 to="/AdminLeavePage"
                 className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
@@ -136,8 +153,23 @@ const Sidebar = ({ isMobile, onClose }) => {
                 }`}
                 onClick={() => handleLinkClick("/AdminLeavePage")}
               >
-                <GoCrossReference size={25} />
+                <FaHistory size={25} />
                 <p className="md:hidden ml-3">Leave History</p>
+              </Link>
+            </Tooltip>
+            {/* tickets  */}
+            <Tooltip title={isMobile ? "" : "View Tickets"} placement="right">
+              <Link
+                to="/ManageTickets"
+                className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
+                  isActive("/ManageTickets")
+                    ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                    : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+                }`}
+                onClick={() => handleLinkClick("/ManageTickets")}
+              >
+                <FaTicket size={25} />
+                <p className="md:hidden ml-3">View Tickets</p>
               </Link>
             </Tooltip>
           </>
