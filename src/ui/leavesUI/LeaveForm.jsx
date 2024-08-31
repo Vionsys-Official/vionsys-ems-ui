@@ -25,37 +25,43 @@ const LeaveForm = () => {
     key: "selection",
   });
   const [selectedLeaveType, setSelectedLeaveType] = useState(""); 
+  const [isHalfDay, setIsHalfDay] = useState(false); // New state for half-day
   const [form] = Form.useForm();
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   const onFinish = (values) => {
     const { startDate, endDate } = dateRange;
     const leaveStart = startDate ? startDate.toISOString() : null;
     const leaveEnd = endDate ? endDate.toISOString() : null;
     values.leaveDays = leaveDays; 
+    values.isHalfDay = isHalfDay; // Include half-day info in submission
     const data = { userId, leaveStart, leaveEnd, ...values };
     console.log(data);
     createRequest(data);
     form.resetFields();
     setDateRange({ startDate: null, endDate: null, key: "selection" });
     setLeaveDays(0);
-    setShow(false)
+    setIsHalfDay(false); // Reset half-day state
+    setShow(false);
   };
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
-      const actualLeaveDays =
+      let actualLeaveDays =
         Math.ceil(
           (new Date(dateRange.endDate).getTime() -
             new Date(dateRange.startDate).getTime()) /
             (1000 * 60 * 60 * 24)
         ) + 1;
+      if (isHalfDay) {
+        actualLeaveDays -= 0.5; // Reduce by half a day if half-day is selected
+      }
       setLeaveDays(actualLeaveDays);
-      setShow(true)
+      setShow(true);
     } else {
       setLeaveDays(0);
     }
-  }, [dateRange]);
+  }, [dateRange, isHalfDay]);
 
   const handleRangeChange = (dates) => {
     if (dates) {
@@ -73,11 +79,16 @@ const LeaveForm = () => {
     setSelectedLeaveType(value);
   };
 
+  const handleHalfDayChange = (e) => {
+    setIsHalfDay(e.target.checked);
+  };
+
   function handleClear() {
     setDateRange({ startDate: null, endDate: null, key: "selection" });
     form.resetFields();
-    message.info("Form clear successfully.");
-    setShow(false)
+    setIsHalfDay(false);
+    message.info("Form cleared successfully.");
+    setShow(false);
   }
 
   return (
@@ -124,13 +135,18 @@ const LeaveForm = () => {
                 />
               </div>
             )}
-            <Form.Item
+           <Form.Item
               label="Leave Mode"
               name="halfDay"
               valuePropName="checked"
               className="w-full"
             >
-              <Checkbox>Half Day</Checkbox>
+              <Checkbox
+                onChange={handleHalfDayChange}
+                disabled={(leaveDays !== 1 && leaveDays !== 0.5)} // Disable if leave days are not exactly 1
+              >
+                Half Day
+              </Checkbox>
             </Form.Item>
 
             <Form.Item
@@ -183,31 +199,31 @@ const LeaveForm = () => {
           >
             <TextArea rows={4} placeholder="Reason for leave request" />
           </Form.Item>
-
           
-            <div className="flex justify-between">
+          <div className="flex justify-between">
             <Form.Item>
-            <Button
-              disabled={isPending}
-              type="primary"
-              className="bg-[#7498D0] hover:bg-slate-500"
-              htmlType="submit"
-            >
-              Apply for leave
-            </Button>
+              <Button
+                disabled={isPending}
+                type="primary"
+                className="bg-[#7498D0] hover:bg-slate-500"
+                htmlType="submit"
+              >
+                Apply for leave
+              </Button>
             </Form.Item>
-            {show?(<Button
-              disabled={isPending}
-              onClick={handleClear}
-              type="text"
-              className="bg-[#f75341] text-white hover:bg-red-700"
-              htmlType="reset"
-            >
-              Clear
-            </Button>):""}
-            </div>
+            {show && (
+              <Button
+                disabled={isPending}
+                onClick={handleClear}
+                type="text"
+                className="bg-[#f75341] text-white hover:bg-red-700"
+                htmlType="reset"
+              >
+                Clear
+              </Button>
+            )}
+          </div>
           
-         
         </Form>
       </div>
     </div>
