@@ -34,7 +34,8 @@ import LeavesSubMenu from "./pages/Employees/LeavesSubMenu";
 import ProfileSubMenu from "./pages/Employees/ProfileSubMenu";
 import ManageTickets from "./ui/tickets/admin/ManageTickets";
 import TicketSubMenu from "./pages/ticketpages/employee/TicketSubMenu";
-import TicketSubMenuForAdmin from "./pages/ticketpages/admin/TicketSubmenu";
+import ResignationSubMenu from "./pages/Resignations/employee/ResignationSubMenu";
+import ManageResignation from "./ui/resignationUI/admin/ManageResignation";
 
 
 const queryClient = new QueryClient({
@@ -80,8 +81,10 @@ function App() {
               <Route path="/taskpage" element={<TaskPage />} />
               <Route path="/notifications" element={<NotificationPage />} />
               <Route path="/LeavesHistory" element={<LeavesHistory />} />
-              <Route path="/ManageTickets" element={<TicketSubMenuForAdmin />} />
+              <Route path="/ManageTickets" element={<ManageTickets />} />
+              <Route path="/ManageResignation" element={<ManageResignation/>} />
               <Route path="/TicketSubMenu" element={<TicketSubMenu />} />
+              <Route path="/ResignationSubMenu" element={<ResignationSubMenu/>}/>
               <Route path="/LeavesPage" element={<LeavesPage />} />
               <Route path="/UserCancleLeave" element={<UserCancleLeave />} />
               <Route
