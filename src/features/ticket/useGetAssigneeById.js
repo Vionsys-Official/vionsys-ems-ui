@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAssigneeById } from "../../services/ticketApi";
+import { getAssigneeTicketsById } from "../../services/ticketApi";
 
-const useGetAssigneeById = () => {
-  const { data, ispending } = useQuery({
+const useGetAssigneeTicketsById = (id) => {
+  const { data, isPending } = useQuery({
     queryKey: ["getAssigneeById"],
-    queryFn: getAssigneeById,
+    queryFn: () => getAssigneeTicketsById(id),
   });
   return {
     data,
-    ispending,
+    isPending,
   };
 };
 
-export default useGetAssigneeById;
+export default useGetAssigneeTicketsById;
