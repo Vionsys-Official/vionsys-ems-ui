@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { logout } from "../services/authApi";
+import { GiExitDoor } from "react-icons/gi";
 
 const Sidebar = ({ isMobile, onClose }) => {
   const { role } = getUserIdRole();
@@ -112,14 +113,29 @@ const Sidebar = ({ isMobile, onClose }) => {
               <Link
                 to="/TicketSubmenu" //insert url
                 className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
-                  isActive("/Ticketpage") //insert url
+                  isActive("/TicketSubmenu") //insert url
                     ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
                     : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
                 }`}
-                onClick={() => handleLinkClick("/TicketPage")} //insert url
+                onClick={() => handleLinkClick("/TicketSubmenu")} //insert url
               >
                 <FaTicket size={25} />
                 <p className="md:hidden ml-3">Raise Ticket</p>
+              </Link>
+            </Tooltip>
+            {/* Resignation */}
+            <Tooltip title={isMobile ? "" : "Resignation"} placement="right">
+              <Link
+                to="/ResignationSubMenu" //insert url
+                className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
+                  isActive("/ResignationSubMenu") //insert url
+                    ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                    : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+                }`}
+                onClick={() => handleLinkClick("/ResignationSubMenu")} //insert url
+              >
+                <GiExitDoor size={25} />
+                <p className="md:hidden ml-3">Apply Resignation</p>
               </Link>
             </Tooltip>
           </>
@@ -170,6 +186,21 @@ const Sidebar = ({ isMobile, onClose }) => {
               >
                 <FaTicket size={25} />
                 <p className="md:hidden ml-3">View Tickets</p>
+              </Link>
+            </Tooltip>
+            {/* Resignation */}
+            <Tooltip title={isMobile ? "" : "Resignations"} placement="right">
+              <Link
+                to="/ManageResignation"
+                className={`sidebar-link z-10 flex items-center justify-center w-full p-2 rounded-lg transition-colors duration-200 ${
+                  isActive("/ManageResignation")
+                    ? "active md:text-[#7498d0] text-slate-100 md:dark:text-slate-800"
+                    : "text-slate-100 md:text-[#7498d0] dark:text-slate-100"
+                }`}
+                onClick={() => handleLinkClick("/ManageResignation")}
+              >
+                <GiExitDoor size={25} />
+                <p className="md:hidden ml-3">Resignations</p>
               </Link>
             </Tooltip>
           </>
