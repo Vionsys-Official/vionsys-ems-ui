@@ -1,13 +1,14 @@
 import { LoaderIcon } from "react-hot-toast";
-// import UserCard from "./UserCard"; asch
+// import UserCard from "./UserCard"; 
 import useGetAllUsers from "../features/users/useGetAllUsers";
 import CreateNewUser from "../pages/CreateNewUser";
 import withAuth from "../store/withAuth";
 import { useEffect, useState } from "react";
-import { Avatar, Button, List, Input } from "antd";
+import { Avatar, Button, List, Input, Modal } from "antd";
 import getUserIdRole from "../utils/getUserIdRole";
 import { Link } from "react-router-dom";
 import { SearchOutlined } from "@ant-design/icons";
+import UserAttendance from "./user/UserAttendance";
 
 const AllUsersList = () => {
   const { id } = getUserIdRole();
@@ -15,6 +16,8 @@ const AllUsersList = () => {
   const { allUsers, isPending } = useGetAllUsers(id);
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     if (allUsers && allUsers.data) {
@@ -35,8 +38,21 @@ const AllUsersList = () => {
     setUsers(filterResults);
   };
 
+  const handleViewAttendance = (user) => {
+    // console.log(user)
+    setSelectedUser(user);
+    setIsAttendanceModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsAttendanceModalOpen(false);
+    setSelectedUser(null);
+  };
+
+
   const userData = users.map((item) => {
     return {
+      uid:item._id,
       key: item._id,
       title: (
         <Link to={`${item?._id}`}>{`${item.firstName} ${item?.lastName}`}</Link>
@@ -45,6 +61,8 @@ const AllUsersList = () => {
       profile: item?.profile,
     };
   });
+
+
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -98,15 +116,36 @@ const AllUsersList = () => {
                     <div>{item?.designation}</div>
                   </div>
                 </div>
-                <Link to={`${item?.key}`}>
-                  <Button type="link" className="mr-4">
-                    View Details
+                <div>
+                  <Link to={`${item?.key}`}>
+                    <Button
+                      type="link"
+                      className="mr-4 border border-slate-300"
+                    >
+                      View Details
+                    </Button>
+                  </Link>
+                  <Button
+                    type=""
+                    className="mr-4 border border-slate-300 text-blue-600"
+                    onClick={() => handleViewAttendance(item)}
+                  >
+                    Attendance
                   </Button>
-                </Link>
+                </div>
               </List.Item>
             )}
           />
         </div>
+        <Modal
+          title="User Attendance"
+          open={isAttendanceModalOpen}
+          onCancel={handleCancel}
+          footer={null}
+          width={1000}
+        >
+          {selectedUser && <UserAttendance user={selectedUser} />}
+        </Modal>
       </div>
     </section>
   );
