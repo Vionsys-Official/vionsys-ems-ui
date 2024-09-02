@@ -8,7 +8,9 @@ export const useCreateTicket = () => {
     mutationFn: (ticketdata) => raiseTicketApi(ticketdata),
     onSuccess: () => {
       message.success("Ticket Raised successfully!!!");
-      // queryClient.invalidateQueries([""]);
+      queryClient.invalidateQueries(["getAssigneeById"]);
+      queryClient.invalidateQueries(["getTicketByEmpId"]);
+
     },
     onError: (err) => {
       console.log(err);
