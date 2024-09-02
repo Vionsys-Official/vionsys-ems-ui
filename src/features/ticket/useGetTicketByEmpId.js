@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useGetTicketByEmpId as GetTicketByEmpIdApi } from "../../services/ticketApi";
+import { getTicketByEmpId as getTicketByEmpIdApi } from "../../services/ticketApi";
 
 export const useGetTicketByEmpId = () => {
   //   const queryClient = new QueryClient();
   const { data, isPending } = useQuery({
     queryKey: ["getTicketByEmpId"],
-    queryFn: GetTicketByEmpIdApi,
+    queryFn: getTicketByEmpIdApi,
   });
   return {
     data,
