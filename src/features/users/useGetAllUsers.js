@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllUserApi } from "../../services/usersApi";
 
 
-const useGetAllUsers = (userId) => {
+const useGetAllUsers = () => {
 
   const { data: allUsers, isPending } = useQuery({
     queryKey: ["users"],
-    queryFn: () => getAllUserApi(userId),
+    queryFn: () => getAllUserApi(),
   });
 
   return {allUsers, isPending}
