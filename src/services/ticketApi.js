@@ -17,15 +17,15 @@ export const raiseticket = async (ticketData) => {
 };
 
 export const getTicketByEmpId = async () => {
-  const response = await api.get(`/ticket/getAll/${id}`, {
+  const response = await api.get(`/ticket/findByEmpId/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data.data;
+  return response.data;
 };
 
-export const getAssigneeById = async (id) => {
+export const getAssigneeTicketsById = async (id) => {
   const response = await api.get(`/ticket/findByAssignedToUid/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -33,8 +33,8 @@ export const getAssigneeById = async (id) => {
   });
   return response.data.data;
 };
-export const UpdateById = async () => {
-  const response = await api.update(`/ticket/updateById/${id}`, {
+export const UpdateById = async (values) => {
+  const response = await api.patch(`/ticket/updateById/${values.id}`, values, {
     header: {
       Authorization: `Bearer ${token}`,
     },

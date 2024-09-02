@@ -1,24 +1,27 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateTicket as updateTicketApi } from "../../services/ticketApi";
-import toast from "react-hot-toast";
+import { message } from "antd";
+import { UpdateById } from "../../services/ticketApi";
 
 const useUpdateTicketById = () => {
   const queryClient = useQueryClient();
-  const { mutate: updateTicket, ispending } = useMutation({
-    mutationFn: (ticketdata) => updateTicketApi(ticketdata),
+
+  const { mutate: updateTicket, isPending: isUpdatePending } = useMutation({
+    mutationFn: (values) => UpdateById(values),
     onSuccess: () => {
-      toast.success("Task assigned successfully!!!");
-      queryClient.invalidateQueries(["updateById"]);
+      message.success("Ticket Updated!!");
+      queryClient.invalidateQueries(["getAssigneeById"]);
+      queryClient.invalidateQueries(["getTicketByEmpId"]);
     },
     onError: (err) => {
       console.log(err);
-      toast.error(err.response.data.error);
+      message.error(err.response.data.error);
     },
   });
+
   return {
     updateTicket,
-    ispending,
-  };
+    isUpdatePending,
+  }
 };
 
 export default useUpdateTicketById;

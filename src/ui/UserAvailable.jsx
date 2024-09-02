@@ -25,9 +25,9 @@ const UserAvailable = () => {
 
   const chartData = [
     { name: "Available", value: available },
-    { name: "Unavailable", value: unAvailable},
+    { name: "Unavailable", value: unAvailable },
   ];
-  const COLORS = ["#00C49F","#ff3333", "#00C49F", "#00C49F"];
+  const COLORS = ["#00C49F", "#ff3333", "#00C49F", "#00C49F"];
 
   return (
     <Card className="relative dark:bg-gray-700 shadow-2xl dark:shadow-zinc-500  border-none">
@@ -44,11 +44,10 @@ const UserAvailable = () => {
                 return (
                   <AntToolTip key={item.name} title={item.name} placement="top" >
                     <Avatar
-                    className="hover:scale-125  transition-transform duration-200 ease-in-out"
+                      className="hover:scale-125  transition-transform duration-200 ease-in-out"
                       style={{
-                        backgroundColor: `${
-                          item.date ? "#00C49F" : "#ff3333"
-                        }  `,
+                        backgroundColor: `${item.date ? "#00C49F" : "#ff3333"
+                          }  `,
                       }}
                       alt={item.name}
                     >
@@ -79,7 +78,7 @@ const UserAvailable = () => {
                     />
                   ))}
                 </Pie>
-                
+
                 <Tooltip />
                 <Legend
                   align="center"
