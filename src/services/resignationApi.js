@@ -51,3 +51,27 @@ export const cancelResignation = async ({ resignationId, reason }) => {
     );
   }
 };
+
+export const updateResignationStatus = async ({ resignationId, userId, status, note }) => {
+  try {
+    const response = await api.post(
+      "/resignation/updateStatus",
+      {
+        resignationId,
+        userId,
+        status,
+        note,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.error || "Failed to update resignation status"
+    );
+  }
+};
