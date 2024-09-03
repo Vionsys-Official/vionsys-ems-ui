@@ -7,8 +7,8 @@ const useGetAttendance = ({ uid = null } = {}) => {
   const sid = uid ?? id; // Use uid if provided, otherwise use id
 
   const { data, isPending } = useQuery({
+    queryKey: ["attendances", sid],
     queryFn: () => getAttendance(sid),
-    queryKey: ["attendance", sid],
   });
 
   return { data, isPending };

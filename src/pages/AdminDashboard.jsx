@@ -15,6 +15,7 @@ import {
 import useGetAllAttendance from "../features/attendance/useGetAllAttendance";
 import { isToday } from "date-fns";
 import HighlightsBDWA from "../ui/user/HighlightsBDWA";
+import CheckInCheckOut from "../ui/attendance/CheckInCheckOut";
 
 const AdminDashboard = () => {
   const { data, isPending } = useGetAllAttendance();
@@ -103,8 +104,10 @@ const AdminDashboard = () => {
         }
       </div>
 
-      <div className="p-8 grid md:grid-cols-3 gap-2 relative overflow-x-hidden">
+      <div className="p-8 grid md:grid-cols-3 gap-4 justify-center gap-y-6 relative overflow-x-hidden">
         <UserAvailable />
+        <CheckInCheckOut />
+        <HighlightsBDWA />
         <Card className="dark:bg-gray-700 shadow-2xl dark:shadow-zinc-500 mx-3 border-none">
           <h1 className="text-xl font-semibold border-b-2 dark:text-white rounded-full py-2 border-orange-500 text-center">Employees By Gender</h1>
           <div className="top-0 relative flex justify-center items-center">
@@ -118,7 +121,7 @@ const AdminDashboard = () => {
                   label={renderCustomizedLabel}
                   outerRadius={120}
                   paddingAngle={1}
-                  dataKey="value"  
+                  dataKey="value"
                 >
                   {chartData.map((entry, index) => (
                     <Cell
@@ -137,7 +140,6 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </div>
         </Card>
-        <HighlightsBDWA />
         <Notifications />
 
       </div>
