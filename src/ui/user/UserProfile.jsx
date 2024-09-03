@@ -5,12 +5,18 @@ import { CiMail } from "react-icons/ci";
 import { CiLocationOn } from "react-icons/ci";
 import useGetCurrentUser from '../../features/users/useGetCurrentUser';
 import getUserIdRole from '../../utils/getUserIdRole';
+import sendverifymail from '../../features/authentication/useVerifyMail';
 import HighlightsBDWA from './HighlightsBDWA';
 import CheckInCheckOut from '../attendance/CheckInCheckOut';
 
 const UserProfile = () => {
     const { id } = getUserIdRole();
+    const { sendmail, isPending } = sendverifymail();
     const { user: userData, isPending: userLoading } = useGetCurrentUser(id);
+
+    const handleSendVerifyEmail = (email) => {
+        sendmail(email);
+    };
     return (
         <>
             {
