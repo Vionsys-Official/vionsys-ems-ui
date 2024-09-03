@@ -10,7 +10,7 @@ const useCreateResignation = () => {
     onSuccess: (res) => {
       toast.success(res.message || "Resignation submitted successfully!");
       queryClient.invalidateQueries({
-        queryKey: ["userResignationHistory"],
+        queryKey: ["getResignationById"],
       });
     },
     onError: (err) => {

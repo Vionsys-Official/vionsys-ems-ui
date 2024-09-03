@@ -12,7 +12,7 @@ const useCancleResignation = () => {
         cancleResignationApi({ resignationId, reason }),
       onSuccess: () => {
         toast.success("Resignation canceled successfully");
-        queryClient.invalidateQueries(["resignationHistory"]); // Adjust based on your query key
+        queryClient.invalidateQueries(["getAllResignations"]); // Adjust based on your query key
       },
       onError: (err) => {
         toast.error(err.message || "Failed to cancel resignation");
