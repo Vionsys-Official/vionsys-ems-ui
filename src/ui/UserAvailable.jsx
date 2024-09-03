@@ -39,7 +39,9 @@ const UserAvailable = () => {
       ) : (
         <div className=" pt-6">
           <div className="py-2 pb-2 text-center">
-            <Avatar.Group>
+            <Avatar.Group
+              maxCount={10}
+              className="flex flex-wrap gap-y-2">
               {availableEmployees.map((item) => {
                 return (
                   <AntToolTip key={item.name} title={item.name} placement="top" >
