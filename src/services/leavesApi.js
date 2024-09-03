@@ -1,5 +1,8 @@
+import getUserIdRole from "../utils/getUserIdRole";
 import { api } from "./authApi";
 const token = localStorage.getItem("token");
+
+const { id } = getUserIdRole();
 
 export const createLeaveRequest = async (data) => {
   const response = await api.post("/leaves/create", data, {
@@ -42,12 +45,13 @@ export const cancleleave = async (user, leaveId, cancleReason) => {
 };
 
 export const leaveapproved = async (leaveId, userId, note) => {
-  const responce = await api.post(
+  const response = await api.post(
     "/leaves/Approved",
     {
       leaveId,
       userId,
       note,
+      adminId: id,
     },
     {
       headers: {
@@ -55,16 +59,18 @@ export const leaveapproved = async (leaveId, userId, note) => {
       },
     }
   );
-  return responce.data;
+
+  return response.data;
 };
 
 export const leaverejected = async (leaveId, userId, note) => {
-  const responce = await api.post(
+  const response = await api.post(
     "/leaves/Rejected",
     {
       leaveId,
       userId,
       note,
+      adminId: id,
     },
     {
       headers: {
@@ -72,5 +78,5 @@ export const leaverejected = async (leaveId, userId, note) => {
       },
     }
   );
-  return responce.data;
+  return response.data;
 };
