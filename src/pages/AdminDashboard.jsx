@@ -17,8 +17,9 @@ import { isToday } from "date-fns";
 import HighlightsBDWA from "../ui/user/HighlightsBDWA";
 import CheckInCheckOut from "../ui/attendance/CheckInCheckOut";
 
+
 const AdminDashboard = () => {
-  const { data, isPending } = useGetAllAttendance();
+  const { data } = useGetAllAttendance();
   const employeeAttendances = data?.data?.attendance.map((item) => {
     return {
       name: `${item.user.firstName}`,

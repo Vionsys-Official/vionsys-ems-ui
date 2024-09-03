@@ -10,7 +10,6 @@ import { isToday } from 'date-fns';
 const CheckInCheckOut = () => {
     const { id } = getUserIdRole();
     const { data: employeesAttendance, isPending: tableLoading } = useGetAttendance(id);
-    console.log(employeesAttendance)
     const { updateAttendance, isPending: updateLoading } = useUpdateAttendance();
     const { createAttendance, isPending: attendanceLoading } = useCreateAttendance();
 
