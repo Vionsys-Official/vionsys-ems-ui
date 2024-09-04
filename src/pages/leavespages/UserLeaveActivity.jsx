@@ -28,13 +28,17 @@ const UserLeaveActivity = () => {
               <div className="md:border-r w-full ">
                 <span className="flex justify-center gap-4 h-[10rem] items-center text-center bg-white rounded-lg text-black">
                   <span className="rounded-full p-3 bg-[#9AEFCA]"><FaRegClipboard size={35} /></span>
-                  <div><p className="min-w-[5rem] text-black opacity-70 text-xl">Available Leaves</p>
-                    <p className="text-4xl">
+                  <div className="p-2 border rounded-md">
+                    <p className="min-w-[5rem] text-black opacity-70 text-xl">Available Leaves</p>
+                    <div className="text-4xl">
+                   
                       {leavecount?.floaterleave +
                         leavecount?.privilageleave +
                         leavecount?.sickleave +
                         leavecount?.casualleave}
-                    </p>
+                      <div className="border rounded-md text-xl bg-slate-100">Total 21</div>
+                    </div>
+                    
                   </div>
                 </span>
               </div>
@@ -42,11 +46,13 @@ const UserLeaveActivity = () => {
               <div className="md:border-r  w-full">
                 <span className="flex justify-center gap-4 h-[10rem] text-center items-center bg-white rounded-lg text-black">
                   <span className="rounded-full p-3 bg-[#FBC950]"><BsCalendar4Event size={35} /></span>
-                  <div>
+                  <div className="p-2 border rounded-md">
                     <p className="flex items-center justify-center text-black opacity-70 text-xl">
                       Floater Leaves
                     </p>
-                    <p className="text-4xl">{leavecount?.floaterleave}</p>
+                    <div className="text-4xl">{leavecount?.floaterleave}
+                    <div className="border rounded-md text-xl bg-slate-100">Total 1</div>
+                    </div>
                   </div>
                 </span>
               </div>
@@ -54,9 +60,11 @@ const UserLeaveActivity = () => {
               <div className="md:border-r  w-full">
                 <span className="flex justify-center gap-4 h-[10rem] items-center text-center bg-white rounded-lg text-black">
                   <span className="rounded-full p-3 bg-[#D1B5F0]"><ImStarEmpty size={35} /></span>
-                  <div>
+                  <div className="p-2 border rounded-md">
                     <p className="flex items-center justify-center text-black opacity-70 text-xl">Privilege Leaves</p>
-                    <p className="text-4xl">{leavecount?.privilageleave}</p>
+                    <div className="text-4xl">{leavecount?.privilageleave}
+                    <div className="border rounded-md text-xl bg-slate-100">Total 10</div>
+                    </div>
                   </div>
                 </span>
               </div>
@@ -64,9 +72,12 @@ const UserLeaveActivity = () => {
               <div className="md:border-r  w-full">
                 <span className="flex justify-center gap-4 h-[10rem] items-center text-center bg-white rounded-lg text-black">
                   <span className="rounded-full p-3 bg-[#C9EF9A]"><MdOutlineSick size={35} /></span>
-                  <div className="p-5">
+                  <div className="p-2 px-8 border rounded-md">
                     <p className="flex items-center justify-center text-black opacity-70 text-xl">Sick Leaves</p>
-                    <p className="text-4xl">{leavecount?.sickleave}</p>
+
+                       <div className="text-4xl">{leavecount?.sickleave}</div>
+                       <div className="border rounded-md text-xl bg-slate-100">Total 5</div>
+                    
                   </div>
                 </span>
               </div>
@@ -74,9 +85,10 @@ const UserLeaveActivity = () => {
               <div className="md:border-r w-full">
                 <span className="flex justify-center gap-4 h-[10rem] items-center text-center bg-white rounded-lg text-black">
                   <span className="rounded-full p-3 bg-[#AFBF9A]"><PiBagLight size={35} /></span>
-                  <div className="p-1">
+                  <div className="p-2 px-3 border rounded-md">
                     <p className="flex items-center justify-center text-black opacity-70 text-xl">Casual Leaves</p>
                     <p className="text-4xl">{leavecount?.casualleave}</p>
+                    <div className="border rounded-md text-xl bg-slate-100">Total 5</div>
                   </div>
                 </span>
               </div>
@@ -84,9 +96,10 @@ const UserLeaveActivity = () => {
               <div className=" w-full">
                 <span className="flex justify-center gap-4 h-[10rem] items-center text-center bg-white rounded-lg text-black">
                   <span className="rounded-full p-3 bg-[#F5B8CF]"><LiaRupeeSignSolid size={35} /></span>
-                  <div className="p-2">
+                  <div className="p-2 px-4 border rounded-md">
                     <p className="flex items-center justify-center text-black opacity-70 text-xl">Unpaid Leaves</p>
                     <p className="text-4xl">{leavecount?.unpaidleave}</p>
+                    
                   </div>
                 </span>
               </div>
