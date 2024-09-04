@@ -52,7 +52,7 @@ export const cancelResignation = async ({ resignationId, reason }) => {
   }
 };
 
-export const updateResignationStatus = async ({ resignationId, userId, status, note }) => {
+export const updateResignationStatus = async ({ resignationId, userId, status, note,adminId }) => {
   try {
     const response = await api.post(
       "/resignation/updateStatus",
@@ -61,6 +61,7 @@ export const updateResignationStatus = async ({ resignationId, userId, status, n
         userId,
         status,
         note,
+        adminId
       },
       {
         headers: {

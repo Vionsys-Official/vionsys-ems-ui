@@ -1,19 +1,23 @@
 import React from "react";
 import { Button, Form, Input, Select } from "antd";
 import useUpdateResignationAdmin from "../../../features/resignation/useUpdateResignationAdmin";
+import getUserIdRole from "../../../utils/getUserIdRole";
 
 const { Option } = Select;
 
 const ChangeStatus = ({ record, isOpen, setIsOpen }) => {
+  const { id: adminId } = getUserIdRole();
   const [form] = Form.useForm();
-  const { dataupdateResignation, isPainding } = useUpdateResignationAdmin();
+  const { dataupdateResignation, isPending } = useUpdateResignationAdmin();
 
   const handleFinish = (values) => {
+    
     dataupdateResignation({
       resignationId: record._id,
       userId: record.user,
       status: values.status,
       note: values.adminNoteOrResolutionNote,
+      adminId
     });
     setIsOpen(!isOpen);
     form.resetFields();
@@ -76,7 +80,7 @@ const ChangeStatus = ({ record, isOpen, setIsOpen }) => {
 
         <Form.Item>
           <Button className="bg-yellow-400" htmlType="submit" type="text">
-            {isPainding ? "Updating..." : "Update"}
+            {isPending ? "Updating..." : "Update"}
           </Button>
         </Form.Item>
       </Form>
