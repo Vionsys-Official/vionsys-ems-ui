@@ -1,47 +1,34 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateResignation from "../../../ui/resignationUI/employee/CreateResignation";
 import CheckRStatus from "../../../ui/resignationUI/employee/CheckRStatus";
 
 const ResignationSubMenu = () => {
-  const [activeLink, setActiveLink] = useState("Apply Resignation");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activePath, setIsActivePath] = useState(location.pathname);
 
-  const handleSidebarLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  const handleLinkClick = (path) => {
+    setIsActivePath(path);
+    navigate(path);
+  }
 
+  const isActive = (path) => activePath === path;
   return (
-    <div className="flex h-screen pt-[1px]">
-      {/* Sidebar */}
-      <div className="flex flex-1 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${
-            activeLink === "Apply Resignation" ? "font-bold text-blue-300" : ""
-          }`}
-          onClick={() => handleSidebarLinkClick("Apply Resignation")}
-        >
+    <div className="flex text-sm px-6 flex-col h-screen items-center gap-2 bg-gray-100 shadow-lg py-10 mx-auto text-gray-900">
+      <div className="flex flex-col gap-2">
+        <Link to={"/ResignationSubMenu"}
+          onClick={() => handleLinkClick("/ResignationSubMenu")}
+          className={`${isActive("/ResignationSubMenu") ? "text-blue-400" : ""} font-semibold`}>
           Apply Resignation
         </Link>
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${
-            activeLink === "Check Status" ? "font-bold text-blue-300" : ""
-          }`}
-          onClick={() => handleSidebarLinkClick("Check Status")}
+        <Link to={"/resignationStatus"}
+          onClick={() => handleLinkClick("/resignationStatus")}
+          className={`${isActive("/resignationStatus") ? "text-blue-400" : ""} font-semibold`}
         >
           Check Status
         </Link>
-      </div>
 
-      {/* Content */}
-      <div className="p-4 ml-52 flex-1 w-full">
-        {activeLink === "Apply Resignation" && <CreateResignation />}
-        {activeLink === "Check Status" && <CheckRStatus />}
-        {activeLink !== "Apply Resignation" &&
-          activeLink !== "Check Status" && (
-            <div className="text-center">
-              <p>No content available for this link</p>
-            </div>
-          )}
       </div>
     </div>
   );

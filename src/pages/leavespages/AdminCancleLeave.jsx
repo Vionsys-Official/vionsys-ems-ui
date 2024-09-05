@@ -7,6 +7,7 @@ import { LoaderIcon } from "react-hot-toast";
 import UserLeaveHistory from "../../ui/leavesUI/UserLeaveHistory";
 import "../../utils/css/AdminLeavePage.css";
 import { SearchOutlined } from "@ant-design/icons";
+import withAuth from "../../store/withAuth";
 
 const AdminCancleLeave = () => {
   const { id } = getUserIdRole();
@@ -139,4 +140,4 @@ const AdminCancleLeave = () => {
   );
 };
 
-export default AdminCancleLeave;
+export default withAuth(AdminCancleLeave, ["admin"]);

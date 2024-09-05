@@ -92,12 +92,12 @@ const CheckRStatus = ({ data }) => {
     },
     ...(showNoteByAdminColumn
       ? [
-          {
-            title: "Note by Admin",
-            dataIndex: "noteByAdmin",
-            key: "noteByAdmin",
-          },
-        ]
+        {
+          title: "Note by Admin",
+          dataIndex: "noteByAdmin",
+          key: "noteByAdmin",
+        },
+      ]
       : []),
     {
       title: "Exit Date",
@@ -121,7 +121,7 @@ const CheckRStatus = ({ data }) => {
   ];
 
   return (
-    <>
+    <div className="mt-6">
       <Table columns={columns} dataSource={data} />
       <Modal
         title="Cancel Resignation"
@@ -149,7 +149,7 @@ const CheckRStatus = ({ data }) => {
           </Button>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 
@@ -162,17 +162,17 @@ export default function App() {
 
   const dataSource = Array.isArray(data?.data)
     ? data.data.map((item) => ({
-        key: item._id,
-        resignationType: item.resignationType,
-        noticePeriodDays: item.noticePeriodDays,
-        noteByAdmin: item.noteByAdmin,
-        resignationStatus: item.resignationStatus,
-        date: item.date ? format(new Date(item.date), "dd-MM-yyyy") : "NA",
-        exitDate: item.exitDate
-          ? format(new Date(item.exitDate), "dd-MM-yyyy")
-          : "NA",
-        userId: item.user._id, // Ensure userId is correctly extracted
-      }))
+      key: item._id,
+      resignationType: item.resignationType,
+      noticePeriodDays: item.noticePeriodDays,
+      noteByAdmin: item.noteByAdmin,
+      resignationStatus: item.resignationStatus,
+      date: item.date ? format(new Date(item.date), "dd-MM-yyyy") : "NA",
+      exitDate: item.exitDate
+        ? format(new Date(item.exitDate), "dd-MM-yyyy")
+        : "NA",
+      userId: item.user._id, // Ensure userId is correctly extracted
+    }))
     : [];
 
   return <CheckRStatus data={dataSource} />;
