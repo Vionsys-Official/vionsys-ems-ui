@@ -99,4 +99,45 @@
   html.dark-mode .attendance-list-row:hover {
     background-color: #555555;
   } */
-  
+/* General button styles */
+.rbc-toolbar button {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for light mode */
+.rbc-toolbar button:hover {
+  background-color: #334155 !important; /* slate-700 background on hover */
+  color: white !important; /* white text on hover */
+}
+
+/* Focus state */
+.rbc-toolbar button:focus {
+  outline: none;
+}
+
+/* Dark mode styles */
+.dark .rbc-toolbar button {
+  background-color: #334155 !important; /* slate-700 background for dark mode */
+  color: white !important; /* text-white in dark mode */
+  border: 1px solid white; /* border-white in dark mode */
+}
+
+/* Hover effect for dark mode */
+.dark .rbc-toolbar button:hover {
+  background-color: #9b9bb1 !important; /* slate-400 background on hover */
+  color: white !important; /* Keep text white */
+}
+
+/* Smooth transitions */
+.dark .rbc-toolbar button,
+.rbc-toolbar button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+

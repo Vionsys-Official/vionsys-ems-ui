@@ -15,7 +15,7 @@ const EmployeesSubMenu = () => {
     return (
         <div className="flex h-screen pt-[1px]">
             {/* Sidebar */}
-            <div className="flex flex-1 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
+            <div className="flex flex-1 dark:bg-slate-700 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
                 <Link
                     className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Employee List" ? "font-bold text-blue-300" : ""
                         }`}
