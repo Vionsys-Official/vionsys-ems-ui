@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import AdminLeaveModal from "../../ui/leavesUI/AdminLeaveModal";
 import "../../utils/css/AdminLeavePage.css";
 import { SearchOutlined } from "@ant-design/icons";
+import withAuth from "../../store/withAuth";
 
 const AdminLeavePage = () => {
   const [modalOpen, setmodalOpen] = useState(false);
@@ -185,4 +186,4 @@ const AdminLeavePage = () => {
   );
 };
 
-export default AdminLeavePage;
+export default withAuth(AdminLeavePage, ['admin']);

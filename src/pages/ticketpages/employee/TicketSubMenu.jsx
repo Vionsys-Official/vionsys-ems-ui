@@ -1,54 +1,38 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import EmpOpenTickets from "../../../ui/tickets/employee/EmpOpenTickets";
-import EmpClosedTickets from "../../../ui/tickets/employee/EmpClosedTickets";
-import RaiseTicket from "../../../ui/tickets/employee/RaiseTicket";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const TicketSubMenu = () => {
-  const [activeLink, setActiveLink] = useState("Raise Ticket");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activePath, setIsActivePath] = useState(location.pathname);
 
-  const handleSidebarLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  const handleLinkClick = (path) => {
+    setIsActivePath(path);
+    navigate(path);
+  }
+
+  const isActive = (path) => activePath === path;
   return (
-    <div className="flex h-screen pt-[1px]">
-      {/* Sidebar */}
-      <div className="flex flex-1 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Raise Ticket" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Raise Ticket")}
-        >
+    <div className="flex text-sm px-6 flex-col h-screen items-center gap-2 bg-gray-100 shadow-lg py-10 mx-auto text-gray-900">
+      <div className="flex flex-col gap-2">
+        <Link to={"/TicketSubMenu"}
+          onClick={() => handleLinkClick("/TicketSubMenu")}
+          className={`${isActive("/TicketSubMenu") ? "text-blue-400" : ""} font-semibold`}>
           Raise Ticket
         </Link>
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Open Tickets" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Open Tickets")}
+        <Link to={"/empOpenTickets"}
+          onClick={() => handleLinkClick("/empOpenTickets")}
+          className={`${isActive("/empOpenTickets") ? "text-blue-400" : ""} font-semibold`}
         >
           Open Tickets
         </Link>
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Closed Tickets" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Closed Tickets")}
+        <Link to={"/empClosedTickets"}
+          onClick={() => handleLinkClick("/empClosedTickets")}
+          className={`${isActive("/empClosedTickets") ? "text-blue-400" : ""} font-semibold`}
         >
           Closed Tickets
         </Link>
-      </div>
 
-      {/* Content */}
-      <div className="p-4 ml-52 flex-1 w-full">
-        {activeLink === "Open Tickets" && <EmpOpenTickets />}
-        {activeLink === "Closed Tickets" && <EmpClosedTickets />}
-        {activeLink === "Raise Ticket" && <RaiseTicket />}
-        {activeLink !== "Open Tickets" &&
-          activeLink !== "Closed Tickets" &&
-          activeLink !== "Raise Ticket" && (
-            <div className="text-center">
-              <p>No content available for this link</p>
-            </div>
-          )}
       </div>
     </div>
   );

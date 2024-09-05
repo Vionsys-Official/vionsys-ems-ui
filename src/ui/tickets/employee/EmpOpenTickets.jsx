@@ -51,7 +51,11 @@ const EmpOpenTicket = ({ data, isPending }) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={data} loading={isPending} />;
+  return (
+    <div className="w-full h-full mt-8">
+      <Table columns={columns} dataSource={data} loading={isPending} />;
+    </div>
+  )
 };
 
 export default function App() {
@@ -62,19 +66,19 @@ export default function App() {
 
   const dataSource = Array.isArray(data?.data)
     ? data.data
-        .filter((item) => item.status === "OPEN") // Only include closed tickets
-        .map((item) => ({
-          key: item._id,
-          raisedDate: item.ticketRaisedDate
-            ? format(new Date(item.ticketRaisedDate), "dd-MM-yyyy")
-            : "NA",
-          ticketType: item.ticketType,
-          ticketPriority: item.priority,
-          description: item.description,
-          assignedTo: item.ticketAssignedToFullName,
-          designation:item.ticketAssignedTo.designation,
-          status: item.status,
-        }))
+      .filter((item) => item.status === "OPEN") // Only include closed tickets
+      .map((item) => ({
+        key: item._id,
+        raisedDate: item.ticketRaisedDate
+          ? format(new Date(item.ticketRaisedDate), "dd-MM-yyyy")
+          : "NA",
+        ticketType: item.ticketType,
+        ticketPriority: item.priority,
+        description: item.description,
+        assignedTo: item.ticketAssignedToFullName,
+        designation: item.ticketAssignedTo.designation,
+        status: item.status,
+      }))
     : [];
 
   console.log("Data source:", dataSource);

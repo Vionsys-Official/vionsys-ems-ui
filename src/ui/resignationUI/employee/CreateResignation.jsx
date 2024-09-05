@@ -28,85 +28,87 @@ const CreateResignation = () => {
   };
 
   return (
-    <div
-      className="bg-white p-3 rounded-md font-medium"
-      style={{ maxWidth: "400px", margin: "0 auto" }}
-    >
-      <h1 className="text-center text-xl font-bold mb-3 text-[#7498D0]">
-        Vionsys Resignation Application Form
-      </h1>
-      <Form
-        form={form}
-        name="resignationForm"
-        onFinish={handleSubmit}
-        layout="vertical"
-        className="flex flex-col"
-      >
-        <Form.Item
-          label="Select Resignation Type"
-          name="resignationType"
-          className="w-full"
-          rules={[
-            { required: true, message: "Please select resignation type" },
-          ]}
+    <div className="flex justify-center mt-6 ">
+      <div className="bg-white py-4 px-6 shadow-lg rounded-lg w-full max-w-lg">
+        <h1 className="text-2xl font-bold text-center text-[#7498D0] mb-6">
+          Vionsys Resignation Application
+        </h1>
+        <Form
+          form={form}
+          name="resignationForm"
+          onFinish={handleSubmit}
+          layout="vertical"
+          className="space-y-4"
         >
-          <Select placeholder="Resignation Type">
-            <Select.Option value="Resign with Notice period">
-              Resign with Notice period
-            </Select.Option>
-            <Select.Option value="Resign without Notice period">
-              Resign without Notice period
-            </Select.Option>
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          label="Enter Notice Period Days"
-          name="noticePeriodDays"
-          rules={[
-            { required: true, message: "Please enter notice period days" },
-          ]}
-        >
-          <Input
-            placeholder="Notice Period Days"
-            type="number"
-            className="w-full"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Reason for Resignation"
-          name="resignationReason"
-          rules={[
-            { required: true, message: "Please enter your resignation reason" },
-          ]}
-        >
-          <TextArea rows={4} placeholder="Enter your reason for resignation" />
-        </Form.Item>
-
-        <div className="flex justify-between">
-          <Form.Item>
-            <Button
-              disabled={isLoading}
-              type="primary"
-              className="bg-[#7498D0] hover:bg-slate-500"
-              htmlType="submit"
-            >
-              Submit Resignation
-            </Button>
+          <Form.Item
+            label="Select Resignation Type"
+            name="resignationType"
+            rules={[
+              { required: true, message: "Please select resignation type" },
+            ]}
+          >
+            <Select placeholder="Choose Type" className="rounded-lg">
+              <Select.Option value="Resign with Notice period">
+                Resign with Notice period
+              </Select.Option>
+              <Select.Option value="Resign without Notice period">
+                Resign without Notice period
+              </Select.Option>
+            </Select>
           </Form.Item>
-          <Form.Item>
-            <Button
-              onClick={() => form.resetFields()}
-              type="text"
-              className="bg-[#f75341] text-white hover:bg-red-700"
-              htmlType="reset"
-            >
-              Clear
-            </Button>
+
+          <Form.Item
+            label="Notice Period Days"
+            name="noticePeriodDays"
+            rules={[
+              { required: true, message: "Please enter notice period days" },
+            ]}
+          >
+            <Input
+              placeholder="Enter Days"
+              type="number"
+              className="rounded-lg"
+            />
           </Form.Item>
-        </div>
-      </Form>
+
+          <Form.Item
+            label="Reason for Resignation"
+            name="resignationReason"
+            rules={[
+              { required: true, message: "Please provide a reason" },
+            ]}
+          >
+            <TextArea
+              rows={4}
+              placeholder="Explain your reason"
+              className="rounded-lg"
+            />
+          </Form.Item>
+
+          <div className="flex justify-between items-center">
+            <Form.Item>
+              <Button
+                disabled={isLoading}
+                type="primary"
+                className="bg-[#7498D0] hover:bg-slate-600 px-6 py-2 rounded-lg text-white flex justify-center items-center"
+                htmlType="submit"
+              >
+                {isLoading ? "Submitting..." : "Submit"}
+              </Button>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                onClick={() => form.resetFields()}
+                type="text"
+                className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg text-white flex justify-center items-center"
+              >
+                Clear
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 };
