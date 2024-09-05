@@ -212,7 +212,7 @@ const UserAttendance = ({ user }) => {
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(Number(e.target.value))}
-          className="mb-4 p-2 border-2 rounded border-blue-400"
+          className="mb-4 p-2 border-2 dark:bg-slate-700 dark:text-white rounded border-blue-400"
         >
           {moment.months().map((month, index) => (
             <option key={month} value={index}>
@@ -224,7 +224,7 @@ const UserAttendance = ({ user }) => {
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="mb-4 p-2 border-2 border-blue-400 rounded"
+          className="mb-4 p-2 border-2 dark:bg-slate-700 dark:text-white border-blue-400 rounded"
         >
           {Array.from({ length: 10 }, (_, i) => {
             const year = new Date().getFullYear() - i;
@@ -237,9 +237,10 @@ const UserAttendance = ({ user }) => {
         </select>
       </div>
 
-      <div className="h-[130vh] bg-white p-4 rounded-md shadow-sm mx-4">
+      <div className="h-[130vh] dark:bg-slate-700 dark:text-white bg-white p-4 rounded-md shadow-sm mx-4">
         {!attendanceLoading && !holidayLoading && (
           <Calendar
+          className="dark:bg-slate-700 dark:text-white"
             localizer={localizer}
             events={events}
             views={["month"]}
@@ -252,7 +253,7 @@ const UserAttendance = ({ user }) => {
         )}
       </div>
 
-      <div className="bg-white p-4 rounded-md shadow-sm mx-4 mb-4">
+      <div className="bg-white dark:bg-slate-700 dark:text-white p-4 rounded-md shadow-sm mx-4 mb-4">
         <div className="flex gap-6 justify-center items-center">
           <div className="flex items-center gap-2">
             <div className="w-[20px] h-[20px] bg-[#e53935]"></div>

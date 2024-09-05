@@ -72,7 +72,7 @@ const PreviousWork = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 dark:text-white">
       <Modal
         title="Employee Work Experience Add Form"
         open={addWorkModal}

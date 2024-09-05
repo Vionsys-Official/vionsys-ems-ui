@@ -38,7 +38,7 @@ const JoiningKit = () => {
     },
   ];
   return (
-    <main>
+    <main >
       <Table dataSource={KitData} columns={KitdatColumns} className="px-5" />
     </main>
   );

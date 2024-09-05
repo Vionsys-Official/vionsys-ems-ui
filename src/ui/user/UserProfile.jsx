@@ -24,7 +24,7 @@ const UserProfile = () => {
                     <LoaderIcon />
                 ) : (
                     <>
-                        <div className="w-full flex bg-white rounded-md shadow-lg">
+                        <div className="w-full flex dark:bg-slate-700 dark:text-white bg-white rounded-md shadow-lg">
                             {/* Your JSX for user profile */}
                             {/* left side image */}
                             <div className="relative rounded-md border-2 border-blue-200 flex items-center justify-center">
