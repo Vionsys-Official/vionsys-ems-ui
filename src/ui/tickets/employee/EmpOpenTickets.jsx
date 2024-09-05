@@ -53,7 +53,7 @@ const EmpOpenTicket = ({ data, isPending }) => {
 
   return (
     <div className="w-full h-full mt-8">
-      <Table columns={columns} dataSource={data} loading={isPending} />;
+      <Table columns={columns} dataSource={data} loading={isPending} />
     </div>
   )
 };
