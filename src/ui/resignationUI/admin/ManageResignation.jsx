@@ -10,8 +10,6 @@ const ManageResignation = () => {
   const [record, setRecord] = useState({});
   const { data, isPending } = useGetAllResignation();
 
-  console.log(data); // Inspect the data structure
-
   const columns = [
     {
       title: "Name",
@@ -50,8 +48,8 @@ const ManageResignation = () => {
     },
     {
       title: "Applied Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "formattedDate",
+      key: "formattedDate",
     },
     {
       title: "Status",
@@ -98,7 +96,8 @@ const ManageResignation = () => {
   ];
 
   const dataSource = Array.isArray(data?.data)
-    ? data.data.map((resignation) => {
+  ? data.data
+      .map((resignation) => {
         const {
           _id,
           resignationType,
@@ -107,7 +106,7 @@ const ManageResignation = () => {
           resignationStatus,
           date,
           userDetails,
-          noteByAdmin, // Include noteByAdmin field
+          statusUpdatedAt, // New field for tracking status update time
         } = resignation;
 
         const name = `${userDetails?.firstName || ""} ${
@@ -125,13 +124,21 @@ const ManageResignation = () => {
           resignationType,
           resignationReason,
           noticePeriodDays,
-          date: date ? format(new Date(date), "dd-MM-yyyy") : "NA",
+          date: date ? new Date(date) : null, // Use raw date for sorting
+          formattedDate: date ? format(new Date(date), "dd-MM-yyyy") : "NA", // For display
           resignationStatus,
+          statusUpdatedAt: statusUpdatedAt ? new Date(statusUpdatedAt) : null, // Track status update time
           user: resignation.user, // Required for passing to ChangeStatus
           noteByAdmin: "", // Required for passing to ChangeStatus
         };
       })
-    : [];
+      // Sort by status update time, if available, otherwise by creation date
+      .sort((a, b) => {
+        const dateA = a.statusUpdatedAt || a.date;
+        const dateB = b.statusUpdatedAt || b.date;
+        return dateB - dateA; // Newest resignations or updates appear first
+      })
+  : [];
 
   const handleEdit = (record) => {
     setIsModalOpen(!isModalOpen);
@@ -140,7 +147,7 @@ const ManageResignation = () => {
 
   return (
     <div className="w-full h-full p-4">
-      <h2 className="text-xl font-semibold mb-2">All Resignations</h2>
+      <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">All Resignations</h2>
       {isPending ? (
         <div>Loading....</div>
       ) : (
@@ -163,3 +170,4 @@ const ManageResignation = () => {
 };
 
 export default ManageResignation;
+
