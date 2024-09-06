@@ -100,7 +100,7 @@ const CheckRStatus = ({ data }) => {
       ]
       : []),
     {
-      title: "Exit Date",
+      title: "Last Working Day",
       dataIndex: "exitDate",
       key: "exitDate",
       render: (text) => <span className="text-sm">{text}</span>,
@@ -161,7 +161,7 @@ export default function App() {
   if (isLoading) return <div>Loading...</div>;
 
   const dataSource = Array.isArray(data?.data)
-  ? data.data
+    ? data.data
       .map((item) => ({
         key: item._id,
         resignationType: item.resignationType,
@@ -176,7 +176,7 @@ export default function App() {
         userId: item.user._id,
       }))
       .sort((a, b) => b.rawDate - a.rawDate) // Ensure sorting by date (newest first)
-  : [];
+    : [];
 
   return <CheckRStatus data={dataSource} />;
 }

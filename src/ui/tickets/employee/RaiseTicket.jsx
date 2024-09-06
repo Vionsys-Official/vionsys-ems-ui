@@ -31,9 +31,9 @@ const RaiseTicket = () => {
   };
 
   return (
-    <div className="flex justify-center md:h-[90vh] py-5">
-      <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-lg">
-        <h1 className="text-2xl font-bold text-center text-[#7498D0] mb-6">
+    <div className="flex justify-center py-5">
+      <div className="bg-white px-6 py-2 shadow-lg rounded-lg w-full max-w-lg">
+        <h1 className="text-2xl font-bold text-center text-[#7498D0] mb-2">
           Vionsys Raise Ticket Form
         </h1>
         <Form
