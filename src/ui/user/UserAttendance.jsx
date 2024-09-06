@@ -3,8 +3,12 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useGetAttendance from "../../features/attendance/useGetAttendance";
+import useUpdateAttendanceAdmin from "../../features/attendance/useUpdateAttendanceAdmin"; // Import the hook
 import "../../utils/css/attendance.css";
 import getholidayList from "../../features/holiday/useGetHolidays";
+import getUserIdRole from "../../utils/getUserIdRole";
+import { Modal, Button, TimePicker, Form } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 
 const localizer = momentLocalizer(moment);
 
@@ -30,30 +34,37 @@ const isAlternateSundayOff = (date) => {
 };
 
 const UserAttendance = ({ user }) => {
+  const { role } = getUserIdRole();
+  const { updateAttendanceAdmin, isPending } = useUpdateAttendanceAdmin(); // Use the hook
+
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  
-  const { data: employeesData, isPending: attendanceLoading } =
-    useGetAttendance({ uid: user?.uid || null, year: selectedYear, month: selectedMonth });
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [form] = Form.useForm();
+
+  const { data: employeesData, isPending: attendanceLoading , refetch } =
+    useGetAttendance({
+      uid: user?.uid || null,
+      year: selectedYear,
+      month: selectedMonth,
+    });
 
   const userAttendance = employeesData?.data?.attendance;
-  //   console.log(userAttendance)
-  const {
-    data: holidayList,
-    isPending: holidayLoading,
-  } = getholidayList(selectedYear);
 
-  //   console.log(holidayList?.fixedHolidays);
+  const { data: holidayList, isPending: holidayLoading } =
+    getholidayList(selectedYear);
+
   const fixedHolidayList = holidayList?.fixedHolidays || [];
   const [events, setEvents] = useState([]);
-
 
   useEffect(() => {
     if (userAttendance && fixedHolidayList) {
       const processedEvents = generateEvents(userAttendance, fixedHolidayList);
       if (JSON.stringify(events) !== JSON.stringify(processedEvents)) {
-      setEvents(processedEvents);
-    }
+        setEvents(processedEvents);
+      }
     }
   }, [userAttendance, fixedHolidayList, selectedYear, selectedMonth]);
 
@@ -71,6 +82,7 @@ const UserAttendance = ({ user }) => {
     ) {
       const dateString = moment(date).format("YYYY-MM-DD");
 
+      // Include weekly offs and handle attendance here (removed for brevity)
       // Include weekly offs for all dates
       if (
         isWeeklyOff(date) ||
@@ -111,8 +123,8 @@ const UserAttendance = ({ user }) => {
               ? new Date(attendanceEntry.logoutTime)
               : null;
 
-              if (loginTime <= today) {
-                if (logoutTime) {
+            if (loginTime <= today) {
+              if (logoutTime) {
                 // Calculate work time duration
                 const duration = moment.duration(logoutTime - loginTime);
                 const hours = duration.hours();
@@ -124,7 +136,7 @@ const UserAttendance = ({ user }) => {
                     ? "NA"
                     : `${hours} hrs : ${minutes} mins`;
 
-                    // Employee is present
+                // Employee is present
                 processedEvents.push({
                   title: "P",
                   work: workTime,
@@ -135,6 +147,7 @@ const UserAttendance = ({ user }) => {
                   end: new Date(dateString),
                   type: "present",
                   classNames: "present",
+                  attendanceEntry,
                 });
               } else {
                 // Employee is present but logoutTime is missing
@@ -188,7 +201,7 @@ const UserAttendance = ({ user }) => {
 
   // Custom Event component to include login and logout times
   const CustomEvent = ({ event }) => (
-    <div>
+    <div className="relative">
       <strong className="text-sm">{event.title}</strong>
       {event.desc && (
         <div className="text-[13px] font-semibold">{event.desc}</div>
@@ -198,8 +211,64 @@ const UserAttendance = ({ user }) => {
           <div className="text-[10px] font-semibold">{event.work}</div>
         )}
       </span>
+      {role === "admin" && (
+        <Button
+          size="small"
+          icon={<EditOutlined style={{ fontSize: "12px" }} />}
+          onClick={() => openEditModal(event)}
+          className="absolute top-0 right-0 mt-1 mr-1"
+          style={{ padding: "0", fontSize: "12px" }}
+        />
+      )}
     </div>
   );
+
+  const openEditModal = (event) => {
+  // Set selected event data
+  setSelectedEvent(event);
+
+  // Check and set form values based on event data
+  form.setFieldsValue({
+    loginTime: event.attendanceEntry?.loginTime
+      ? moment(event.attendanceEntry.loginTime)
+      : undefined, // Leave undefined if loginTime is not available
+    logoutTime: event.attendanceEntry?.logoutTime
+      ? moment(event.attendanceEntry.logoutTime)
+      : undefined, // Leave undefined if logoutTime is not available
+  });
+
+  // Show the modal
+  setIsModalVisible(true);
+};
+
+
+  const handleOk = () => {
+    const values = form.getFieldsValue();
+    const loginTime = values.loginTime ? values.loginTime.toISOString() : null;
+    const logoutTime = values.logoutTime
+      ? values.logoutTime.toISOString()
+      : null;
+    const attendanceDate = selectedEvent.start.toISOString();
+    const userId = user.uid;
+    const attendanceData = {
+      userId,
+      date: attendanceDate,
+      loginTime: loginTime || null,
+      logoutTime: logoutTime || null,
+    };
+
+    // Call mutation to update attendance
+    updateAttendanceAdmin(attendanceData, {
+      onSuccess: () => {
+        // Refetch attendance data on success
+        refetch(); // This will refetch the attendance data
+      },
+    });
+    setIsModalVisible(false);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const handleNavigate = (date) => {
     setSelectedYear(date.getFullYear());
@@ -224,7 +293,7 @@ const UserAttendance = ({ user }) => {
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="mb-4 p-2 border-2 dark:bg-slate-700 dark:text-white border-blue-400 rounded"
+          className="mb-4 p-2 border-2 border-blue-400 rounded"
         >
           {Array.from({ length: 10 }, (_, i) => {
             const year = new Date().getFullYear() - i;
@@ -253,7 +322,48 @@ const UserAttendance = ({ user }) => {
         )}
       </div>
 
-      <div className="bg-white dark:bg-slate-700 dark:text-white p-4 rounded-md shadow-sm mx-4 mb-4">
+      <Modal
+        title="Edit Attendance"
+        open={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="cancel" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            loading={isPending}
+          >
+            Ok
+          </Button>,
+        ]}
+      >
+        {selectedEvent && (
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={{
+              loginTime: selectedEvent.attendanceEntry?.loginTime
+                ? moment(selectedEvent.attendanceEntry.loginTime)
+                : null,
+              logoutTime: selectedEvent.attendanceEntry?.logoutTime
+                ? moment(selectedEvent.attendanceEntry.logoutTime)
+                : null,
+            }}
+          >
+            <Form.Item label="Login Time" name="loginTime">
+              <TimePicker format="h:mm a" />
+            </Form.Item>
+            <Form.Item label="Logout Time" name="logoutTime">
+              <TimePicker format="h:mm a" />
+            </Form.Item>
+          </Form>
+        )}
+      </Modal>
+      <div className="bg-white p-4 rounded-md shadow-sm mx-4 mb-4">
         <div className="flex gap-6 justify-center items-center">
           <div className="flex items-center gap-2">
             <div className="w-[20px] h-[20px] bg-[#e53935]"></div>

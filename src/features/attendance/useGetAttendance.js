@@ -6,12 +6,12 @@ const useGetAttendance = ({ uid = null } = {}) => {
   const { id } = getUserIdRole();
   const sid = uid ?? id; // Use uid if provided, otherwise use id
 
-  const { data, isPending } = useQuery({
+  const { data, isPending , refetch} = useQuery({
     queryKey: ["attendances", sid],
     queryFn: () => getAttendance(sid),
   });
 
-  return { data, isPending };
+  return { data, isPending, refetch};
 };
 
 export default useGetAttendance;

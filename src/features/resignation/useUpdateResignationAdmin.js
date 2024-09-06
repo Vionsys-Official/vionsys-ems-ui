@@ -5,8 +5,8 @@ import { updateResignationStatus as updateResignationStatusApi } from "../../ser
 const useUpdateResignationAdmin = () => {
   const queryClient = useQueryClient();
   const { mutate: dataupdateResignation, isLoading: isPending } = useMutation({
-    mutationFn: ({ resignationId, userId, status, note}) =>
-      updateResignationStatusApi({ resignationId, userId, status, note }),
+    mutationFn: ({ resignationId, userId, status, note , adminId}) =>
+      updateResignationStatusApi({ resignationId, userId, status, note , adminId}),
     onSuccess: () => {
       message.success("Resignation status updated successfully");
       queryClient.invalidateQueries(["getAllResignations"]);

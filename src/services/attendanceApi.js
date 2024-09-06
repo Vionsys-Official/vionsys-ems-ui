@@ -68,3 +68,36 @@ export const getExcelDataByID = async (
   const response = await api.post(`/attendance/Excel/getExcel/${userId}`, data);
   return response.data;
 };
+
+
+export const adminUpdateAttendance = async ({
+  userId,
+  date,
+  loginTime,
+  logoutTime,
+}) => {
+  // Define the payload with the required fields
+  const payload = {
+    date,
+    loginTime,
+    logoutTime,
+  };
+
+  // Get the token from localStorage for authorization
+  const token = localStorage.getItem("token");
+
+  // Send the PUT request to update the attendance
+  const response = await api.put(
+    `/attendance/admin/update/${userId}`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  // Return the updated attendance data
+  return response.data;
+};
+

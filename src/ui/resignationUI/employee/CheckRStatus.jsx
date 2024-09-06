@@ -161,19 +161,22 @@ export default function App() {
   if (isLoading) return <div>Loading...</div>;
 
   const dataSource = Array.isArray(data?.data)
-    ? data.data.map((item) => ({
-      key: item._id,
-      resignationType: item.resignationType,
-      noticePeriodDays: item.noticePeriodDays,
-      noteByAdmin: item.noteByAdmin,
-      resignationStatus: item.resignationStatus,
-      date: item.date ? format(new Date(item.date), "dd-MM-yyyy") : "NA",
-      exitDate: item.exitDate
-        ? format(new Date(item.exitDate), "dd-MM-yyyy")
-        : "NA",
-      userId: item.user._id, // Ensure userId is correctly extracted
-    }))
-    : [];
+  ? data.data
+      .map((item) => ({
+        key: item._id,
+        resignationType: item.resignationType,
+        noticePeriodDays: item.noticePeriodDays,
+        noteByAdmin: item.noteByAdmin,
+        resignationStatus: item.resignationStatus,
+        date: item.date ? format(new Date(item.date), "dd-MM-yyyy") : "NA",
+        rawDate: item.date ? new Date(item.date) : null, // Convert to date object for accurate sorting
+        exitDate: item.exitDate
+          ? format(new Date(item.exitDate), "dd-MM-yyyy")
+          : "NA",
+        userId: item.user._id,
+      }))
+      .sort((a, b) => b.rawDate - a.rawDate) // Ensure sorting by date (newest first)
+  : [];
 
   return <CheckRStatus data={dataSource} />;
 }

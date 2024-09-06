@@ -17,7 +17,7 @@ const TicketSubMenu = () => {
       <div className="flex flex-col gap-2">
         <Link to={"/TicketSubMenu"}
           onClick={() => handleLinkClick("/TicketSubMenu")}
-          className={`${isActive("/TicketSubmenu") ? "text-blue-400" : ""} font-semibold`}>
+          className={`${isActive("/TicketSubMenu") ? "text-blue-400" : ""} font-semibold`}>
           Raise Ticket
         </Link>
         <Link to={"/empOpenTickets"}

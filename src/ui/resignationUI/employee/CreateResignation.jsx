@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Modal } from "antd";
 import useCreateResignation from "../../../features/resignation/useCreateResignation";
 import getUserIdRole from "../../../utils/getUserIdRole";
 
@@ -20,9 +20,19 @@ const CreateResignation = () => {
       ...resignationData,
       user: userId,
     };
-    createResignation(data, {
-      onSuccess: () => {
-        form.resetFields(); // Clear the form fields after successful submission
+
+    // Confirmation dialog before submitting the resignation
+    Modal.confirm({
+      title: "Are you sure you want to apply for resignation?",
+      content: "",
+      okText: "Yes",
+      cancelText: "No",
+      onOk: () => {
+        createResignation(data, {
+          onSuccess: () => {
+            form.resetFields(); // Clear the form fields after successful submission
+          },
+        });
       },
     });
   };
