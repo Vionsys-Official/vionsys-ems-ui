@@ -26,7 +26,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search input
   const [filteredItems, setFilteredItems] = useState([]); // State for filtered search results
   const searchRef = useRef(null); // To detect clicks outside
-
+  const softwareVersion = import.meta.env.VITE_APP_VERSION;
   const { id } = getUserIdRole();
   const { user: userData, isPending: userLoading } = useGetCurrentUser(id);
   const { sendmail, isPending } = sendverifymail();
@@ -113,14 +113,14 @@ const Header = () => {
       <Menu.Item
         key="1"
         onClick={handleResetPassword}
-        className="border border-blue-500"
+        className="border"
       >
         Reset Password
       </Menu.Item>
       <Menu.Item
         key="2"
         onClick={() => handleSendVerifyEmail(userData?.data?.user?.email)}
-        className="border border-blue-400"
+        className="border"
         disabled={userData?.data?.user?.isVerified || isPending}
       >
         {!isPending
@@ -132,12 +132,21 @@ const Header = () => {
       <Menu.Item
         key="4"
         onClick={handleLogout}
-        className="border-blue-400 border"
+        className=" border"
       >
         <div className="flex text-center text-red-500 font-semibold pl-6">
           <IoLogOutOutline className="text-red-500 text-center" size={25} />
           <span className="ml-2 text-md">Log Out</span>
         </div>
+      </Menu.Item>
+
+      {/* Version Display at the End */}
+      <Menu.Item
+        key="version"
+        className="text-gray-900 border-b mt-2 pt-2"
+        disabled
+      >
+        Version {softwareVersion}
       </Menu.Item>
     </Menu>
   );
@@ -211,7 +220,7 @@ const Header = () => {
         )}
 
         <ThemeButton />
-        <Tooltip title={"Settings"}>
+        <Tooltip title={`Setting`}>
           <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
             <Avatar
               src={userData?.data?.user?.profile}
