@@ -69,22 +69,22 @@ const AllUsersList = () => {
   };
 
   return (
-    <section className="py-5">
+    <section className="py-5 mb-8">
       <div className="h-full p-5 w-full">
         <div className="">
           <div>
-            <h1 className="font-bold text-xl">All Employees List</h1>
+            <h1 className="font-bold text-black dark:text-white  text-xl">All Employees List</h1>
           </div>
           <div className="flex gap-4">
             <Input
-              className="p-2 my-4 flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-gray-600"
+              className="p-2 my-4 flex gap-4 mb-5 border-2 rounded-lg dark:text-white border-blue-200 dark:border-white dark:border dark:bg-gray-500"
               placeholder="Search users"
               onChange={handleSearch}
               value={searchQuery}
               prefix={<SearchOutlined />}
             />
             <Button
-              className="bg-slate-100 dark:bg-slate-500 dark:text-slate-100 my-4 flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-gray-600"
+              className="bg-slate-100 dark:bg-slate-500 text-center dark:text-slate-100 my-4 flex gap-4 mb-5 border-2 rounded-lg border-blue-200 dark:border-white dark:border"
               size="large"
               onClick={showModal}
             >
@@ -102,7 +102,7 @@ const AllUsersList = () => {
             itemLayout="horizontal"
             dataSource={userData}
             renderItem={(item, index) => (
-              <List.Item key={index} className="bg-white rounded-md mb-1">
+              <List.Item key={index} className="bg-white dark:text-white dark:bg-slate-500 rounded-md mb-1">
                 <div className="flex items-center gap-4 px-6">
                   <Avatar
                     size={50}
@@ -113,21 +113,21 @@ const AllUsersList = () => {
                   />
                   <div>
                     <div className="text-base font-semibold">{item.title}</div>
-                    <div>{item?.designation}</div>
+                    <div className="dark:text-gray-200">{item?.designation}</div>
                   </div>
                 </div>
                 <div>
                   <Link to={`${item?.key}`}>
                     <Button
                       type="link"
-                      className="mr-4 border border-slate-300"
+                      className="mr-4 border dark:text-white border-slate-300"
                     >
                       View Details
                     </Button>
                   </Link>
                   <Button
-                    type=""
-                    className="mr-4 border border-slate-300 text-blue-600"
+                    type="link"
+                    className="mr-4 border dark:text-white border-slate-300"
                     onClick={() => handleViewAttendance(item)}
                   >
                     Attendance

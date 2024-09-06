@@ -19,28 +19,28 @@ const LeaveMenu = () => {
   const isActive = (path) => activePath === path;
 
   return (
-    <div className="flex text-sm px-6 flex-col h-screen items-center gap-2 bg-gray-100 shadow-lg py-10 mx-auto text-gray-900">
+    <div className="flex text-sm px-6 flex-col h-screen items-center gap-2 bg-gray-100 dark:bg-slate-700 shadow-lg py-10 mx-auto text-gray-900 dark:text-white">
       <div className="flex flex-col gap-2">
         <Link to={"/LeaveMenu"}
           onClick={() => handleLinkClick("/LeaveMenu")}
-          className={`${isActive("/LeaveMenu") ? "text-blue-400" : ""} font-semibold`}>
+          className={`${isActive("/LeaveMenu") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}>
           Leave Request
         </Link>
         <Link to={"/cancelledLeaveList"}
           onClick={() => handleLinkClick("/cancelledLeaveList")}
-          className={`${isActive("/cancelledLeaveList") ? "text-blue-400" : ""} font-semibold`}
+          className={`${isActive("/cancelledLeaveList") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
         >
           Cancelled Leaves
         </Link>
         <Link to={"/leaveActivities"}
           onClick={() => handleLinkClick("/leaveActivities")}
-          className={`${isActive("/leaveActivities") ? "text-blue-400" : ""} font-semibold`}
+          className={`${isActive("/leaveActivities") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
         >
           Leaves Activity
         </Link>
         <Link to={"/leaveHistory"}
           onClick={() => handleLinkClick("/leaveHistory")}
-          className={`${isActive("/leaveHistory") ? "text-blue-400" : ""} font-semibold`}
+          className={`${isActive("/leaveHistory") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
         >
           Leaves History
         </Link>

@@ -12,24 +12,24 @@ const ProfileSubMenu = () => {
     return (
         <div className="flex w-full h-screen pt-[1px] gap-4">
             {/* Sidebar */}
-            <div className="flex fixed text-sm flex-col items-center w-auto h-full bg-slate-50 px-6 py-10  gap-2 shadow-md">
+            <div className="flex fixed text-sm flex-col items-center w-auto h-full text-black dark:text-white dark:bg-slate-700 bg-slate-50 px-6 py-10  gap-2 shadow-md">
                 <div className='flex flex-col gap-2'>
                     <Link
-                        className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Profile" ? "text-blue-300" : ""
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Profile" ? "text-blue-300 dark:text-white dark:font-bold" : ""
                             }`}
                         onClick={() => handleSidebarLinkClick("Profile")}
                     >
                         Profile
                     </Link>
                     <Link
-                        className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Joining Kit" ? " text-blue-300" : ""
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Joining Kit" ? " text-blue-300 dark:text-white dark:font-bold" : ""
                             }`}
                         onClick={() => handleSidebarLinkClick("Joining Kit")}
                     >
                         Joining Kit
                     </Link>
                     <Link
-                        className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Previous Experience" ? " text-blue-300" : ""
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Previous Experience" ? " text-blue-300 dark:text-white dark:font-bold" : ""
                             }`}
                         onClick={() => handleSidebarLinkClick("Previous Experience")}
                     >

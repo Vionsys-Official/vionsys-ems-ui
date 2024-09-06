@@ -37,8 +37,8 @@ const UserDetails = () => {
 
   return (
     <div className="p-2 w-full rounded-xl flex justify-center items-center  dark:text-slate-600 overflow-hidden ">
-      <div className="relative rounded-xl grid grid-cols-1 md:grid-cols-5 px-4 gap-6 md:pt-14 pt-20 bg-white dark:bg-slate-400 py-8 w-full justify-around items-start ">
-        <div className="flex flex-col col-span-2 gap-2 shadow-xl bg-slate-100 p-6 rounded-lg border  ">
+      <div className="relative rounded-xl grid grid-cols-1 md:grid-cols-5 px-4 gap-6 md:pt-14 pt-20 bg-white dark:bg-slate-200 py-8 w-full justify-around items-start ">
+        <div className="flex flex-col col-span-2 gap-2 shadow-xl bg-slate-100 dark:bg-slate-400  p-6 rounded-lg border  ">
         <div className="flex flex-col justify-center items-center">
          <div className="rounded-full border-2 border-blue-200">
          <img
@@ -60,7 +60,7 @@ const UserDetails = () => {
           {`${userData?.designation}`}
           </p>
           </div>
-          <div className="flex bg-white flex-col gap-2 justify-start items-start  py-2 rounded-lg pl-4  border">
+          <div className="flex bg-white dark:bg-slate-200  flex-col gap-2 justify-start items-start  py-2 rounded-lg pl-4  border">
           <p className="text-xl  font-bold text-center  dark:text-black">
            Basic Information
           </p>
@@ -160,7 +160,7 @@ const UserDetails = () => {
         </div>
 
         <div className="relative flex flex-col  gap-4  col-span-3 h-full ">
-        <div className="flex flex-col gap-3 border shadow-lg p-4 dark:bg-white rounded-lg h-full">
+        <div className="flex flex-col gap-3 border shadow-lg p-4 dark:bg-slate-400 rounded-lg h-full">
          <p className="text-xl font-bold flex justify-start items-start dark:text-black py-2 px-4">
           Personal Information
           </p>
@@ -237,7 +237,7 @@ const UserDetails = () => {
         </div>
 
 
-          <div className="flex flex-row  py-5 justify-between items-center px-8  shadow-lg border rounded-lg dark:bg-white
+          <div className="flex flex-row  py-5 justify-between items-center px-8  shadow-lg border rounded-lg dark:bg-slate-400 
            gap-8 h-full">
           <p className="text-lg text-gray-700 dark:text-black">
             <span className="block text-black font-semibold dark:text-black">

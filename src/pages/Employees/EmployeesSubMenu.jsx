@@ -1,69 +1,47 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import AllUsersList from '../../ui/AllUsersList';
-import AttendanceList from '../../ui/AttendanceList';
-import TaskHistory from '../taskpages/TaskHistory';
-import HolidayCalander from '../../ui/HolidayCalander';
-
+import  { useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+ 
 const EmployeesSubMenu = () => {
-    const [activeLink, setActiveLink] = useState("Employee List");
-
-    const handleSidebarLinkClick = (link) => {
-        setActiveLink(link);
-    };
-
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [activePath, setIsActivePath] = useState(location.pathname);
+ 
+    const handleLinkClick = (path) => {
+        setIsActivePath(path);
+        navigate(path);
+    }
+ 
+    const isActive = (path) => activePath === path;
     return (
-        <div className="flex h-screen pt-[1px]">
-            {/* Sidebar */}
-            <div className="flex flex-1 dark:bg-slate-700 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Employee List" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Employee List")}
-                >
-                    Employee List
-                </Link>
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Attendance List" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Attendance List")}
-                >
-                    Attendance List
-                </Link>
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Employee Tasks" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Employee Tasks")}
-                >
-                    Employee Tasks
-                </Link>
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Holiday Calendar" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Holiday Calendar")}
-                >
-                    Holiday Calendar
-                </Link>
-            </div>
-
-            {/* Content */}
-            <div className="p-4 ml-52 flex-1 w-full">
-                {activeLink === "Employee List" && <AllUsersList />}
-                {activeLink === "Attendance List" && <AttendanceList />}
-                {activeLink === "Employee Tasks" && <TaskHistory />}
-                {activeLink === "Holiday Calendar" && <HolidayCalander />}
-                {activeLink !== "Employee List" &&
-                    activeLink !== "Attendance List" &&
-                    activeLink !== "Employee Tasks"
-                    &&
-                    activeLink !== "Holiday Calendar" && (
-                        <div className="text-center">
-                            <p>No content available for this link</p>
-                        </div>
-                    )}
-            </div>
+        <div className="flex text-sm px-6 flex-col h-screen items-center gap-2 dark:text-white dark:bg-slate-700 bg-gray-100 shadow-lg py-10 mx-auto text-gray-900">
+        <div className="flex flex-col gap-2">
+            <Link to={"/employees"}
+                onClick={() => handleLinkClick("/employees")}
+                className={`${isActive("/employees") ? "text-blue-300 dark:text-white dark:font-bold" : ""} font-semibold`}>
+                Employeee List
+            </Link>
+            <Link to={"/attendanceList"}
+                onClick={() => handleLinkClick("/attendanceList")}
+                className={`${isActive("/attendanceList") ? "text-blue-300 dark:text-white dark:font-bold" : ""} font-semibold`}
+            >
+                Attendance List
+            </Link>
+            <Link to={"/employeesTasks"}
+                onClick={() => handleLinkClick("/employeesTasks")}
+                className={`${isActive("/employeesTasks") ? "text-blue-300 dark:text-white dark:font-bold" : ""} font-semibold`}
+            >
+                Employee Tasks
+            </Link>
+            <Link to={"/holidayCalendar"}
+                onClick={() => handleLinkClick("/holidayCalendar")}
+                className={`${isActive("/holidayCalendar") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
+            >
+               Holiday Calendar
+            </Link>
         </div>
+    </div>
     )
 }
-
+ 
 export default EmployeesSubMenu
+ 
