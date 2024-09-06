@@ -149,8 +149,8 @@ function App() {
                   )
                 }
               >
-                <Route index element={<Navigate to="/TicketSubMenu" />} />
-                <Route path="/TicketSubMenu" element={<RaiseTicket />} />
+                <Route index element={<Navigate to="/TicketSubmenu" />} />
+                <Route path="/TicketSubmenu" element={<RaiseTicket />} />
                 <Route path="/empOpenTickets" element={<EmpOpenTickets />} />
                 <Route path="/empClosedTickets" element={<EmpClosedTickets />} />
               </Route>
