@@ -62,7 +62,7 @@ const ManageResignation = () => {
         } else if (status === "Rejected") {
           color = "volcano";
         } else if (status === "Pending") {
-          color = "geekblue";
+          color = "yellow";
         } else if (status === "Canceled") {
           color = "gray";
         }
