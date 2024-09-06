@@ -293,7 +293,7 @@ const UserAttendance = ({ user }) => {
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="mb-4 p-2 border-2 border-blue-400 rounded"
+          className="mb-4 p-2 border-2 dark:bg-slate-700 dark:text-white border-blue-400 rounded"
         >
           {Array.from({ length: 10 }, (_, i) => {
             const year = new Date().getFullYear() - i;

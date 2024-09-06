@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import useGetAssigneeTicketsById from "../../../features/ticket/useGetAssigneeById";
 import getUserIdRole from "../../../utils/getUserIdRole";
 import { Button, Modal, Table, Tag, Input } from "antd";
@@ -147,8 +147,9 @@ const ManageTickets = () => {
 
   return (
     <div className="w-full flex flex-col  h-full p-4">
-      <h2 className="text-xl font-semibold mb-2">All Tickets</h2>
+      <h2 className="text-xl font-semibold text-black dark:text-white mb-2">All Tickets</h2>
       <Input
+        className="dark:bg-slate-400 border-2 border-blue-200"
         placeholder="Search Tickets by Employee Name"
         onChange={handleSearch}
         style={{ marginBottom: 16, width: 400 }}
@@ -163,6 +164,7 @@ const ManageTickets = () => {
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
+        className="dark:bg-slate-400"
       >
         <EditTicket
           record={record}

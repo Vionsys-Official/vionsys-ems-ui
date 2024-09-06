@@ -205,7 +205,7 @@ const LeaveForm = () => {
               <Button
                 disabled={isPending}
                 type="primary"
-                className="bg-[#7498D0] hover:bg-slate-500"
+                className="bg-[#7498D0] text-white hover:bg-slate-500"
                 htmlType="submit"
               >
                 Apply for leave
