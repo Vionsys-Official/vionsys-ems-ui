@@ -151,7 +151,7 @@ const LeavesHistory = () => {
 
   return (
     <section className="py-5">
-      <main className="p-5 gap-4 mb-5 admin-leave-page-container">
+      <main className="p-5 gap-4 mb-5 dark:bg-slate-500 admin-leave-page-container">
       <div className="border-2 rounded-lg border-blue-200">
         {isPending && <LoaderIcon />}
 

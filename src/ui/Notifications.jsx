@@ -30,7 +30,7 @@ const Notifications = () => {
   };
 
   return (
-    <Card className="col-span-3 dark:border-none dark:bg-gray-700">
+    <Card className="col-span-2 dark:border-none dark:bg-gray-700">
       <div className="flex justify-between px-6 items-center border-b-2 rounded-3xl border-orange-500 pb-2">
         <h1 className="text-xl dark:text-white">Notifications</h1>
         {role === "admin" && (

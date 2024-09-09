@@ -1,7 +1,4 @@
-import getUserIdRole from "../utils/getUserIdRole";
 import { api } from "./authApi";
-
-const { id } = getUserIdRole();
 
 export const createAttendance = async ({ user, time, timeTag, note }) => {
   let payload =
@@ -14,13 +11,15 @@ export const createAttendance = async ({ user, time, timeTag, note }) => {
   return response.data;
 };
 
-export const getAttendance = async () => {
+export const getAttendance = async (id) => {
+  // console.log(id)
   const token = localStorage.getItem("token");
   const response = await api.get(`/attendance/find/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  // console.log(response.data)
   return response.data;
 };
 
@@ -69,3 +68,36 @@ export const getExcelDataByID = async (
   const response = await api.post(`/attendance/Excel/getExcel/${userId}`, data);
   return response.data;
 };
+
+
+export const adminUpdateAttendance = async ({
+  userId,
+  date,
+  loginTime,
+  logoutTime,
+}) => {
+  // Define the payload with the required fields
+  const payload = {
+    date,
+    loginTime,
+    logoutTime,
+  };
+
+  // Get the token from localStorage for authorization
+  const token = localStorage.getItem("token");
+
+  // Send the PUT request to update the attendance
+  const response = await api.put(
+    `/attendance/admin/update/${userId}`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  // Return the updated attendance data
+  return response.data;
+};
+

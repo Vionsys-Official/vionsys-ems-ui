@@ -7,6 +7,7 @@ import { LoaderIcon } from "react-hot-toast";
 import UserLeaveHistory from "../../ui/leavesUI/UserLeaveHistory";
 import "../../utils/css/AdminLeavePage.css";
 import { SearchOutlined } from "@ant-design/icons";
+import withAuth from "../../store/withAuth";
 
 const AdminCancleLeave = () => {
   const { id } = getUserIdRole();
@@ -116,9 +117,9 @@ const AdminCancleLeave = () => {
 
   return (
     <section className="py-5">
-      <div className="gap-4 mb-5 admin-leave-page-container">
+      <div className="gap-4 mb-5  text-black rounded-lg dark:bg-slate-500 dark:text-white admin-leave-page-container">
         <Input
-          className="p-2 border-2 rounded-lg border-blue-200"
+          className="p-2 border-2 rounded-lg text-black dark:bg-slate-400 dark:text-white border-blue-200"
           placeholder="Search by name"
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
@@ -128,7 +129,7 @@ const AdminCancleLeave = () => {
             width: "300px",
           }}
         />
-        <div className="admin-leave-table border-2 rounded-lg border-blue-200">
+        <div className="admin-leave-table border-2 rounded-lg text-black dark:bg-slate-400 dark:text-white border-blue-200">
           {isPending && <LoaderIcon />}
           {data && (
             <UserLeaveHistory userleave={sorteduserLeaves} columns={columns} />
@@ -139,4 +140,4 @@ const AdminCancleLeave = () => {
   );
 };
 
-export default AdminCancleLeave;
+export default withAuth(AdminCancleLeave, ["admin"]);

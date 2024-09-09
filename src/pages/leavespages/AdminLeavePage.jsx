@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import AdminLeaveModal from "../../ui/leavesUI/AdminLeaveModal";
 import "../../utils/css/AdminLeavePage.css";
 import { SearchOutlined } from "@ant-design/icons";
+import withAuth from "../../store/withAuth";
 
 const AdminLeavePage = () => {
   const [modalOpen, setmodalOpen] = useState(false);
@@ -154,14 +155,14 @@ const AdminLeavePage = () => {
 
   return (
     <section className="py-5">
-      <div className="gap-4 mb-5 admin-leave-page-container">
+      <div className="gap-4 mb-5 dark:bg-slate-500 admin-leave-page-container">
         <AdminLeaveModal
           modalOpen={modalOpen}
           setmodalOpen={setmodalOpen}
           leavedata={leavedata}
         />
         <Input
-          className="p-2 border-2 rounded-lg border-blue-200"
+          className="p-2 border-2 text-black rounded-lg dark:bg-slate-400 dark:text-white border-blue-200"
           placeholder="Search by name"
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
@@ -174,7 +175,7 @@ const AdminLeavePage = () => {
         {isPending && <LoaderIcon />}
         {AllLeaves && (
           <Table
-            className="admin-leave-table"
+            className="admin-leave-table dark:bg-slate-400"
             columns={columns}
             dataSource={sorteduserLeaves}
             onChange={onChange}
@@ -185,4 +186,4 @@ const AdminLeavePage = () => {
   );
 };
 
-export default AdminLeavePage;
+export default withAuth(AdminLeavePage, ['admin']);

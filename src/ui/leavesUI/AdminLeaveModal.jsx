@@ -14,8 +14,8 @@ const AdminLeaveModal = (props) => {
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
@@ -24,7 +24,6 @@ const AdminLeaveModal = (props) => {
 
   const handleSubmit = (values) => {
     const { note, leaveAdminstatus } = values;
-
     if (leaveAdminstatus === "Approved") {
       approveLeave(
         { leaveId, userId, note },
@@ -60,9 +59,11 @@ const AdminLeaveModal = (props) => {
         closeIcon={<HiXCircle size={25} onClick={() => setmodalOpen(false)} />}
         className="font-medium"
       >
-        <h1 className="text-xl font-bold text-center mb-6 text-[#7498D0]">Employee Leave Request</h1>
+        <h1 className="text-xl font-bold text-center mb-6 text-[#7498D0]">
+          Employee Leave Request
+        </h1>
         <Form
-        form={form}
+          form={form}
           name="Admin_Leave_Form"
           onFinish={handleSubmit}
           layout="vertical"
@@ -103,7 +104,11 @@ const AdminLeaveModal = (props) => {
                 color="black"
               />
             </Form.Item>
-            <Form.Item label="Leave End Date" name="duration" className="w-full">
+            <Form.Item
+              label="Leave End Date"
+              name="duration"
+              className="w-full"
+            >
               <Input
                 type="text"
                 defaultValue={formatDate(leavedata?.leaveEnd)}
@@ -134,7 +139,7 @@ const AdminLeaveModal = (props) => {
           <Form.Item
             label="Enter Leave Note"
             name="note"
-            rules={[{ required: true,}]}
+            rules={[{ required: true }]}
           >
             <TextArea rows={2} placeholder="Provide Leave Note Here" />
           </Form.Item>

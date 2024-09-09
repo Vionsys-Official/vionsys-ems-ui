@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import UserDetails from '../UserDetails';
-import JoiningKit from '../../ui/user/JoiningKit';
 import JoiningKitOfEmpForAdmin from '../welcomeKit/AdminKit';
 import PreviousWork from '../../ui/user/PreviousWork';
 const ProfileSubMenu = () => {
@@ -11,30 +10,32 @@ const ProfileSubMenu = () => {
         setActiveLink(link);
     };
     return (
-        <div className="flex h-screen pt-[1px]">
+        <div className="flex w-full h-screen pt-[1px] gap-4">
             {/* Sidebar */}
-            <div className="flex flex-1 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Profile" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Profile")}
-                >
-                    Profile
-                </Link>
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Joining Kit" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Joining Kit")}
-                >
-                    Joining Kit
-                </Link>
-                <Link
-                    className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Previous Experience" ? "font-bold text-blue-300" : ""
-                        }`}
-                    onClick={() => handleSidebarLinkClick("Previous Experience")}
-                >
-                    Previous Experience
-                </Link>
+            <div className="flex fixed text-sm flex-col items-center w-auto h-full text-black dark:text-white dark:bg-slate-700 bg-slate-50 px-6 py-10  gap-2 shadow-md">
+                <div className='flex flex-col gap-2'>
+                    <Link
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Profile" ? "text-blue-300 dark:text-white dark:font-bold" : ""
+                            }`}
+                        onClick={() => handleSidebarLinkClick("Profile")}
+                    >
+                        Profile
+                    </Link>
+                    <Link
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Joining Kit" ? " text-blue-300 dark:text-white dark:font-bold" : ""
+                            }`}
+                        onClick={() => handleSidebarLinkClick("Joining Kit")}
+                    >
+                        Joining Kit
+                    </Link>
+                    <Link
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Previous Experience" ? " text-blue-300 dark:text-white dark:font-bold" : ""
+                            }`}
+                        onClick={() => handleSidebarLinkClick("Previous Experience")}
+                    >
+                        Previous Experience
+                    </Link>
+                </div>
             </div>
 
             {/* Content */}
