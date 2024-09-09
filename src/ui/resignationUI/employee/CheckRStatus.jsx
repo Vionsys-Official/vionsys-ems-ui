@@ -81,7 +81,7 @@ const CheckRStatus = ({ data }) => {
         } else if (status === "Rejected") {
           color = "volcano";
         } else if (status === "Pending") {
-          color = "geekblue";
+          color = "yellow";
         }
         return (
           <Tag color={color} key={status}>
