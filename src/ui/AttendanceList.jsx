@@ -1,5 +1,6 @@
 import { LoaderIcon } from "react-hot-toast";
-import { Button, Popover, Table } from "antd";
+import { Button, Modal, Popover, Table } from "antd";
+import UserAttendance from "../ui/user/UserAttendance"
 import useGetAllAttendance from "../features/attendance/useGetAllAttendance";
 import withAuth from "../store/withAuth";
 import { format, parseISO, differenceInHours } from "date-fns";
@@ -8,6 +9,7 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import ExcelForm from "./ExcelForm";
 import { useState } from "react";
 import "../utils/css/attendance.css";
+import { IoCalendarOutline } from "react-icons/io5";
 
 const dateFormatNormal = (date) => {
   return format(parseISO(date), "dd/MM/yyyy");
@@ -19,7 +21,21 @@ const dateToTime = (dateStr) => {
 
 const AttendanceList = () => {
   const [modal, setModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); 
   const { data, isPending } = useGetAllAttendance();
+  // console.log(data?.data?.attendance)
+  const [isCalendarShow, setIsCalendarShow] = useState(false);
+
+  const handleCalendarClick = (user) => {
+    // console.log(user)
+    setSelectedUser(user);
+    setIsCalendarShow(true);
+  };
+
+  const handleCancel = () => {
+    setIsCalendarShow(false);
+    setSelectedUser(null);
+  };
 
   const columns = [
     {
@@ -76,9 +92,20 @@ const AttendanceList = () => {
         return text;
       },
     },
+    {
+      key: "Monthly Calendar",
+      dataIndex: "monthlyCalendar",
+      title: "Monthly Calendar",
+      width: 120,
+      render: (_, record) => (
+        <Button icon={<IoCalendarOutline className="w-6 h-6" />} onClick={() => handleCalendarClick(record)}/>
+      ),
+    },
   ];
 
   const dataSource = data?.data?.attendance?.map((item) => {
+    const uid=item?._id;
+    const ID = item?.attendances[0]?._id
     const loginTime = item?.attendances[0]?.loginTime
       ? dateToTime(item?.attendances[0]?.loginTime)
       : "-";
@@ -92,16 +119,20 @@ const AttendanceList = () => {
             item?.attendances[0]?.loginTime
           )
         : "-";
+        // console.log(data?.data?.attendance);
     return {
+      uid:item._id,
       name: `${item?.user?.firstName} ${item?.user?.lastName}`,
       date: dateFormatNormal(item?.attendances[0]?.date),
       employeeId: item?.user?.employeeId,
       loginTime,
       logoutTime,
+      ID,
       workTime,
+      monthlyCalendar: "Calendar"
     };
   });
-
+  // console.log(dataSource)
   return (
     <section className="py-5">
       <div className="attendance-list-container dark:bg-gray-800 ">
@@ -134,6 +165,17 @@ const AttendanceList = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal to show User Attendance */}
+      <Modal
+        title="User Attendance"
+        open={isCalendarShow}
+        onCancel={handleCancel}
+        footer={null}
+        width={1200}
+      >
+        {selectedUser && <UserAttendance user={selectedUser} />}
+      </Modal>
     </section>
   );
 };

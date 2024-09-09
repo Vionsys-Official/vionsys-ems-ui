@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { DatePicker, Space } from "antd";
 import getUserIdRole from "../../utils/getUserIdRole";
 import useCreateLeaveRequest from "../../features/leaves/useCreateLeaveRequest";
-import React from "react";
 import moment from "moment"; 
+import { message } from "antd";
 
 const { RangePicker } = DatePicker;
 
@@ -15,7 +15,7 @@ const LeaveForm = () => {
     "11-Apr-24/Ramzan",
     "29-Oct-24/Dhanteras",
   ];
-  const { data, createRequest, isPending } = useCreateLeaveRequest();
+  const { createRequest, isPending } = useCreateLeaveRequest();
   const { id: userId } = getUserIdRole();
   const { TextArea } = Input;
   const [leaveDays, setLeaveDays] = useState(0);
@@ -25,34 +25,43 @@ const LeaveForm = () => {
     key: "selection",
   });
   const [selectedLeaveType, setSelectedLeaveType] = useState(""); 
+  const [isHalfDay, setIsHalfDay] = useState(false); // New state for half-day
   const [form] = Form.useForm();
+  const [show, setShow] = useState(false);
 
   const onFinish = (values) => {
     const { startDate, endDate } = dateRange;
     const leaveStart = startDate ? startDate.toISOString() : null;
     const leaveEnd = endDate ? endDate.toISOString() : null;
     values.leaveDays = leaveDays; 
+    values.isHalfDay = isHalfDay; // Include half-day info in submission
     const data = { userId, leaveStart, leaveEnd, ...values };
     console.log(data);
     createRequest(data);
     form.resetFields();
     setDateRange({ startDate: null, endDate: null, key: "selection" });
     setLeaveDays(0);
+    setIsHalfDay(false); // Reset half-day state
+    setShow(false);
   };
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
-      const actualLeaveDays =
+      let actualLeaveDays =
         Math.ceil(
           (new Date(dateRange.endDate).getTime() -
             new Date(dateRange.startDate).getTime()) /
             (1000 * 60 * 60 * 24)
         ) + 1;
+      if (isHalfDay) {
+        actualLeaveDays -= 0.5; // Reduce by half a day if half-day is selected
+      }
       setLeaveDays(actualLeaveDays);
+      setShow(true);
     } else {
       setLeaveDays(0);
     }
-  }, [dateRange]);
+  }, [dateRange, isHalfDay]);
 
   const handleRangeChange = (dates) => {
     if (dates) {
@@ -69,6 +78,18 @@ const LeaveForm = () => {
   const handleLeaveTypeChange = (value) => {
     setSelectedLeaveType(value);
   };
+
+  const handleHalfDayChange = (e) => {
+    setIsHalfDay(e.target.checked);
+  };
+
+  function handleClear() {
+    setDateRange({ startDate: null, endDate: null, key: "selection" });
+    form.resetFields();
+    setIsHalfDay(false);
+    message.info("Form cleared successfully.");
+    setShow(false);
+  }
 
   return (
     <div className="bg-white p-5 rounded-md font-medium">
@@ -114,13 +135,18 @@ const LeaveForm = () => {
                 />
               </div>
             )}
-            <Form.Item
+           <Form.Item
               label="Leave Mode"
               name="halfDay"
               valuePropName="checked"
               className="w-full"
             >
-              <Checkbox>Half Day</Checkbox>
+              <Checkbox
+                onChange={handleHalfDayChange}
+                disabled={(leaveDays !== 1 && leaveDays !== 0.5)} // Disable if leave days are not exactly 1
+              >
+                Half Day
+              </Checkbox>
             </Form.Item>
 
             <Form.Item
@@ -173,17 +199,31 @@ const LeaveForm = () => {
           >
             <TextArea rows={4} placeholder="Reason for leave request" />
           </Form.Item>
-
-          <Form.Item>
-            <Button
-              disabled={isPending}
-              type="primary"
-              className="bg-[#7498D0] hover:bg-slate-500"
-              htmlType="submit"
-            >
-              Apply for leave
-            </Button>
-          </Form.Item>
+          
+          <div className="flex justify-between">
+            <Form.Item>
+              <Button
+                disabled={isPending}
+                type="primary"
+                className="bg-[#7498D0] text-white hover:bg-slate-500"
+                htmlType="submit"
+              >
+                Apply for leave
+              </Button>
+            </Form.Item>
+            {show && (
+              <Button
+                disabled={isPending}
+                onClick={handleClear}
+                type="text"
+                className="bg-[#f75341] text-white hover:bg-red-700"
+                htmlType="reset"
+              >
+                Clear
+              </Button>
+            )}
+          </div>
+          
         </Form>
       </div>
     </div>

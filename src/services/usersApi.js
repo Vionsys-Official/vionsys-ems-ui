@@ -2,7 +2,7 @@ import { api } from "./authApi";
 
 export const getAllUserApi = async () => {
     const token = localStorage.getItem("token");
-    const response = await api.get('', {
+    const response = await api.get('/', {
         headers: {
             Authorization: `Bearer ${token}`
         }

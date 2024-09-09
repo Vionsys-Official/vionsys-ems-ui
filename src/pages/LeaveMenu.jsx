@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 import LeavesPages from "./leavespages/LeavesPages";
@@ -7,61 +7,43 @@ import UserLeaveActivity from "./leavespages/UserLeaveActivity";
 import UserCancleLeave from "./leavespages/UserCancleLeave";
 
 const LeaveMenu = () => {
-  const [activeLink, setActiveLink] = useState("Leave Request");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activePath, setIsActivePath] = useState(location.pathname);
 
-  const handleSidebarLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  const handleLinkClick = (path) => {
+    setIsActivePath(path);
+    navigate(path);
+  }
+
+  const isActive = (path) => activePath === path;
 
   return (
-    <div className="flex h-screen pt-[1px]">
-      {/* Sidebar */}
-      <div className="flex flex-1 flex-col h-full fixed bg-slate-50 px-8 py-10  gap-2 shadow-md">
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Leave Request" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Leave Request")}
-        >
+    <div className="flex text-sm px-6 flex-col h-screen items-center gap-2 bg-gray-100 dark:bg-slate-700 shadow-lg py-10 mx-auto text-gray-900 dark:text-white">
+      <div className="flex flex-col gap-2">
+        <Link to={"/LeaveMenu"}
+          onClick={() => handleLinkClick("/LeaveMenu")}
+          className={`${isActive("/LeaveMenu") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}>
           Leave Request
         </Link>
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Cancled Leaves" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Cancled Leaves")}
+        <Link to={"/cancelledLeaveList"}
+          onClick={() => handleLinkClick("/cancelledLeaveList")}
+          className={`${isActive("/cancelledLeaveList") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
         >
           Cancelled Leaves
         </Link>
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Leaves Activity" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Leaves Activity")}
+        <Link to={"/leaveActivities"}
+          onClick={() => handleLinkClick("/leaveActivities")}
+          className={`${isActive("/leaveActivities") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
         >
           Leaves Activity
         </Link>
-        <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Leaves History" ? "font-bold text-blue-300" : ""
-            }`}
-          onClick={() => handleSidebarLinkClick("Leaves History")}
+        <Link to={"/leaveHistory"}
+          onClick={() => handleLinkClick("/leaveHistory")}
+          className={`${isActive("/leaveHistory") ? "text-blue-400 dark:text-white dark:font-bold" : ""} font-semibold`}
         >
           Leaves History
         </Link>
-      </div>
-
-      {/* Content */}
-      <div className="p-4 ml-52 flex-1 w-full">
-        {activeLink === "Leave Request" && <LeavesPages />}
-        {activeLink === "Cancled Leaves" && <UserCancleLeave />}
-        {activeLink === "Leaves Activity" && <UserLeaveActivity />}
-        {activeLink === "Leaves History" && <LeavesHistory />}
-
-        {activeLink !== "Leave Request" &&
-          activeLink !== "Cancled Leaves" &&
-          activeLink !== "Leaves Activity" &&
-          activeLink !== "Leaves History" && (
-            <div className="text-center">
-              <p>No content available for this link</p>
-            </div>
-          )}
       </div>
     </div>
   );

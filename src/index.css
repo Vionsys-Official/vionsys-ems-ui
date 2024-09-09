@@ -5,3 +5,19 @@
 ::-webkit-scrollbar {
     display: none !important;
 }
+
+  
+  .ant-btn-primary {
+    background-color: black !important;
+    border-color: black !important;
+  }
+  
+  /* Ensure that text color is also changed */
+  .ant-btn-primary:hover,
+  .ant-btn-primary:focus {
+    background-color: black !important;
+    border-color: black !important;
+  }
+
+
+  

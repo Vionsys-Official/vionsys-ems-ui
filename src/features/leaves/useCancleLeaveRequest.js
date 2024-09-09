@@ -1,4 +1,3 @@
-import React from "react";
 import { cancleleave as cancleleaveApi } from "../../services/leavesApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -10,7 +9,7 @@ const useCancleLeaveRequest = () => {
     mutationFn: ({ user, leaveId, cancleReason }) =>
       cancleleaveApi(user, leaveId, cancleReason),
     onSuccess: () => {
-      toast.success("Cancle Leave Request Successfully");
+      toast.success("Cancel Leave Request Successfully");
       query.invalidateQueries(["leaveHistory"]);
     },
     onError: (err) => {

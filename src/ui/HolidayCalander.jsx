@@ -103,18 +103,18 @@ const HolidayCalander = () => {
   };
 
   return (
-    <div className="py-5">
+    <div className="py-5 dark:text-white">
       {/* holiday delete modal form */}
       <Modal
-        className="delete_holiday"
-        title="Delete Holiday from calender"
+        className="delete_holiday dark:bg-slate-700 dark:text-white"
+        title="Delete Holiday from calendar"
         open={modal}
         onCancel={() => setmodal(false)}
         footer={null}
         closeIcon={<HiXCircle size={25} onClick={() => setmodal(false)} />}
       >
         <p className="text-red-500 py-3">
-          Do you really want to delete this holiday from calender, this action
+          Do you really want to delete this holiday from calendar, this action
           cannot be undone !
         </p>
         <Button disabled={deletePending} onClick={handleHolidayDelete}>
@@ -124,7 +124,7 @@ const HolidayCalander = () => {
 
       {/* create holiday modal form */}
       <Modal
-        title="Create new holiday in the calender"
+        title="Create new holiday in the calendar"
         open={creationmodal}
         onCancel={() => setcreationmodal(false)}
         footer={null}
@@ -132,7 +132,7 @@ const HolidayCalander = () => {
           <HiXCircle size={25} onClick={() => setcreationmodal(false)} />
         }
       >
-        <div className="gap-3 flex flex-col py-3">
+        <div className="gap-3 flex flex-col py-3 ">
           <Input
             placeholder="Enter Holiday Name"
             defaultValue={""}
@@ -163,7 +163,7 @@ const HolidayCalander = () => {
               }
               placeholder="Holiday Type"
               defaultValue={""}
-              className="w-full"
+              className="w-full "
             >
               <Select.Option value="Fixed Holiday">Fixed Holiday</Select.Option>
               <Select.Option value="Floater Holiday">
@@ -173,16 +173,16 @@ const HolidayCalander = () => {
           </div>
         </div>
         <Button disabled={CreatePending} onClick={handleAddHoliday}>
-          Add to Calender
+          Add to Calendar
         </Button>
       </Modal>
       <div>
-        <div className="flex items-center w-fit justify-center gap-2 p-2">
+        <div className="flex items-center w-fit justify-center  gap-2 p-2">
           <h1 className="text-3xl font-semibold">Holidays for year</h1>
           <Select
             onChange={(e) => setYear(e)}
             defaultValue={new Date().getFullYear()}
-            placeholder="Calender Year"
+            placeholder="Calendar Year"
             className="mt-3"
           >
             <Select.Option value={2024}>2024</Select.Option>
@@ -209,9 +209,9 @@ const HolidayCalander = () => {
         </p>
       </div>
       <div className="flex justify-center items-center gap-3 m-3">
-        <div className="w-fit border-b p-2">
+        <div className="w-fit border-b p-2 ">
           <button
-            className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${
+            className={`inline-flex  dark:text-white dark:border-slate-400 h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${
               mode === "fixed"
                 ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm focus:outline-none sm:text-base bg-[#7498d0] text-white "
                 : ""
@@ -222,7 +222,7 @@ const HolidayCalander = () => {
           </button>
 
           <button
-            className={`inline-flex h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${
+            className={`inline-flex  dark:text-white dark:border-slate-400 h-12 items-center whitespace-nowrap border-b border-black px-4 py-2 text-center text-sm text-black focus:outline-none sm:text-base ${
               mode === "floater"
                 ? "inline-flex h-12 items-center whitespace-nowrap rounded-t-md border border-b-0 border-black px-4 py-2 text-center text-sm text-white focus:outline-none sm:text-base bg-[#7498d0]"
                 : ""
@@ -244,14 +244,13 @@ const HolidayCalander = () => {
       )}
       {/* Render table based on mode */}
       <div className="p-5 gap-3 mb-4 admin-leave-page-container">
-        <div className="border-2 rounded-lg border-blue-200 dark:border-gray-600">
+        <div className="border-2  rounded-lg border-blue-200 dark:border-gray-600">
           {isPending ? (
             "Loading..."
           ) : (
             <Table
               dataSource={mode === "fixed" ? fixedHolidays : floaterHolidays}
               columns={columns}
-              className=""
             />
           )}
         </div>
