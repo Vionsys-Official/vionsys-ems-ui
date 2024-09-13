@@ -3,7 +3,7 @@ import { Button, Table, Tag, Modal, Input } from "antd";
 import getUserIdRole from "../../../utils/getUserIdRole";
 import useGetResignationById from "../../../features/resignation/useGetResignationById";
 import useCancleResignation from "../../../features/resignation/useCancleResignation";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns"; // Import isValid for date validation
 import { MdOutlineCancel } from "react-icons/md";
 
 const shouldShowNoteByAdmin = (data) => {
@@ -27,7 +27,6 @@ const CheckRStatus = ({ data }) => {
       setCurrentRecord(record);
       setModalVisible(true);
     } else {
-      // Handle the case where resignation status isn't "Pending"
       console.error("Only pending resignations can be canceled.");
     }
   };
@@ -56,14 +55,19 @@ const CheckRStatus = ({ data }) => {
       render: (text) => <span className="text-sm">{text}</span>,
     },
     {
-      title: "Resignation Type",
-      dataIndex: "resignationType",
-      key: "resignationType",
-    },
-    {
       title: "Notice Period",
       dataIndex: "noticePeriodDays",
       key: "noticePeriodDays",
+      render: (text) => (
+        <span className="text-sm">
+          {text !== undefined ? `${text} days` : "N/A"}
+        </span>
+      ),
+    },
+    {
+      title: "Notice Period Assigned by Admin",
+      dataIndex: "adminNoticePeriodDays",
+      key: "adminNoticePeriodDays",
       render: (text) => (
         <span className="text-sm">
           {text !== undefined ? `${text} days` : "N/A"}
@@ -90,20 +94,30 @@ const CheckRStatus = ({ data }) => {
         );
       },
     },
+    {
+      title: "Resignation Approved Date", // New column for admin approval date
+      dataIndex: "adminApprovedDate",
+      key: "adminApprovedDate",
+      render: (text) => {
+        return <span className="text-sm">{text || "NA"}</span>; // Display the admin approval date
+      },
+    },
     ...(showNoteByAdminColumn
       ? [
-        {
-          title: "Note by Admin",
-          dataIndex: "noteByAdmin",
-          key: "noteByAdmin",
-        },
-      ]
+          {
+            title: "Note by Admin",
+            dataIndex: "noteByAdmin",
+            key: "noteByAdmin",
+          },
+        ]
       : []),
     {
       title: "Last Working Day",
       dataIndex: "exitDate",
       key: "exitDate",
-      render: (text) => <span className="text-sm">{text}</span>,
+      render: (text) => {
+        return <span className="text-sm">{text || "NA"}</span>;
+      },
     },
     {
       title: "Cancel",
@@ -153,7 +167,6 @@ const CheckRStatus = ({ data }) => {
   );
 };
 
-
 export default function App() {
   const { id: userId } = getUserIdRole();
   const { data, isLoading } = useGetResignationById(userId);
@@ -162,20 +175,34 @@ export default function App() {
 
   const dataSource = Array.isArray(data?.data)
     ? data.data
-      .map((item) => ({
-        key: item._id,
-        resignationType: item.resignationType,
-        noticePeriodDays: item.noticePeriodDays,
-        noteByAdmin: item.noteByAdmin,
-        resignationStatus: item.resignationStatus,
-        date: item.date ? format(new Date(item.date), "dd-MM-yyyy") : "NA",
-        rawDate: item.date ? new Date(item.date) : null, // Convert to date object for accurate sorting
-        exitDate: item.exitDate
-          ? format(new Date(item.exitDate), "dd-MM-yyyy")
-          : "NA",
-        userId: item.user._id,
-      }))
-      .sort((a, b) => b.rawDate - a.rawDate) // Ensure sorting by date (newest first)
+        .map((item) => {
+          const parseMongoDate = (mongoDate) => {
+            return mongoDate?.$date ? new Date(mongoDate.$date) : null;
+          };
+
+          const parsedDate = parseMongoDate(item.date);
+
+          return {
+            key: item._id,
+            resignationType: item.resignationType,
+            noticePeriodDays: item.defaultNoticePeriod,
+            adminNoticePeriodDays: item.noticePeriodDays || "N/A",
+            noteByAdmin: item.noteByAdmin,
+            resignationStatus: item.resignationStatus,
+
+            date: item.date ? format(new Date(item.date), "dd-MM-yyyy") : "NA",
+            rawDate: isValid(parsedDate) ? parsedDate : null,
+            exitDate: item.exitDate
+              ? format(new Date(item.exitDate), "dd-MM-yyyy")
+              : "NA",
+            adminApprovedDate: item.adminApprovedDate
+              ? format(new Date(item.adminApprovedDate), "dd-MM-yyyy")
+              : "NA", // Format approval date
+
+            userId: item.user?._id || "N/A",
+          };
+        })
+        .sort((a, b) => b.rawDate - a.rawDate)
     : [];
 
   return <CheckRStatus data={dataSource} />;
