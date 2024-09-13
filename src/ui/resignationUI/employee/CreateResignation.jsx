@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Button, Form, Input, Select, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import useCreateResignation from "../../../features/resignation/useCreateResignation";
 import getUserIdRole from "../../../utils/getUserIdRole";
 
@@ -9,18 +8,7 @@ const CreateResignation = () => {
   const [form] = Form.useForm(); // Initialize form instance
   const { id: userId } = getUserIdRole();
   const { createResignation, isLoading } = useCreateResignation(); // Using the custom hook
-
-  const [isNoticePeriodDisabled, setIsNoticePeriodDisabled] = useState(); // State to manage disabling of the notice period input
-
-  // Handle resignation type change
-  const handleResignationTypeChange = (value) => {
-    if (value === "Resign without Notice period") {
-      setIsNoticePeriodDisabled(true); // Disable the notice period input
-      form.setFieldsValue({ noticePeriodDays: 0 }); // Clear the notice period field
-    } else {
-      setIsNoticePeriodDisabled(false); // Enable the notice period input
-    }
-  };
+  const defaultNoticePeriod = 60; // Default value set to 60 days
 
   const handleSubmit = (resignationData) => {
     if (!userId) {
@@ -31,6 +19,7 @@ const CreateResignation = () => {
     const data = {
       ...resignationData,
       user: userId,
+      defaultNoticePeriod, // Ensure notice period is always set to 60
     };
 
     // Confirmation dialog before submitting the resignation
@@ -62,44 +51,18 @@ const CreateResignation = () => {
           layout="vertical"
           className="space-y-4"
         >
-          {/* Resignation Type Selection */}
-          <Form.Item
-            label="Select Resignation Type"
-            name="resignationType"
-            rules={[
-              { required: true, message: "Please select resignation type" },
-            ]}
-          >
-            <Select
-              placeholder="Choose Type"
-              className="rounded-lg"
-              onChange={handleResignationTypeChange} // Listen for changes
-            >
-              <Select.Option value="Resign with Notice period">
-                Resign with Notice period
-              </Select.Option>
-              <Select.Option value="Resign without Notice period">
-                Resign without Notice period
-              </Select.Option>
-            </Select>
-          </Form.Item>
 
           {/* Notice Period Input */}
           <Form.Item
             label="Notice Period Days"
-            name="noticePeriodDays"
-            rules={[
-              {
-                required: !isNoticePeriodDisabled, // Only required if the notice period is not disabled
-                message: "Please enter notice period days",
-              },
-            ]}
+            name="defaultNoticePeriod"
+            initialValue={defaultNoticePeriod} // Set initial value to 60
           >
             <Input
-              placeholder="Enter Days"
               type="number"
+              value={defaultNoticePeriod} // Keep the value as 60
               className="rounded-lg"
-              disabled={isNoticePeriodDisabled} // Disable the field based on selection
+              disabled // Make the field non-editable
             />
           </Form.Item>
 
