@@ -1,9 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAttendance as createAttendanceApi } from "../../services/attendanceApi";
 import toast from "react-hot-toast";
+import getUserIdRole from "../../utils/getUserIdRole"; // Import this to get the user ID
 
 const useCreateAttendance = () => {
   const queryClient = useQueryClient();
+  const { id } = getUserIdRole(); // Get the user ID
+
   const { mutate: createAttendance, isPending } = useMutation({
     mutationFn: ({ user, time, timeTag, note }) =>
       createAttendanceApi({ user, time, timeTag, note }),
@@ -13,10 +16,11 @@ const useCreateAttendance = () => {
       console.log(error);
     },
     onSuccess: () => {
-      toast.success("You are checked in. Let's work ! ");
+      toast.success("You are checked in. Let's work!");
 
+      // Invalidate the attendance query for this specific user to update the calendar
       queryClient.invalidateQueries({
-        queryKey: ["attendance"],
+        queryKey: ["attendances", id],
       });
     },
   });

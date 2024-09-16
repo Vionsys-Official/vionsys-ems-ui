@@ -21,7 +21,8 @@ export const getResignationById = async (userId) => {
 };
 
 export const getAllResignations = async () => {
-  const response = await api.get(`/resignation/getAllResignation`, {
+  const response = await api.get(`/resignation/getAllResignation`,
+    {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -52,7 +53,7 @@ export const cancelResignation = async ({ resignationId, reason }) => {
   }
 };
 
-export const updateResignationStatus = async ({ resignationId, userId, status, note,adminId }) => {
+export const updateResignationStatus = async ({ resignationId, userId, status, note,adminId, noticePeriodDays,adminApprovedDate }) => {
   try {
     const response = await api.post(
       "/resignation/updateStatus",
@@ -61,7 +62,9 @@ export const updateResignationStatus = async ({ resignationId, userId, status, n
         userId,
         status,
         note,
-        adminId
+        adminId,
+        noticePeriodDays,
+        adminApprovedDate
       },
       {
         headers: {
@@ -72,7 +75,7 @@ export const updateResignationStatus = async ({ resignationId, userId, status, n
     return response.data;
   } catch (error) {
     throw new Error(
-      error.response?.data?.error || "Failed to update resignation status"
+      error.response?.data?.error
     );
   }
 };
