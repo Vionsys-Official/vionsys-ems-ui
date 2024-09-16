@@ -27,17 +27,38 @@ const ManageResignation = () => {
       key: "designation",
     },
     {
-      title: "Type",
-      dataIndex: "resignationType",
-      key: "resignationType",
-    },
-    {
       title: "Reason",
       dataIndex: "resignationReason",
       key: "resignationReason",
     },
     {
+      title: "Resignation Applied Date",
+      dataIndex: "formattedDate",
+      key: "formattedDate",
+    },
+    {
+      title: "Approved Date", // Show admin-approved date
+      dataIndex: "adminApprovedDate",
+      key: "adminApprovedDate",
+      render: (text) =>
+        text !== "NA" ? (
+          <span className="text-sm">{text}</span>
+        ) : (
+          <span className="text-sm">N/A</span>
+        ),
+    },
+    {
       title: "Notice Period",
+      dataIndex: "defaultNoticePeriod",
+      key: "defaultNoticePeriod",
+      render: (text) => (
+        <span className="text-sm">
+          {text !== undefined ? `${text} days` : "N/A"}
+        </span>
+      ),
+    },
+    {
+      title: "Notice Period By Admin",
       dataIndex: "noticePeriodDays",
       key: "noticePeriodDays",
       render: (text) => (
@@ -47,9 +68,9 @@ const ManageResignation = () => {
       ),
     },
     {
-      title: "Applied Date",
-      dataIndex: "formattedDate",
-      key: "formattedDate",
+      title: "Employee Exit Date",
+      dataIndex: "exitDate",
+      key: "exitDate",
     },
     {
       title: "Status",
@@ -77,7 +98,7 @@ const ManageResignation = () => {
       title: "Edit",
       dataIndex: "edit",
       render: (_, record) => {
-        // Disable edit button for Approved and Rejected status
+        // Disable edit button for Approved, Rejected, and Canceled statuses
         const isDisabled =
           record.resignationStatus === "Approved" ||
           record.resignationStatus === "Rejected" ||
@@ -96,49 +117,55 @@ const ManageResignation = () => {
   ];
 
   const dataSource = Array.isArray(data?.data)
-  ? data.data
-      .map((resignation) => {
-        const {
-          _id,
-          resignationType,
-          noticePeriodDays,
-          resignationReason,
-          resignationStatus,
-          date,
-          userDetails,
-          statusUpdatedAt, // New field for tracking status update time
-        } = resignation;
+    ? data.data
+        .map((resignation) => {
+          const {
+            _id,
+            noticePeriodDays,
+            defaultNoticePeriod,
+            resignationReason,
+            resignationStatus,
+            date,
+            adminApprovedDate, // Ensure the adminApprovedDate is part of the data
+            exitDate,
+            userDetails,
+          } = resignation;
 
-        const name = `${userDetails?.firstName || ""} ${
-          userDetails?.lastName || ""
-        }`;
-        const email = userDetails?.email || "";
-        const designation = userDetails?.designation || "";
+          const name = `${userDetails?.firstName || ""} ${
+            userDetails?.lastName || ""
+          }`;
+          const email = userDetails?.email || "";
+          const designation = userDetails?.designation || "";
 
-        return {
-          key: _id,
-          _id, // Required for passing to ChangeStatus
-          name,
-          email,
-          designation,
-          resignationType,
-          resignationReason,
-          noticePeriodDays,
-          date: date ? new Date(date) : null, // Use raw date for sorting
-          formattedDate: date ? format(new Date(date), "dd-MM-yyyy") : "NA", // For display
-          resignationStatus,
-          statusUpdatedAt: statusUpdatedAt ? new Date(statusUpdatedAt) : null, // Track status update time
-          user: resignation.user, // Required for passing to ChangeStatus
-          noteByAdmin: "", // Required for passing to ChangeStatus
-        };
-      })
-      // Sort by status update time, if available, otherwise by creation date
-      .sort((a, b) => {
-        const dateA = a.statusUpdatedAt || a.date;
-        const dateB = b.statusUpdatedAt || b.date;
-        return dateB - dateA; // Newest resignations or updates appear first
-      })
-  : [];
+          return {
+            key: _id,
+            _id, // Required for passing to ChangeStatus
+            name,
+            email,
+            designation,
+            resignationReason,
+            noticePeriodDays,
+            defaultNoticePeriod,
+            // Format adminApprovedDate for display
+            adminApprovedDate: adminApprovedDate
+              ? format(new Date(adminApprovedDate), "dd-MM-yyyy")
+              : "NA",
+            date: date ? new Date(date) : null, // Use raw date for sorting
+            formattedDate: date ? format(new Date(date), "dd-MM-yyyy") : "NA", // For display
+            exitDate: exitDate
+              ? format(new Date(exitDate), "dd-MM-yyyy") // Format exit date if available
+              : "NA",
+            resignationStatus,
+            user: resignation.user, // Required for passing to ChangeStatus
+            noteByAdmin: resignation.noteByAdmin || "N/A", // Include noteByAdmin field
+          };
+        })
+        .sort((a, b) => {
+          const dateA = a.statusUpdatedAt || a.date;
+          const dateB = b.statusUpdatedAt || b.date;
+          return dateB - dateA; // Newest resignations or updates appear first
+        })
+    : [];
 
   const handleEdit = (record) => {
     setIsModalOpen(!isModalOpen);
@@ -147,7 +174,9 @@ const ManageResignation = () => {
 
   return (
     <div className="w-full h-full p-4">
-      <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">All Resignations</h2>
+      <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">
+        All Resignations
+      </h2>
       {isPending ? (
         <div>Loading....</div>
       ) : (
@@ -170,4 +199,3 @@ const ManageResignation = () => {
 };
 
 export default ManageResignation;
-
