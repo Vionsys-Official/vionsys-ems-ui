@@ -44,12 +44,15 @@ const UserAttendance = ({ user }) => {
 
   const [form] = Form.useForm();
 
-  const { data: employeesData, isPending: attendanceLoading , refetch } =
-    useGetAttendance({
-      uid: user?.uid || null,
-      year: selectedYear,
-      month: selectedMonth,
-    });
+  const {
+    data: employeesData,
+    isPending: attendanceLoading,
+    refetch,
+  } = useGetAttendance({
+    uid: user?.uid || null,
+    year: selectedYear,
+    month: selectedMonth,
+  });
 
   const userAttendance = employeesData?.data?.attendance;
 
@@ -159,6 +162,7 @@ const UserAttendance = ({ user }) => {
                   end: new Date(dateString),
                   type: "present",
                   classNames: "present",
+                  attendanceEntry,
                 });
               }
             }
@@ -195,7 +199,6 @@ const UserAttendance = ({ user }) => {
       style.backgroundColor = "#7498d0"; // Blue color for holidays
       style.color = "#fff";
     }
-
     return { style };
   };
 
@@ -237,22 +240,36 @@ const UserAttendance = ({ user }) => {
       : undefined, // Leave undefined if logoutTime is not available
   });
 
-  // Show the modal
-  setIsModalVisible(true);
-};
-
+    // Show the modal
+    setIsModalVisible(true);
+  };
 
   const handleOk = () => {
     const values = form.getFieldsValue();
-    const loginTime = values.loginTime ? values.loginTime.toISOString() : null;
-    const logoutTime = values.logoutTime
-      ? values.logoutTime.toISOString()
+
+    // Ensure loginTime and logoutTime are properly formatted
+    const loginTime = values.loginTime
+      ? moment(selectedEvent.start)
+          .set({
+            hour: values.loginTime.hour(),
+            minute: values.loginTime.minute(),
+          })
+          .toISOString()
       : null;
-    const attendanceDate = selectedEvent.start.toISOString();
+
+    const logoutTime = values.logoutTime
+      ? moment(selectedEvent.start)
+          .set({
+            hour: values.logoutTime.hour(),
+            minute: values.logoutTime.minute(),
+          })
+          .toISOString()
+      : null;
+
     const userId = user.uid;
     const attendanceData = {
       userId,
-      date: attendanceDate,
+      date: selectedEvent.start.toISOString(), // Keep the original date
       loginTime: loginTime || null,
       logoutTime: logoutTime || null,
     };
@@ -309,7 +326,7 @@ const UserAttendance = ({ user }) => {
       <div className="h-[130vh] dark:bg-slate-700 dark:text-white bg-white p-4 rounded-md shadow-sm mx-4">
         {!attendanceLoading && !holidayLoading && (
           <Calendar
-          className="dark:bg-slate-700 dark:text-white"
+            className="dark:bg-slate-700 dark:text-white"
             localizer={localizer}
             events={events}
             views={["month"]}
