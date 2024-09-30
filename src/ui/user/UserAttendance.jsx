@@ -44,12 +44,15 @@ const UserAttendance = ({ user }) => {
 
   const [form] = Form.useForm();
 
-  const { data: employeesData, isPending: attendanceLoading , refetch } =
-    useGetAttendance({
-      uid: user?.uid || null,
-      year: selectedYear,
-      month: selectedMonth,
-    });
+  const {
+    data: employeesData,
+    isPending: attendanceLoading,
+    refetch,
+  } = useGetAttendance({
+    uid: user?.uid || null,
+    year: selectedYear,
+    month: selectedMonth,
+  });
 
   const userAttendance = employeesData?.data?.attendance;
 
@@ -82,13 +85,72 @@ const UserAttendance = ({ user }) => {
     ) {
       const dateString = moment(date).format("YYYY-MM-DD");
 
-      // Include weekly offs and handle attendance here (removed for brevity)
-      // Include weekly offs for all dates
-      if (
+      // Check for attendance on the current date
+      const attendanceEntry = attendanceData?.find(
+        (entry) => moment(entry.date).format("YYYY-MM-DD") === dateString
+      );
+
+      // Check if it's a holiday
+      const holiday = fixedHolidayList.find(
+        (entry) => moment(entry.date).format("YYYY-MM-DD") === dateString
+      );
+
+      // Check for weekly off
+      const isWO =
         isWeeklyOff(date) ||
         isAlternateSaturdayOff(date) ||
-        isAlternateSundayOff(date)
-      ) {
+        isAlternateSundayOff(date);
+
+      if (attendanceEntry) {
+        const loginTime = new Date(attendanceEntry?.loginTime);
+        const logoutTime = attendanceEntry?.logoutTime
+          ? new Date(attendanceEntry.logoutTime)
+          : null;
+
+        // Calculate work time duration
+        const duration = logoutTime
+          ? moment.duration(logoutTime - loginTime)
+          : null;
+        const workTime = duration
+          ? `${duration.hours()} hrs : ${duration.minutes()} mins`
+          : "NA";
+
+        let title = "P";
+        let classNames = "present";
+
+        if (holiday) {
+          title = "HO/P";
+          classNames = "presentHoliday";
+        } else if (isWO) {
+          title = "WO/P";
+          classNames = "presentWeeklyOff";
+        }
+
+        // Push attendance event
+        processedEvents.push({
+          title,
+          work: workTime,
+          desc: `${moment(loginTime).format("hh:mm")} - ${
+            logoutTime ? moment(logoutTime).format("hh:mm") : "NA"
+          }`,
+          start: new Date(dateString),
+          end: new Date(dateString),
+          type: "present",
+          classNames,
+          attendanceEntry,
+        });
+      } else if (holiday) {
+        // If it's a holiday without attendance
+        processedEvents.push({
+          title: "HO",
+          desc: holiday.holidayName,
+          start: new Date(dateString),
+          end: new Date(dateString),
+          type: "holiday",
+          classNames: "holiday",
+        });
+      } else if (isWO) {
+        // If it's a weekly off without attendance
         processedEvents.push({
           title: "WO",
           start: new Date(dateString),
@@ -96,83 +158,15 @@ const UserAttendance = ({ user }) => {
           type: "weeklyOff",
           classNames: "weeklyOff",
         });
-      } else {
-        const holiday = fixedHolidayList.find(
-          (entry) => moment(entry.date).format("YYYY-MM-DD") === dateString
-        );
-        if (holiday) {
-          // If the date is a holiday, mark it as HO (Holiday) with blue color
-          processedEvents.push({
-            title: "HO",
-            desc: holiday.holidayName,
-            start: new Date(dateString),
-            end: new Date(dateString),
-            type: "holiday",
-            classNames: "holiday",
-          });
-        } else {
-          // Check if there is attendance data for the date
-          const attendanceEntry = attendanceData?.find(
-            (entry) => moment(entry.date).format("YYYY-MM-DD") === dateString
-          );
-
-          // If attendance data exists, determine if the employee is present or absent
-          if (attendanceEntry) {
-            const loginTime = new Date(attendanceEntry?.loginTime);
-            const logoutTime = attendanceEntry?.logoutTime
-              ? new Date(attendanceEntry.logoutTime)
-              : null;
-
-            if (loginTime <= today) {
-              if (logoutTime) {
-                // Calculate work time duration
-                const duration = moment.duration(logoutTime - loginTime);
-                const hours = duration.hours();
-                const minutes = duration.minutes();
-
-                // Handle NaN cases
-                const workTime =
-                  isNaN(hours) || isNaN(minutes)
-                    ? "NA"
-                    : `${hours} hrs : ${minutes} mins`;
-
-                // Employee is present
-                processedEvents.push({
-                  title: "P",
-                  work: workTime,
-                  desc: `${moment(loginTime).format("hh:mm")} - ${moment(
-                    logoutTime
-                  ).format("hh:mm")}`,
-                  start: new Date(dateString),
-                  end: new Date(dateString),
-                  type: "present",
-                  classNames: "present",
-                  attendanceEntry,
-                });
-              } else {
-                // Employee is present but logoutTime is missing
-                processedEvents.push({
-                  title: "P",
-                  work: "NA",
-                  desc: `${moment(loginTime).format("hh:mm")} - NA`,
-                  start: new Date(dateString),
-                  end: new Date(dateString),
-                  type: "present",
-                  classNames: "present",
-                });
-              }
-            }
-          } else if (date <= today) {
-            // Employee is absent
-            processedEvents.push({
-              title: "A",
-              start: new Date(dateString),
-              end: new Date(dateString),
-              type: "absent",
-              classNames: "absent",
-            });
-          }
-        }
+      } else if (date <= today) {
+        // If the employee is absent
+        processedEvents.push({
+          title: "A",
+          start: new Date(dateString),
+          end: new Date(dateString),
+          type: "absent",
+          classNames: "absent",
+        });
       }
     }
 
@@ -194,8 +188,13 @@ const UserAttendance = ({ user }) => {
     } else if (event.title === "HO") {
       style.backgroundColor = "#7498d0"; // Blue color for holidays
       style.color = "#fff";
+    } else if (event.title == "HO/P") {
+      style.backgroundColor = "#0a42ab";
+      style.color = "#fff";
+    } else if (event.title == "WO/P") {
+      style.backgroundColor = "#0a42ab";
+      style.color = "#fff";
     }
-
     return { style };
   };
 
@@ -224,35 +223,49 @@ const UserAttendance = ({ user }) => {
   );
 
   const openEditModal = (event) => {
-  // Set selected event data
-  setSelectedEvent(event);
+    // Set selected event data
+    setSelectedEvent(event);
 
-  // Check and set form values based on event data
-  form.setFieldsValue({
-    loginTime: event.attendanceEntry?.loginTime
-      ? moment(event.attendanceEntry.loginTime)
-      : undefined, // Leave undefined if loginTime is not available
-    logoutTime: event.attendanceEntry?.logoutTime
-      ? moment(event.attendanceEntry.logoutTime)
-      : undefined, // Leave undefined if logoutTime is not available
-  });
+    // Check and set form values based on event data
+    form.setFieldsValue({
+      loginTime: event.attendanceEntry?.loginTime
+        ? moment(event.attendanceEntry.loginTime)
+        : undefined, // Leave undefined if loginTime is not available
+      logoutTime: event.attendanceEntry?.logoutTime
+        ? moment(event.attendanceEntry.logoutTime)
+        : undefined, // Leave undefined if logoutTime is not available
+    });
 
-  // Show the modal
-  setIsModalVisible(true);
-};
-
+    // Show the modal
+    setIsModalVisible(true);
+  };
 
   const handleOk = () => {
     const values = form.getFieldsValue();
-    const loginTime = values.loginTime ? values.loginTime.toISOString() : null;
-    const logoutTime = values.logoutTime
-      ? values.logoutTime.toISOString()
+
+    // Ensure loginTime and logoutTime are properly formatted
+    const loginTime = values.loginTime
+      ? moment(selectedEvent.start)
+          .set({
+            hour: values.loginTime.hour(),
+            minute: values.loginTime.minute(),
+          })
+          .toISOString()
       : null;
-    const attendanceDate = selectedEvent.start.toISOString();
+
+    const logoutTime = values.logoutTime
+      ? moment(selectedEvent.start)
+          .set({
+            hour: values.logoutTime.hour(),
+            minute: values.logoutTime.minute(),
+          })
+          .toISOString()
+      : null;
+
     const userId = user.uid;
     const attendanceData = {
       userId,
-      date: attendanceDate,
+      date: selectedEvent.start.toISOString(), // Keep the original date
       loginTime: loginTime || null,
       logoutTime: logoutTime || null,
     };
@@ -309,7 +322,7 @@ const UserAttendance = ({ user }) => {
       <div className="h-[130vh] dark:bg-slate-700 dark:text-white bg-white p-4 rounded-md shadow-sm mx-4">
         {!attendanceLoading && !holidayLoading && (
           <Calendar
-          className="dark:bg-slate-700 dark:text-white"
+            className="dark:bg-slate-700 dark:text-white"
             localizer={localizer}
             events={events}
             views={["month"]}

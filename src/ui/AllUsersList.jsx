@@ -1,5 +1,5 @@
 import { LoaderIcon } from "react-hot-toast";
-// import UserCard from "./UserCard"; 
+// import UserCard from "./UserCard";
 import useGetAllUsers from "../features/users/useGetAllUsers";
 import CreateNewUser from "../pages/CreateNewUser";
 import withAuth from "../store/withAuth";
@@ -9,7 +9,8 @@ import getUserIdRole from "../utils/getUserIdRole";
 import { Link } from "react-router-dom";
 import { SearchOutlined } from "@ant-design/icons";
 import UserAttendance from "./user/UserAttendance";
-
+import UserLeaveActivity from "../pages/leavespages/UserLeaveActivity";
+ 
 const AllUsersList = () => {
   const { id } = getUserIdRole();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,8 +18,9 @@ const AllUsersList = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
+ 
   useEffect(() => {
     if (allUsers && allUsers.data) {
       setUsers(allUsers.data.users || []);
@@ -37,7 +39,12 @@ const AllUsersList = () => {
     });
     setUsers(filterResults);
   };
-
+ 
+  const handleViewLeave = (user) => {
+    setSelectedUser(user);
+    setIsLeaveModalOpen(true)
+  }
+ 
   const handleViewAttendance = (user) => {
     // console.log(user)
     setSelectedUser(user);
@@ -46,6 +53,7 @@ const AllUsersList = () => {
 
   const handleCancel = () => {
     setIsAttendanceModalOpen(false);
+    setIsLeaveModalOpen(false)
     setSelectedUser(null);
   };
 
@@ -132,6 +140,13 @@ const AllUsersList = () => {
                   >
                     Attendance
                   </Button>
+                  <Button
+                    type="link"
+                    className="mr-4 border dark:text-white border-slate-300"
+                    onClick={() => handleViewLeave(item.uid)}
+                  >
+                    Leaves
+                  </Button>
                 </div>
               </List.Item>
             )}
@@ -145,6 +160,15 @@ const AllUsersList = () => {
           width={1000}
         >
           {selectedUser && <UserAttendance user={selectedUser} />}
+        </Modal>
+        <Modal
+          title="User Leaves"
+          open={isLeaveModalOpen}
+          onCancel={handleCancel}
+          footer={null}
+          width={1000}
+        >
+          {selectedUser && <UserLeaveActivity user={selectedUser} />}
         </Modal>
       </div>
     </section>
