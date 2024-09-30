@@ -80,3 +80,17 @@ export const leaverejected = async (leaveId, userId, note) => {
   );
   return response.data;
 };
+
+
+export const updateLeaveCount = async (userId, leaveData) => {
+  console.log("Leave data to update:", leaveData);
+  console.log("User ID:", userId);
+  
+  const response = await api.patch(`/leaves/update/${userId}`, leaveData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+  return response.data;
+};
