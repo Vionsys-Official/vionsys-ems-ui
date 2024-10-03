@@ -45,18 +45,19 @@ const HighlightsBDWA = () => {
             )}
             {TodaysBirthday && TodaysBirthday?.length > 0 && (
                 <List
-                    className="overflow-scroll max-h-40 "
+                    className="overflow-scroll pt-4 max-h-40 px-1 border-b"
                     itemLayout="horizontal"
                     dataSource={TodaysBirthday}
                     renderItem={(item, index) => (
-                        <List.Item className="bg-cyan-100 rounded-lg mb-1">
+                        <List.Item className="bg-white rounded-lg mb-1">
                             <Skeleton avatar title={false} active loading={isLoading}>
                                 <List.Item.Meta
+                                className='px-3 dark:text-white'
                                     avatar={<Avatar  src={`${item.profile}`} />}
                                     title={<p className="capitalize font-semibold">{item.firstName}&nbsp;{item.lastName}</p>}
-                                    description="Birthday"
+                                    description={<p className='text-green-500 font-semibold '>Birthday</p> }
                                 />
-                                <div className="text-[#999] flex flex-col relative  pb-2">
+                                <div className="text-[#999] px-4 flex flex-col relative  pb-2">
                                     <span>{format(new Date(item.dob), "dd/MM/yyyy")}</span>
                                 </div>
                             </Skeleton>
@@ -76,7 +77,7 @@ const HighlightsBDWA = () => {
                                 className='px-3 dark:text-white'
                                     avatar={<Avatar className='mt-2' src={`${item.profile}`} />}
                                     title={<p className="capitalize dark:text-white  font-semibold">{item.firstName}&nbsp;{item.lastName}</p>}
-                                    description={<p className='text-green-500 font-semibold '>Upcoming Birthday</p> }
+                                    description={<p className='text-yellow-500 font-semibold '>Upcoming Birthday</p> }
                                 />
                                 <div className="text-[#999] px-4 flex dark:text-white flex-col relative  pb-2">
                                     <span>{format(new Date(item.dob), "dd/MM/yyyy")}</span>
