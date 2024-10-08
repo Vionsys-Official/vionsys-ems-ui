@@ -1,11 +1,10 @@
-import { Button, Form, Input, Select, AutoComplete } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useGetCurrentUser from "../features/users/useGetCurrentUser";
 import useUpdate from "../features/authentication/useUpdate";
 import { useUpdateFormData } from "../features/users/useUpdateFormData";
-import useGetAllUsers from "../features/users/useGetAllUsers";
 
 const UpdateUserForm = () => {
   const [file, setFile] = useState();
@@ -13,26 +12,6 @@ const UpdateUserForm = () => {
   const navigate = useNavigate();
   const { update, isPending } = useUpdate();
   const { user } = useGetCurrentUser(userId);
-  const [options, setOptions] = useState([]);
-
-  const handleSearch = (value) => {
-    const filteredOptions = availableEmployees
-      ?.filter((employee) =>
-        employee.name.toLowerCase().includes(value.toLowerCase())
-      )
-      .map((employee) => ({ value: employee.name }));
-
-    setOptions(filteredOptions);
-  };
-
-  const { allUsers } = useGetAllUsers();
-  const allEmployees = allUsers?.data?.users;
-
-  const availableEmployees = allEmployees?.map((user) => {
-    return {
-      name: `${user.firstName} ${user.lastName}`,
-    };
-  });
   let userObject = user?.data.user;
   userObject = {
     ...userObject,
@@ -273,22 +252,29 @@ const UpdateUserForm = () => {
               name="reportingManager"
               className="flex-1"
             >
-              <AutoComplete
-                options={options}
-                onSearch={handleSearch}
-                placeholder="Select"
-                filterOption={false} // So it only relies on the custom search logic
-              />
+              <Select defaultValue="Select">
+                <Option value="Shubham Kale">Shubham Kale</Option>
+                <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
+                <Option value="Govind Rathod">Govind Rathod</Option>
+                <Option value="Nilam Rathod">Nilam Rathod</Option>
+                <Option value="Anjlee Chadar">Anjlee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
+              </Select>
             </Form.Item>
 
             {/* Team Lead */}
             <Form.Item label="Team Lead" name="teamLead" className="flex-1">
-            <AutoComplete
-                options={options}
-                onSearch={handleSearch}
-                placeholder="Select"
-                filterOption={false} // So it only relies on the custom search logic
-              />
+              <Select defaultValue="Select">
+                <Option value="Shubham Kale">Shubham Kale</Option>
+                <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
+                <Option value="Govind Rathod">Govind Rathod</Option>
+                <Option value="Nilam Rathod">Nilam Rathod</Option>
+                <Option value="Anjlee Chadar">Anjlee Chadar</Option>
+                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
+                <Option value="Prem Khadekar">Prem Khadekar</Option>
+                <Option value="Sagar Yenkure">Sagar Yenkure</Option>
+                <Option value="Ravikant Waghmare">Ravikant Waghmare</Option>
+              </Select>
             </Form.Item>
 
             {/* Role */}
