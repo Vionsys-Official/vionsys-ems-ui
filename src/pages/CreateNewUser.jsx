@@ -1,7 +1,8 @@
-import { Button, Form, Input, Modal, Select, Upload } from "antd";
+import { Button, Form, Input, Modal, Select, Upload, AutoComplete } from "antd";
 import { HiXCircle } from "react-icons/hi";
 import useSignup from "../features/authentication/useSignup";
 import { useState } from "react";
+import useGetAllUsers from "../features/users/useGetAllUsers";
 
 const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
   const [file, setFile] = useState();
@@ -9,6 +10,26 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
   const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
   const genders = ["Male", "Female", "Other"];
   const { Option } = Select;
+  const [options, setOptions] = useState([]);
+
+  const handleSearch = (value) => {
+    const filteredOptions = availableEmployees
+      ?.filter((employee) =>
+        employee.name.toLowerCase().includes(value.toLowerCase())
+      )
+      .map((employee) => ({ value: employee.name }));
+
+    setOptions(filteredOptions);
+  };
+
+  const { allUsers } = useGetAllUsers();
+  const allEmployees = allUsers?.data?.users;
+
+  const availableEmployees = allEmployees?.map((user) => {
+    return {
+      name: `${user.firstName} ${user.lastName}`,
+    };
+  });
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -328,35 +349,31 @@ const CreateNewUser = ({ isModalOpen, setIsModalOpen }) => {
               name="reportingManager"
               className="flex-1"
             >
-              <Select defaultValue="Select">
-                <Option value="Shubham Kale">Shubham Kale</Option>
-                <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
-                <Option value="Govind Rathod">Govind Rathod</Option>
-                <Option value="Nilam Rathod">Nilam Rathod</Option>
-                <Option value="Anjlee Chadar">Anjlee Chadar</Option>
-                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
-              </Select>
+              <AutoComplete
+                options={options}
+                onSearch={handleSearch}
+                placeholder="Select"
+                filterOption={false} // So it only relies on the custom search logic
+              />
             </Form.Item>
 
             {/* Team Lead */}
             <Form.Item label="Team Lead" name="teamLead" className="flex-1">
-              <Select defaultValue="Select">
-                <Option value="Shubham Kale">Shubham Kale</Option>
-                <Option value="Pankaj Kandhare">Pankaj Kandhare</Option>
-                <Option value="Govind Rathod">Govind Rathod</Option>
-                <Option value="Nilam Rathod">Nilam Rathod</Option>
-                <Option value="Anjlee Chadar">Anjlee Chadar</Option>
-                <Option value="Rahul Dandwekar">Rahul Dandwekar</Option>
-                <Option value="Prem Khadekar">Prem Khadekar</Option>
-                <Option value="Sagar Yenkure">Sagar Yenkure</Option>
-                <Option value="Ravikant Waghmare">Ravikant Waghmare</Option>
-              </Select>
+              <AutoComplete
+                options={options}
+                onSearch={handleSearch}
+                placeholder="Select"
+                filterOption={false} // So it only relies on the custom search logic
+              />
             </Form.Item>
 
             {/* Role */}
-            <Form.Item label="Role" name="role" className="flex-1" rules={[
-                { required: true, message: "Please enter your role" },
-              ]}>
+            <Form.Item
+              label="Role"
+              name="role"
+              className="flex-1"
+              rules={[{ required: true, message: "Please enter your role" }]}
+            >
               <Select defaultValue="Select">
                 <Option value="admin">Admin</Option>
                 <Option value="user">User</Option>

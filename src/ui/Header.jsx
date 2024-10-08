@@ -221,7 +221,7 @@ const Header = () => {
 
         <ThemeButton />
         <Tooltip title={`Setting`}>
-          <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
+          <Dropdown menu={menu} trigger={["click"]} placement="bottomRight">
             <Avatar
               src={userData?.data?.user?.profile}
               alt="User Profile"
