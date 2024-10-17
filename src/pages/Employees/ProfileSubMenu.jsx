@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import UserDetails from '../UserDetails';
 import JoiningKitOfEmpForAdmin from '../welcomeKit/AdminKit';
 import PreviousWork from '../../ui/user/PreviousWork';
+import Documents from "../../ui/user/Documents"
+
 const ProfileSubMenu = () => {
     const [activeLink, setActiveLink] = useState("Profile");
 
@@ -35,6 +37,13 @@ const ProfileSubMenu = () => {
                     >
                         Previous Experience
                     </Link>
+                    <Link
+                        className={`flex gap-2 hover:text-blue-400 dark:hover:text-white rounded-md ${activeLink === "Documents" ? " text-blue-300 dark:text-white dark:font-bold" : ""
+                            }`}
+                        onClick={() => handleSidebarLinkClick("Documents")}
+                    >
+                        Documents
+                    </Link>
                 </div>
             </div>
 
@@ -43,6 +52,7 @@ const ProfileSubMenu = () => {
                 {activeLink === "Profile" && <UserDetails />}
                 {activeLink === "Joining Kit" && <JoiningKitOfEmpForAdmin />}
                 {activeLink === "Previous Experience" && <PreviousWork />}
+                {activeLink === "Documents"&& <Documents/>}
             </div>
         </div>
     )
