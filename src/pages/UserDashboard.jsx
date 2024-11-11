@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import UserProfile from "../ui/user/UserProfile";
 import { useState } from "react";
-import EmploymentType from "../ui/user/EmploymentType";
+//import EmploymentType from "../ui/user/EmploymentType";
 import PreviousWork from "../ui/user/PreviousWork";
 import JoiningKit from "../ui/user/JoiningKit";
-import UserDocuments from "../ui/user/UserDocuments";
 import HolidayCalander from "../ui/HolidayCalander";
 import UserAttendance from "../ui/user/UserAttendance";
-
+import UserDocuments from "../ui/user/UserDocu"
 const Dashboard = () => {
   const [activeLink, setActiveLink] = useState("Profile");
 
@@ -54,13 +53,13 @@ const Dashboard = () => {
         >
           Attendance
         </Link>
-        {/* <Link
-          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "Documents" ? "font-bold text-blue-300" : ""
+        <Link
+          className={`flex gap-2 hover:text-blue-400 rounded-md ${activeLink === "UserDocuments" ? "font-bold text-blue-300" : ""
             }`}
-          onClick={() => handleSidebarLinkClick("Documents")}
+          onClick={() => handleSidebarLinkClick("UserDocuments")}
         >
           Documents
-        </Link> */}
+        </Link>
         <Link
           className={`flex gap-2 dark:text-white hover:text-blue-400 rounded-md ${activeLink === "HolidayCalander" ? "font-bold text-blue-300 dark:text-blue-300" : ""
             }`}
@@ -76,14 +75,15 @@ const Dashboard = () => {
         {/* {activeLink === "Employment Type" && <EmploymentType />} */}
         {activeLink === "Previous Experience" && <PreviousWork />}
         {activeLink === "Joining Kit" && <JoiningKit />}
-        {/* {activeLink === "Documents" && <UserDocuments />} */}
         {activeLink === "HolidayCalander" && <HolidayCalander />}
+        {activeLink == "UserDocuments" && <UserDocuments/>}
         {activeLink === "Attendance" && <UserAttendance />}
         {activeLink !== "Profile" &&
           // activeLink !== "Employment Type" &&
-          activeLink !== "Previous Experience" &&
+          activeLink !== "Previous Experience" &&-
           activeLink !== "Joining Kit" &&
           activeLink !== "Attendance" &&
+          activeLink !== "UserDocuments" &&
           activeLink !== "HolidayCalander" && (
             // activeLink !== "Documents" &&
             <div className="text-center">

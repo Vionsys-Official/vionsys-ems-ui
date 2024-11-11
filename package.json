@@ -14,7 +14,7 @@
     "@tanstack/react-query-devtools": "^5.18.1",
     "antd": "^5.14.1",
     "axios": "^1.6.7",
-    "date-fns": "^3.3.1",
+    "date-fns": "^3.6.0",
     "firebase": "^10.12.2",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
