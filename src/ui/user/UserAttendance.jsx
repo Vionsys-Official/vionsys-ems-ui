@@ -9,6 +9,7 @@ import getholidayList from "../../features/holiday/useGetHolidays";
 import getUserIdRole from "../../utils/getUserIdRole";
 import { Modal, Button, TimePicker, Form } from "antd";
 import { EditOutlined } from "@ant-design/icons";
+import getDeviceNameFromUserAgent from "../../utils/getDeviceNameFromUserAgent";
 
 const localizer = momentLocalizer(moment);
 
@@ -216,12 +217,16 @@ const UserAttendance = ({ user }) => {
       </span>
       <div>
         {role === "admin" && event.loginDevice && (
-          <p className="text-[12px]">Login: {event.loginDevice}</p>
+          <p className="text-[12px]">
+            Login: {getDeviceNameFromUserAgent(event.loginDevice)}
+          </p>
         )}
       </div>
       <div>
         {role === "admin" && event.logoutDevice && (
-          <p className="text-[12px]">Logout: {event.logoutDevice}</p>
+          <p className="text-[12px]">
+            Logout: {getDeviceNameFromUserAgent(event.logoutDevice)}
+          </p>
         )}
       </div>
       {role === "admin" && (
