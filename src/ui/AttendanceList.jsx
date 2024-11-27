@@ -1,6 +1,6 @@
 import { LoaderIcon } from "react-hot-toast";
-import { Button, Modal, Popover, Table } from "antd";
-import UserAttendance from "../ui/user/UserAttendance"
+import { Button, Modal, Popover, Table, Tag } from "antd";
+import UserAttendance from "../ui/user/UserAttendance";
 import useGetAllAttendance from "../features/attendance/useGetAllAttendance";
 import withAuth from "../store/withAuth";
 import { format, parseISO, differenceInHours } from "date-fns";
@@ -21,7 +21,7 @@ const dateToTime = (dateStr) => {
 
 const AttendanceList = () => {
   const [modal, setModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null); 
+  const [selectedUser, setSelectedUser] = useState(null);
   const { data, isPending } = useGetAllAttendance();
   // console.log(data?.data?.attendance)
   const [isCalendarShow, setIsCalendarShow] = useState(false);
@@ -42,7 +42,7 @@ const AttendanceList = () => {
       key: "employeeId",
       dataIndex: "employeeId",
       title: "EMP ID",
-      width: 80,
+      width: 100,
       sorter: (a, b) => a.employeeId.localeCompare(b.employeeId),
     },
     {
@@ -50,7 +50,7 @@ const AttendanceList = () => {
       dataIndex: "name",
       title: "EMP Name",
       fixed: "left",
-      width: 120,
+      width: 150,
       render: (text) => <span className="font-semibold">{text}</span>,
     },
     {
@@ -60,22 +60,49 @@ const AttendanceList = () => {
       width: 100,
     },
     {
-      key: "loginTime",
-      dataIndex: "loginTime",
-      title: "Login Time",
-      width: 120,
+      key: "loginDetails",
+      title: "Login Details",
+      width: 180,
+      render: (_, record) => {
+        return (
+          <div className="flex flex-col gap-2">
+            <p className="flex gap-2">
+              <p>Time:{""}</p>
+              <Tag color="blue">{record.loginTime}</Tag>
+            </p>
+            <p className="flex gap-2">
+              <p>Device:{""}</p>
+              <Tag color="green">{record.loginDevice}</Tag>
+            </p>
+          </div>
+        );
+      },
     },
     {
-      key: "logoutTime",
-      dataIndex: "logoutTime",
-      title: "Logout Time",
-      width: 120,
+      key: "logoutDetails",
+      title: "Logout Details",
+      width: 180,
+      render: (_, record) => {
+        return (
+          <div className="flex flex-col gap-2">
+            <p className="flex gap-2">
+              <p>Time:{""}</p>
+              <Tag color="blue">{record.logoutTime}</Tag>
+            </p>
+            <p className="flex gap-2">
+              <p>Device:{""}</p>
+              <Tag color="green">{record.logoutDevice}</Tag>
+            </p>
+          </div>
+        );
+      },
     },
+    ,
     {
       key: "workTime",
       dataIndex: "workTime",
       title: "Work Time",
-      width: 120,
+      width: 100,
       render: (text, record) => {
         // Calculate work time in hours
         const loginTime =
@@ -96,22 +123,27 @@ const AttendanceList = () => {
       key: "Monthly Calendar",
       dataIndex: "monthlyCalendar",
       title: "Monthly Calendar",
-      width: 120,
+      width: 100,
       render: (_, record) => (
-        <Button icon={<IoCalendarOutline className="w-6 h-6" />} onClick={() => handleCalendarClick(record)}/>
+        <Button
+          icon={<IoCalendarOutline className="w-6 h-6" />}
+          onClick={() => handleCalendarClick(record)}
+        />
       ),
     },
   ];
 
   const dataSource = data?.data?.attendance?.map((item) => {
-    const uid=item?._id;
-    const ID = item?.attendances[0]?._id
+    const uid = item?._id;
+    const ID = item?.attendances[0]?._id;
     const loginTime = item?.attendances[0]?.loginTime
       ? dateToTime(item?.attendances[0]?.loginTime)
       : "-";
+    const loginDevice = item?.attendances[0]?.loginDevice || "-";
     const logoutTime = item?.attendances[0]?.logoutTime
       ? dateToTime(item?.attendances[0]?.logoutTime)
       : "-";
+    const logoutDevice = item?.attendances[0]?.logoutDevice || "-";
     const workTime =
       loginTime !== "-" && logoutTime !== "-"
         ? getDateDifferenceWithFormat(
@@ -119,17 +151,19 @@ const AttendanceList = () => {
             item?.attendances[0]?.loginTime
           )
         : "-";
-        // console.log(data?.data?.attendance);
+    // console.log(data?.data?.attendance);
     return {
-      uid:item._id,
+      uid: item._id,
       name: `${item?.user?.firstName} ${item?.user?.lastName}`,
       date: dateFormatNormal(item?.attendances[0]?.date),
       employeeId: item?.user?.employeeId,
       loginTime,
+      loginDevice,
       logoutTime,
+      logoutDevice,
       ID,
       workTime,
-      monthlyCalendar: "Calendar"
+      monthlyCalendar: "Calendar",
     };
   });
   // console.log(dataSource)
