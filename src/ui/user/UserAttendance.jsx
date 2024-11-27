@@ -103,6 +103,8 @@ const UserAttendance = ({ user }) => {
 
       if (attendanceEntry) {
         const loginTime = new Date(attendanceEntry?.loginTime);
+        const loginDevice = attendanceEntry?.loginDevice;
+        const logoutDevice = attendanceEntry?.logoutDevice;
         const logoutTime = attendanceEntry?.logoutTime
           ? new Date(attendanceEntry.logoutTime)
           : null;
@@ -129,9 +131,11 @@ const UserAttendance = ({ user }) => {
         // Push attendance event
         processedEvents.push({
           title,
+          loginDevice: loginDevice ? loginDevice : "NA",
+          logoutDevice: logoutDevice ? logoutDevice : "NA",
           work: workTime,
-          desc: `${moment(loginTime).format("hh:mm")} - ${
-            logoutTime ? moment(logoutTime).format("hh:mm") : "NA"
+          desc: `${moment(loginTime).format("hh:mm A")} - ${
+            logoutTime ? moment(logoutTime).format("hh:mm A") : "NA"
           }`,
           start: new Date(dateString),
           end: new Date(dateString),
@@ -210,6 +214,16 @@ const UserAttendance = ({ user }) => {
           <div className="text-[10px] font-semibold">{event.work}</div>
         )}
       </span>
+      <div>
+        {role === "admin" && event.loginDevice && (
+          <p className="text-[12px]">Login: {event.loginDevice}</p>
+        )}
+      </div>
+      <div>
+        {role === "admin" && event.logoutDevice && (
+          <p className="text-[12px]">Logout: {event.logoutDevice}</p>
+        )}
+      </div>
       {role === "admin" && (
         <Button
           size="small"

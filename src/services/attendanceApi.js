@@ -1,8 +1,39 @@
 import { api } from "./authApi";
 
+const getDeviceName = () => {
+  const userAgent = navigator.userAgent;
+
+  // Match common device/OS names
+  if (/Windows/.test(userAgent)) {
+    return "Windows";
+  }
+  if (/Android/.test(userAgent)) {
+    const match = userAgent.match(/Android\s([\d.]+)/);
+    return match ? `Android ${match[1]}` : "Android";
+  }
+  if (/Macintosh/.test(userAgent)) {
+    return "MacOS";
+  }
+  if (/iPhone/.test(userAgent)) {
+    return "iPhone";
+  }
+  if (/iPad/.test(userAgent)) {
+    return "iPad";
+  }
+  if (/Linux/.test(userAgent)) {
+    return "Linux";
+  }
+
+  // Fallback for unknown devices
+  return "Unknown Device";
+};
+
 export const createAttendance = async ({ user, time, timeTag, note }) => {
+  const loginDevice = getDeviceName();
   let payload =
-    timeTag === "login" ? { loginTime: time } : { logoutTime: time };
+    timeTag === "login"
+      ? { loginTime: time, loginDevice }
+      : { logoutTime: time, logoutDevice };
   const response = await api.post("/attendance/create", {
     user,
     note,
@@ -34,8 +65,11 @@ export const getAllAttendance = async () => {
 };
 
 export const updateAttendanceApi = async ({ time, timeTag, user }) => {
+  const deviceInfo = getDeviceName();
   let payload =
-    timeTag === "login" ? { loginTime: time } : { logoutTime: time };
+    timeTag === "login"
+      ? { loginTime: time, loginDevice: deviceInfo }
+      : { logoutTime: time, logoutDevice: deviceInfo };
 
   const response = await api.put(`/attendance/update/${user}`, {
     user,
@@ -69,7 +103,6 @@ export const getExcelDataByID = async (
   return response.data;
 };
 
-
 export const adminUpdateAttendance = async ({
   userId,
   date,
@@ -100,4 +133,3 @@ export const adminUpdateAttendance = async ({
   // Return the updated attendance data
   return response.data;
 };
-
