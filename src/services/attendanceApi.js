@@ -1,27 +1,14 @@
 import { api } from "./authApi";
 
-const getDeviceName = () => {
+const getPlatformName = () => {
   const userAgent = navigator.userAgent;
-
-  // Prioritize Android detection
   if (/Android/.test(userAgent)) {
-    const versionMatch = userAgent.match(/Android\s([\d.]+)/); // Match Android version
-    const deviceMatch = userAgent.match(/\(([^)]+)\)/); // Match device details in parentheses
-
-    const version = versionMatch ? `Android ${versionMatch[1]}` : "Android";
-    if (deviceMatch) {
-      const details = deviceMatch[1].split(";").map((str) => str.trim());
-      const device = details.length > 2 ? details[2] : "Unknown Device"; // Assume 3rd part as device name
-      return `${device} (${version})`;
-    }
-    return version;
+    return "Android";
   }
-
-  // Detect other platforms
   if (/Windows/.test(userAgent)) {
     return "Windows";
   }
-  if (/Macintosh/.test(userAgent)) {
+  if (/Macintosh/.test(userAgent) || /Mac OS X/.test(userAgent)) {
     return "MacOS";
   }
   if (/iPhone/.test(userAgent)) {
@@ -30,18 +17,16 @@ const getDeviceName = () => {
   if (/iPad/.test(userAgent)) {
     return "iPad";
   }
-
-  // Default to "Linux" only if "Android" is not explicitly detected
-  if (/Linux/.test(userAgent)) {
+  if (/Linux/.test(userAgent) && !/Android/.test(userAgent)) {
     return "Linux";
   }
 
-  // Fallback for unknown devices
-  return "Unknown Device";
+  // Fallback for unknown platforms
+  return "Unknown Platform";
 };
 
 export const createAttendance = async ({ user, time, timeTag, note }) => {
-  const loginDevice = getDeviceName();
+  const loginDevice = getPlatformName();
   let payload =
     timeTag === "login"
       ? { loginTime: time, loginDevice }
@@ -77,7 +62,7 @@ export const getAllAttendance = async () => {
 };
 
 export const updateAttendanceApi = async ({ time, timeTag, user }) => {
-  const deviceInfo = getDeviceName();
+  const deviceInfo = getPlatformName();
   let payload =
     timeTag === "login"
       ? { loginTime: time, loginDevice: deviceInfo }
