@@ -3,13 +3,23 @@ import { api } from "./authApi";
 const getDeviceName = () => {
   const userAgent = navigator.userAgent;
 
-  // Match common device/OS names
+  // Prioritize Android detection
+  if (/Android/.test(userAgent)) {
+    const versionMatch = userAgent.match(/Android\s([\d.]+)/); // Match Android version
+    const deviceMatch = userAgent.match(/\(([^)]+)\)/); // Match device details in parentheses
+
+    const version = versionMatch ? `Android ${versionMatch[1]}` : "Android";
+    if (deviceMatch) {
+      const details = deviceMatch[1].split(";").map((str) => str.trim());
+      const device = details.length > 2 ? details[2] : "Unknown Device"; // Assume 3rd part as device name
+      return `${device} (${version})`;
+    }
+    return version;
+  }
+
+  // Detect other platforms
   if (/Windows/.test(userAgent)) {
     return "Windows";
-  }
-  if (/Android/.test(userAgent)) {
-    const match = userAgent.match(/Android\s([\d.]+)/);
-    return match ? `Android ${match[1]}` : "Android";
   }
   if (/Macintosh/.test(userAgent)) {
     return "MacOS";
@@ -20,6 +30,8 @@ const getDeviceName = () => {
   if (/iPad/.test(userAgent)) {
     return "iPad";
   }
+
+  // Default to "Linux" only if "Android" is not explicitly detected
   if (/Linux/.test(userAgent)) {
     return "Linux";
   }
