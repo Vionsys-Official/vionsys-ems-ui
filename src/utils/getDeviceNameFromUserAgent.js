@@ -11,10 +11,10 @@ const getDeviceNameFromUserAgent = (userAgent) => {
       (detail) => !detail.startsWith("Linux") && !detail.startsWith("Android")
     );
 
-    return deviceName || "Unknown Device";
+    return deviceName || "Unknown";
   }
 
-  return "Unknown Device";
+  return "Unknown";
 };
 
 export default getDeviceNameFromUserAgent;

@@ -132,8 +132,8 @@ const UserAttendance = ({ user }) => {
         // Push attendance event
         processedEvents.push({
           title,
-          loginDevice: loginDevice ? loginDevice : "NA",
-          logoutDevice: logoutDevice ? logoutDevice : "NA",
+          loginDevice: loginDevice,
+          logoutDevice: logoutDevice,
           work: workTime,
           desc: `${moment(loginTime).format("hh:mm A")} - ${
             logoutTime ? moment(logoutTime).format("hh:mm A") : "NA"
