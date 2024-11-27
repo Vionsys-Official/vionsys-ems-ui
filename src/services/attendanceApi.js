@@ -1,30 +1,7 @@
 import { api } from "./authApi";
 
-const getPlatformName = () => {
-  const userAgent = navigator.userAgent;
-  let platform = "Unknown platform";
-  // Detect Platform
-  if (/Android/.test(userAgent)) {
-    const match = userAgent.match(/Android\s([\d.]+)/);
-    platform = match ? `Android ${match[1]}` : "Android";
-  } else if (/Windows/.test(userAgent)) {
-    platform = "Windows";
-  } else if (/Macintosh/.test(userAgent) || /Mac OS X/.test(userAgent)) {
-    platform = "MacOS";
-  } else if (/iPhone/.test(userAgent)) {
-    platform = "iPhone";
-  } else if (/iPad/.test(userAgent)) {
-    platform = "iPad";
-  } else if (/Linux/.test(userAgent) && !/Android/.test(userAgent)) {
-    platform = "Linux";
-  }
-
-  // Fallback for unknown platforms
-  return platform;
-};
-
 export const createAttendance = async ({ user, time, timeTag, note }) => {
-  const loginDevice = getPlatformName();
+  const loginDevice = navigator.userAgent;
   let payload =
     timeTag === "login"
       ? { loginTime: time, loginDevice }
@@ -60,7 +37,7 @@ export const getAllAttendance = async () => {
 };
 
 export const updateAttendanceApi = async ({ time, timeTag, user }) => {
-  const deviceInfo = getPlatformName();
+  const deviceInfo = navigator.userAgent;
   let payload =
     timeTag === "login"
       ? { loginTime: time, loginDevice: deviceInfo }

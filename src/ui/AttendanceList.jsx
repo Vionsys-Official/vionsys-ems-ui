@@ -10,6 +10,7 @@ import ExcelForm from "./ExcelForm";
 import { useState } from "react";
 import "../utils/css/attendance.css";
 import { IoCalendarOutline } from "react-icons/io5";
+import getDeviceNameFromUserAgent from "../utils/getDeviceNameFromUserAgent";
 
 const dateFormatNormal = (date) => {
   return format(parseISO(date), "dd/MM/yyyy");
@@ -72,7 +73,9 @@ const AttendanceList = () => {
             </p>
             <p className="flex gap-2">
               <p>Device:{""}</p>
-              <Tag color="green">{record.loginDevice}</Tag>
+              <Tag color="green">
+                {getDeviceNameFromUserAgent(record.loginDevice)}
+              </Tag>
             </p>
           </div>
         );
@@ -91,7 +94,9 @@ const AttendanceList = () => {
             </p>
             <p className="flex gap-2">
               <p>Device:{""}</p>
-              <Tag color="green">{record.logoutDevice}</Tag>
+              <Tag color="green">
+                {getDeviceNameFromUserAgent(record.logoutDevice)}
+              </Tag>
             </p>
           </div>
         );
