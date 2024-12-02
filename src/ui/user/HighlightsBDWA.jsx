@@ -101,7 +101,7 @@ const HighlightsBDWA = () => {
                   }
                 />
                 <div className="text-[#999] px-4 flex dark:text-white flex-col relative  pb-2">
-                  <span>{format(new Date(item.dob), "dd/MM/yyyy")}</span>
+                  <span>{format(new Date(item.dob), "d MMMM")}</span>
                 </div>
               </Skeleton>
             </List.Item>
