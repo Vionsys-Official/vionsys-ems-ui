@@ -14,24 +14,18 @@ import getDeviceNameFromUserAgent from "../../utils/getDeviceNameFromUserAgent";
 const localizer = momentLocalizer(moment);
 
 const isWeeklyOff = (date) => {
-  const dayOfWeek = moment(date).day();
-  const dayOfMonth = moment(date).date();
-  return (
-    dayOfWeek === 0 ||
-    (dayOfWeek === 6 &&
-      ((dayOfMonth > 7 && dayOfMonth <= 14) ||
-        (dayOfMonth > 21 && dayOfMonth <= 28)))
-  );
+  const dayOfWeek = moment(date).day(); // Get the day of the week (0 = Sunday, 6 = Saturday)
+  return dayOfWeek === 0 || dayOfWeek === 6; // Week off for Sunday (0) and Saturday (6)
 };
 
 const isAlternateSaturdayOff = (date) => {
   const dayOfMonth = moment(date).date();
-  return dayOfMonth / 14 === 0; // Alternate Saturdays
+  return dayOfMonth / 7 === 0; // Alternate Saturdays
 };
 
 const isAlternateSundayOff = (date) => {
   const dayOfWeek = moment(date).day();
-  return dayOfWeek === 0 && moment(date).date() % 14 !== 0; // Alternate Sundays
+  return dayOfWeek === 0 && moment(date).date() % 7 !== 0; // Alternate Sundays
 };
 
 const UserAttendance = ({ user }) => {
@@ -72,35 +66,79 @@ const UserAttendance = ({ user }) => {
     }
   }, [userAttendance, fixedHolidayList, selectedYear, selectedMonth]);
 
+  const generateAttendanceEvent = (attendanceEntry, holiday, isWO) => {
+    let event = {
+      title: attendanceEntry?.status || "A", // Default to "Absent"
+      desc: attendanceEntry?.remarks || "",
+      type: "attendance",
+      classNames: "attendance",
+      work: attendanceEntry?.work || "",
+      loginDevice: attendanceEntry?.loginDevice,
+      logoutDevice: attendanceEntry?.logoutDevice,
+    };
+
+    // If attendance is marked as "Present"
+    if (attendanceEntry?.status === "P") {
+      event = {
+        ...event,
+        title: "P",
+        classNames: "present",
+        work: "Worked on assigned tasks", // Example work description
+      };
+    }
+
+    // Add holiday-related data if applicable
+    if (holiday) {
+      event = {
+        ...event,
+        title: "HO",
+        desc: holiday.holidayName,
+        type: "holiday",
+        classNames: "holiday",
+      };
+    }
+
+    // Handle Weekly Off or Absent
+    if (isWO) {
+      event = {
+        ...event,
+        title: "WO",
+        type: "weeklyOff",
+        classNames: "weeklyOff",
+      };
+    }
+
+    return event;
+  };
+
   const generateEvents = (attendanceData, fixedHolidayList) => {
     const processedEvents = [];
-    const today = new Date();
-
-    const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1);
-    const lastDayOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
+    const attendanceMap = new Map(
+      attendanceData?.map((entry) => [
+        moment(entry.date).format("YYYY-MM-DD"),
+        entry,
+      ])
+    );
+    const holidayMap = new Map(
+      fixedHolidayList.map((entry) => [
+        moment(entry.date).format("YYYY-MM-DD"),
+        entry,
+      ])
+    );
 
     for (
-      let date = new Date(firstDayOfMonth);
-      date <= lastDayOfMonth;
-      date.setDate(date.getDate() + 1)
+      let date = moment(new Date(selectedYear, selectedMonth, 1));
+      date.isSameOrBefore(new Date(selectedYear, selectedMonth + 1, 0));
+      date.add(1, "day")
     ) {
-      const dateString = moment(date).format("YYYY-MM-DD");
+      const dateString = date.format("YYYY-MM-DD");
 
-      // Check for attendance on the current date
-      const attendanceEntry = attendanceData?.find(
-        (entry) => moment(entry.date).format("YYYY-MM-DD") === dateString
-      );
+      // Check attendance and holiday
+      const attendanceEntry = attendanceMap.get(dateString);
+      const holiday = holidayMap.get(dateString);
 
-      // Check if it's a holiday
-      const holiday = fixedHolidayList.find(
-        (entry) => moment(entry.date).format("YYYY-MM-DD") === dateString
-      );
-
-      // Check for weekly off
-      const isWO =
-        isWeeklyOff(date) ||
-        isAlternateSaturdayOff(date) ||
-        isAlternateSundayOff(date);
+      const isWO = isWeeklyOff(date.toDate()); // Updated logic for week off
+      const today = new Date();
 
       if (attendanceEntry) {
         const loginTime = new Date(attendanceEntry?.loginTime);
@@ -128,8 +166,6 @@ const UserAttendance = ({ user }) => {
           title = "WO/P";
           classNames = "presentWeeklyOff";
         }
-
-        // Push attendance event
         processedEvents.push({
           title,
           loginDevice: loginDevice,
@@ -140,12 +176,9 @@ const UserAttendance = ({ user }) => {
           }`,
           start: new Date(dateString),
           end: new Date(dateString),
-          type: "present",
-          classNames,
-          attendanceEntry,
         });
       } else if (holiday) {
-        // If it's a holiday without attendance
+        // Holiday event
         processedEvents.push({
           title: "HO",
           desc: holiday.holidayName,
@@ -155,7 +188,7 @@ const UserAttendance = ({ user }) => {
           classNames: "holiday",
         });
       } else if (isWO) {
-        // If it's a weekly off without attendance
+        // Weekly Off event
         processedEvents.push({
           title: "WO",
           start: new Date(dateString),
@@ -163,8 +196,8 @@ const UserAttendance = ({ user }) => {
           type: "weeklyOff",
           classNames: "weeklyOff",
         });
-      } else if (date <= today) {
-        // If the employee is absent
+      } else if (date.toDate() <= today) {
+        // Absent event
         processedEvents.push({
           title: "A",
           start: new Date(dateString),
@@ -174,7 +207,6 @@ const UserAttendance = ({ user }) => {
         });
       }
     }
-
     return processedEvents;
   };
 
