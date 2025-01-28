@@ -1,6 +1,12 @@
 import { api } from "./authApi";
 
-export const createAttendance = async ({ user, time, timeTag, note }) => {
+export const createAttendance = async ({
+  user,
+  shift,
+  time,
+  timeTag,
+  note,
+}) => {
   const loginDevice = navigator.userAgent;
   let payload =
     timeTag === "login"
@@ -9,6 +15,7 @@ export const createAttendance = async ({ user, time, timeTag, note }) => {
   const response = await api.post("/attendance/create", {
     user,
     note,
+    shift,
     ...payload,
   });
   return response.data;
@@ -36,7 +43,7 @@ export const getAllAttendance = async () => {
   return response.data;
 };
 
-export const updateAttendanceApi = async ({ time, timeTag, user }) => {
+export const updateAttendanceApi = async ({ time, shift, timeTag, user }) => {
   const deviceInfo = navigator.userAgent;
   let payload =
     timeTag === "login"
@@ -45,6 +52,7 @@ export const updateAttendanceApi = async ({ time, timeTag, user }) => {
 
   const response = await api.put(`/attendance/update/${user}`, {
     user,
+    shift,
     ...payload,
   });
   return response.data;

@@ -5,23 +5,33 @@ import useGetAttendance from "../../features/attendance/useGetAttendance";
 import useUpdateAttendance from "../../features/attendance/useUpdateAttendance";
 import useCreateAttendance from "../../features/attendance/useCreateAttendance";
 import getUserIdRole from "../../utils/getUserIdRole";
-import { isToday } from "date-fns";
+import checkIsToday from "../../utils/checkIsToday";
 
 const CheckInCheckOut = () => {
   const { id } = getUserIdRole();
-  const { data: employeesAttendance, isPending: tableLoading, refetch } = useGetAttendance({ uid: id });
-  const { updateAttendance, isPending: updateLoading } = useUpdateAttendance();
-  const { createAttendance, isPending: attendanceLoading } = useCreateAttendance();
-
-  const checkIsToday = (employeesAttendance) => {
-    const todayAttendance = employeesAttendance?.data?.attendance.filter((obj) =>
-      isToday(obj?.date)
-    );
-    return todayAttendance;
-  };
 
   const [startTime, setStartTime] = useState("00:00:00");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
+  const [shift, setShift] = useState("");
+  const {
+    data: employeesAttendance,
+    isPending: tableLoading,
+    refetch,
+  } = useGetAttendance({ uid: id });
+  const { updateAttendance, isPending: updateLoading } = useUpdateAttendance();
+  const { createAttendance, isPending: attendanceLoading } =
+    useCreateAttendance();
+
+  useEffect(() => {
+    if (!tableLoading) {
+      const currentDateData = checkIsToday(employeesAttendance);
+      if (currentDateData.length > 0) {
+        setIsActive(!currentDateData[0]?.logoutTime); // Active if not logged out
+      } else {
+        setIsActive(false); // Inactive if no attendance for today
+      }
+    }
+  }, [tableLoading, employeesAttendance]);
 
   useEffect(() => {
     if (!tableLoading) {
@@ -45,7 +55,8 @@ const CheckInCheckOut = () => {
         const currentDateData = checkIsToday(employeesAttendance);
         if (currentDateData.length > 0) {
           const timeDifference = Math.abs(
-            new Date().getTime() - new Date(currentDateData[0]?.loginTime)?.getTime()
+            new Date().getTime() -
+              new Date(currentDateData[0]?.loginTime)?.getTime()
           );
           let hours = Math.floor(timeDifference / (1000 * 60 * 60));
           let minutes = Math.floor(
@@ -66,31 +77,36 @@ const CheckInCheckOut = () => {
   }, [tableLoading, isActive, employeesAttendance]);
 
   const handleAttendanceLogin = () => {
+    if (!shift) return toast.error("Please select shift before check-in");
+
     const time = new Date().toISOString();
     if (!checkIsToday(employeesAttendance)?.length) {
-      createAttendance({ user: id, time, timeTag: "login" });
-      setIsActive(true);
-      refetch(); // Refetch after login to ensure data is updated
+      createAttendance({ user: id, time, shift, timeTag: "login" });
+      refetch();
     } else {
       toast.error("You are already checked in");
     }
   };
 
   const handleAttendanceLogout = () => {
+    if (!shift) return toast.error("Please select shift before check-out");
+
     const time = new Date().toISOString();
-    if (checkIsToday(employeesAttendance)?.length) {
-      updateAttendance({ user: id, time, timeTag: "logout" });
-      setIsActive(false);
-      refetch(); // Refetch after logout to ensure data is updated
-    } else {
-      toast.error("You are already checked out");
-    }
+    updateAttendance({ user: id, time, shift, timeTag: "logout" });
+    setIsActive(false);
+    refetch();
+  };
+
+  const handleShiftChange = (e) => {
+    setShift(e.target.value);
   };
 
   return (
     <Card className="shadow-lg z-10 flex items-center justify-center dark:bg-gray-700">
       <div className="flex p-3 rounded-md border-2 border-blue-200 flex-col">
-        <h2 className="text-lg text-center mb-2 dark:text-white">Your Attendance</h2>
+        <h2 className="text-lg text-center mb-2 dark:text-white">
+          Your Attendance
+        </h2>
         <h4 className="text-center text-4xl mb-2 dark:text-white">
           {!tableLoading ? startTime : "00:00:00"}
         </h4>
@@ -108,29 +124,48 @@ const CheckInCheckOut = () => {
             <span>09H 15M (per day)</span>
           </div>
         </div>
+        <div className="flex justify-between mb-4">
+          <label htmlFor="shift" className="dark:text-white">
+            Shift:
+          </label>
+          <select
+            id="shift"
+            value={shift}
+            onChange={handleShiftChange}
+            className="border rounded-md p-1"
+          >
+            <option value="">Select Shift</option>
+            <option value="dayShift">Day Shift</option>
+            <option value="nightShift">Night Shift</option>
+          </select>
+        </div>
         <div className="flex gap-6 justify-center items-center">
           <Button
             type="button"
-            className={`bg-green-400 text-white ${isActive
-              ? "pointer-events-none opacity-50"
-              : "hover:bg-white hover:text-green-400 hover:border-green-400"
-              }`}
+            className={`bg-green-400 text-white ${
+              isActive
+                ? "pointer-events-none opacity-50"
+                : "hover:bg-white hover:text-green-400 hover:border-green-400"
+            }`}
             onClick={handleAttendanceLogin}
             disabled={
-              attendanceLoading || employeesAttendance?.data?.attendanceForDay?.loginTime
+              attendanceLoading
+              // || employeesAttendance?.data?.attendanceForDay?.loginTime
             }
           >
             Check In
           </Button>
           <Button
             type="button"
-            className={`bg-red-500 text-white ${!isActive
-              ? "pointer-events-none opacity-50"
-              : "hover:bg-white hover:text-red-500 hover:border-red-500"
-              }`}
+            className={`bg-red-500 text-white ${
+              !isActive
+                ? "pointer-events-none opacity-50"
+                : "hover:bg-white hover:text-red-500 hover:border-red-500"
+            }`}
             onClick={handleAttendanceLogout}
             disabled={
-              updateLoading || employeesAttendance?.data?.attendanceForDay?.logoutTime
+              updateLoading
+              // || employeesAttendance?.data?.attendanceForDay?.logoutTime
             }
           >
             Check Out
