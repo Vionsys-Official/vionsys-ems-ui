@@ -18,16 +18,6 @@ const isWeeklyOff = (date) => {
   return dayOfWeek === 0 || dayOfWeek === 6; // Week off for Sunday (0) and Saturday (6)
 };
 
-const isAlternateSaturdayOff = (date) => {
-  const dayOfMonth = moment(date).date();
-  return dayOfMonth / 7 === 0; // Alternate Saturdays
-};
-
-const isAlternateSundayOff = (date) => {
-  const dayOfWeek = moment(date).day();
-  return dayOfWeek === 0 && moment(date).date() % 7 !== 0; // Alternate Sundays
-};
-
 const UserAttendance = ({ user }) => {
   const { role } = getUserIdRole();
   const { updateAttendanceAdmin, isPending } = useUpdateAttendanceAdmin(); // Use the hook
@@ -50,6 +40,7 @@ const UserAttendance = ({ user }) => {
   });
 
   const userAttendance = employeesData?.data?.attendance;
+  console.log("userAttendance:", userAttendance);
 
   const { data: holidayList, isPending: holidayLoading } =
     getholidayList(selectedYear);
@@ -141,16 +132,23 @@ const UserAttendance = ({ user }) => {
       const today = new Date();
 
       if (attendanceEntry) {
-        const loginTime = new Date(attendanceEntry?.loginTime);
-        const loginDevice = attendanceEntry?.loginDevice;
-        const logoutDevice = attendanceEntry?.logoutDevice;
-        const logoutTime = attendanceEntry?.logoutTime
+        let loginTime = new Date(attendanceEntry?.loginTime);
+        let logoutTime = attendanceEntry?.logoutTime
           ? new Date(attendanceEntry.logoutTime)
           : null;
 
+        // Adjust logout time if it is earlier than login time (shift crosses midnight)
+        if (logoutTime && logoutTime < loginTime) {
+          logoutTime.setDate(logoutTime.getDate() + 1); // Adjust by adding 1 day
+        }
+
+        // Ensure both times are in the local timezone
+        loginTime = moment(loginTime).local().toDate();
+        logoutTime = logoutTime ? moment(logoutTime).local().toDate() : null;
+
         // Calculate work time duration
         const duration = logoutTime
-          ? moment.duration(logoutTime - loginTime)
+          ? moment.duration(moment(logoutTime).diff(moment(loginTime)))
           : null;
         const workTime = duration
           ? `${duration.hours()} hrs : ${duration.minutes()} mins`
@@ -166,13 +164,17 @@ const UserAttendance = ({ user }) => {
           title = "WO/P";
           classNames = "presentWeeklyOff";
         }
+
+        // Push the event to the processed events list
         processedEvents.push({
           title,
-          loginDevice: loginDevice,
-          logoutDevice: logoutDevice,
+          loginDevice: attendanceEntry?.loginDevice,
+          logoutDevice: attendanceEntry?.logoutDevice,
+          loginTime: loginTime,
+          logoutTime: logoutTime,
           work: workTime,
-          desc: `${moment(loginTime).format("hh:mm A")} - ${
-            logoutTime ? moment(logoutTime).format("hh:mm A") : "NA"
+          desc: `${moment(loginTime).format("HH:mm")} - ${
+            logoutTime ? moment(logoutTime).format("HH:mm") : "NA"
           }`,
           start: new Date(dateString),
           end: new Date(dateString),
@@ -207,6 +209,7 @@ const UserAttendance = ({ user }) => {
         });
       }
     }
+
     return processedEvents;
   };
 
@@ -274,19 +277,16 @@ const UserAttendance = ({ user }) => {
   );
 
   const openEditModal = (event) => {
+    console.log(event);
     // Set selected event data
     setSelectedEvent(event);
 
     // Check and set form values based on event data
     form.setFieldsValue({
-      loginTime: event.attendanceEntry?.loginTime
-        ? moment(event.attendanceEntry.loginTime)
-        : undefined, // Leave undefined if loginTime is not available
-      logoutTime: event.attendanceEntry?.logoutTime
-        ? moment(event.attendanceEntry.logoutTime)
-        : undefined, // Leave undefined if logoutTime is not available
-    });
+      loginTime: event?.loginTime ? moment(event.loginTime) : undefined, // Leave undefined if loginTime is not available
 
+      logoutTime: event?.logoutTime ? moment(event.logoutTime) : undefined, // Leave undefined if logoutTime is not available
+    });
     // Show the modal
     setIsModalVisible(true);
   };
@@ -304,7 +304,7 @@ const UserAttendance = ({ user }) => {
           .toISOString()
       : null;
 
-    const logoutTime = values.logoutTime
+    let logoutTime = values.logoutTime
       ? moment(selectedEvent.start)
           .set({
             hour: values.logoutTime.hour(),
@@ -313,13 +313,20 @@ const UserAttendance = ({ user }) => {
           .toISOString()
       : null;
 
+    // Adjust logout time if it is earlier than login time (i.e., crosses midnight)
+    if (logoutTime && moment(logoutTime).isBefore(moment(loginTime))) {
+      logoutTime = moment(logoutTime).add(1, "day").toISOString(); // Add one day to logout time
+    }
+
     const userId = user.uid;
     const attendanceData = {
       userId,
-      date: selectedEvent.start.toISOString(), // Keep the original date
-      loginTime: loginTime || null,
-      logoutTime: logoutTime || null,
+      date: moment(selectedEvent.start).local().toISOString(), // Adjust event start time to local timezone
+      loginTime: loginTime ? moment(loginTime).local().toISOString() : null, // Adjust login time to local timezone
+      logoutTime: logoutTime ? moment(logoutTime).local().toISOString() : null, // Adjust logout time to local timezone
     };
+
+    console.log("attendanceData : ", attendanceData);
 
     // Call mutation to update attendance
     updateAttendanceAdmin(attendanceData, {
@@ -330,6 +337,7 @@ const UserAttendance = ({ user }) => {
     });
     setIsModalVisible(false);
   };
+
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -410,23 +418,25 @@ const UserAttendance = ({ user }) => {
             form={form}
             layout="vertical"
             initialValues={{
-              loginTime: selectedEvent.attendanceEntry?.loginTime
-                ? moment(selectedEvent.attendanceEntry.loginTime)
-                : null,
-              logoutTime: selectedEvent.attendanceEntry?.logoutTime
-                ? moment(selectedEvent.attendanceEntry.logoutTime)
-                : null,
+              loginTime: selectedEvent?.loginTime
+                ? moment(selectedEvent.loginTime)
+                : undefined,
+              logoutTime: selectedEvent?.logoutTime
+                ? moment(selectedEvent.logoutTime)
+                : undefined,
             }}
           >
             <Form.Item label="Login Time" name="loginTime">
-              <TimePicker format="h:mm a" />
+              <TimePicker format="HH:mm" />
             </Form.Item>
+
             <Form.Item label="Logout Time" name="logoutTime">
-              <TimePicker format="h:mm a" />
+              <TimePicker format="HH:mm" />
             </Form.Item>
           </Form>
         )}
       </Modal>
+
       <div className="bg-white p-4 rounded-md shadow-sm mx-4 mb-4">
         <div className="flex gap-6 justify-center items-center">
           <div className="flex items-center gap-2">

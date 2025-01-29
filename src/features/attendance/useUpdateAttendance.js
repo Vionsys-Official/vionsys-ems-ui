@@ -8,8 +8,8 @@ const useUpdateAttendance = () => {
   const { id } = getUserIdRole(); // Get the user ID
 
   const { mutate: updateAttendance, isPending } = useMutation({
-    mutationFn: ({ user, time, timeTag }) =>
-      updateAttendanceApi({ user, time, timeTag }),
+    mutationFn: ({ user, time, shift, timeTag }) =>
+      updateAttendanceApi({ user, time, shift, timeTag }),
     mutationKey: ["attendance"],
     onError: (error) => {
       toast.error(error.message);
