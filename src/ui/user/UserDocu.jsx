@@ -17,6 +17,7 @@ const UserDocu = () => {
   // Fetch documents for the specific user
   const { data: documents, isLoading: isFetchingDocuments } =
     useGetAllDocuments(userId);
+    console.log("documents", documents);
   const [visible, setVisible] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
 

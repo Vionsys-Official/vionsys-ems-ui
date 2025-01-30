@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import useGetAllDocuments from "../../features/documents/useGetAllDocuments";
 import useAddDocuments from "../../features/documents/useAddDocument";
 import useDeleteDocument from "../../features/documents/useDeleteDocument";
@@ -17,9 +17,11 @@ const Documents = () => {
   const { id: isAdmin } = getUserIdRole();
   const [form] = Form.useForm();
   const { userId } = useParams();
+  const fileInputRef = useRef(null); // Create a ref
 
   const { data: documents, isLoading: isFetchingDocuments } =
     useGetAllDocuments(userId);
+  console.log("documents", documents);
 
   const { deleteDocument, isPending: isDeletingDocument } = useDeleteDocument();
   const { addDocument, isPending: isAddingDocument } = useAddDocuments();
@@ -80,12 +82,19 @@ const Documents = () => {
     setPreviewFile(null);
   };
 
-  const showAddModal = () => {
-    setIsAddModalVisible(true);
-  };
 
-  const showUpdateModal = (docId) => {
+const showAddModal = () => {
+  setNewDocumentTitle("");  // Reset title
+  setNewDocumentFile(null); // Reset file
+  if (fileInputRef.current) {
+    fileInputRef.current.value = ""; // Reset file input field
+  }
+  setIsAddModalVisible(true);
+};
+
+  const showUpdateModal = (docId, title) => {
     setCurrentDocumentId(docId);
+    setNewDocumentTitle(title); // Set the selected document title
     setIsUpdateModalVisible(true);
   };
 
@@ -138,7 +147,7 @@ const Documents = () => {
         <Space>
           <Tooltip title="Edit">
             <Button
-              onClick={() => showUpdateModal(doc.key)}
+              onClick={() => showUpdateModal(doc.key, doc.title)} // Pass title as well
               className="bg-gray-900 text-white hover:bg-gray-900"
             >
               {loadingDocumentId === doc.key && isUpdatingDocument ? (
@@ -188,7 +197,7 @@ const Documents = () => {
       )}
 
       {isFetchingDocuments ? (
-        <p className="text-center text-gray-500">Loading documents...</p>
+        <p className="text-center text-gray-500">Loading...</p>
       ) : (
         <Table
           columns={columns}
@@ -217,6 +226,7 @@ const Documents = () => {
           <Form.Item label="Upload New Document">
             <input
               type="file"
+              ref={fileInputRef} // Attach the ref
               onChange={handleFileChange}
               className="block w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 cursor-pointer focus:outline-none"
             />
